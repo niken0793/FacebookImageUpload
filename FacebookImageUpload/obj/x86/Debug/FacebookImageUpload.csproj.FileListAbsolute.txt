@@ -1,0 +1,12 @@
+C:\Users\NIKEN\Documents\Visual Studio 2010\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\FacebookImageUpload.exe
+C:\Users\NIKEN\Documents\Visual Studio 2010\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\FacebookImageUpload.pdb
+C:\Users\NIKEN\Documents\Visual Studio 2010\Projects\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.csprojResolveAssemblyReference.cache
+C:\Users\NIKEN\Documents\Visual Studio 2010\Projects\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.Form1.resources
+C:\Users\NIKEN\Documents\Visual Studio 2010\Projects\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.Properties.Resources.resources
+C:\Users\NIKEN\Documents\Visual Studio 2010\Projects\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.csproj.GenerateResource.Cache
+C:\Users\NIKEN\Documents\Visual Studio 2010\Projects\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.exe
+C:\Users\NIKEN\Documents\Visual Studio 2010\Projects\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.pdb
+C:\Users\NIKEN\Documents\Visual Studio 2010\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\Facebook.dll
+C:\Users\NIKEN\Documents\Visual Studio 2010\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\Facebook.xml
+C:\Users\NIKEN\documents\visual studio 2010\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\Newtonsoft.Json.dll
+C:\Users\NIKEN\documents\visual studio 2010\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\Newtonsoft.Json.xml
