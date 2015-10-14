@@ -83,13 +83,15 @@ namespace FacebookImageUpload
 
         private void downloadImage_Click(object sender, EventArgs e)
         {
-            temp++;
+            temp++; // biến để đặt tên
             var fb = new FacebookClient(_accessToken);
-            dynamic res = fb.Get(_imageId + "?fields=images");
-            string json_string = Newtonsoft.Json.JsonConvert.SerializeObject(res);
-            var json = JObject.Parse(json_string);
+            dynamic res = fb.Get(_imageId + "?fields=images");  // query đường dẫn + độ phân giải ảnh
+            string json_string = Newtonsoft.Json.JsonConvert.SerializeObject(res); // parse response sang json
+            var json = JObject.Parse(json_string); 
             int i =0;
             string source_url = "";
+
+            /* lấy độ phân giải trùng với độ phân giải của ảnh đã up */
             while ((string)json["images"][i].ToString()!=null)
             {
                 int image_height = Int32.Parse((string)json["images"][i]["height"]);
@@ -102,6 +104,8 @@ namespace FacebookImageUpload
                 i++;
 
             }
+            /*------*/
+            /* download ảnh */
             using (WebClient webClient = new WebClient())
             {
                 byte[] data = webClient.DownloadData(source_url);
@@ -116,7 +120,7 @@ namespace FacebookImageUpload
                 }
 
             }
-            long ratio = _upFileSize / _downFileSize ;
+            long ratio = _upFileSize / _downFileSize ; // lấy tỉ lệ
             MessageBox.Show(ratio.ToString());
         }
 
