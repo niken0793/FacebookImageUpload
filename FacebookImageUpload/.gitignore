@@ -46,6 +46,7 @@ Temporary Items
 *.DS_Store
 
 #Visual Studio files
+bin/
 *.[Oo]bj
 *.user
 *.aps
