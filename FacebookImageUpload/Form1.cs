@@ -15,6 +15,7 @@ using System.Net;
 using System.Drawing.Imaging;
 namespace FacebookImageUpload
 {
+    // test commit code
     public partial class Form1 : Form
     {
         public Form1()
@@ -68,7 +69,7 @@ namespace FacebookImageUpload
         {
             //upload photo
             var imgstream = File.OpenRead(imagePath.Text);
-
+            var fb = new FacebookClient(_accessToken);
             dynamic res = fb.Post(_albumid + "/photos", new
             {
                 message = "Image description",
