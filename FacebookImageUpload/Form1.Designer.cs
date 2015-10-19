@@ -28,67 +28,67 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.openfile = new System.Windows.Forms.Button();
-            this.uploadImage = new System.Windows.Forms.Button();
-            this.imagePath = new System.Windows.Forms.TextBox();
-            this.downloadImage = new System.Windows.Forms.Button();
-            this.createAlbum = new System.Windows.Forms.Button();
+            this.fdOpenfile = new System.Windows.Forms.Button();
+            this.btnUploadImage = new System.Windows.Forms.Button();
+            this.tbImagePath = new System.Windows.Forms.TextBox();
+            this.btnDownloadImage = new System.Windows.Forms.Button();
+            this.btnCreateAlbum = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
-            // openfile
+            // fdOpenfile
             // 
-            this.openfile.Location = new System.Drawing.Point(177, 26);
-            this.openfile.Name = "openfile";
-            this.openfile.Size = new System.Drawing.Size(27, 23);
-            this.openfile.TabIndex = 0;
-            this.openfile.Text = "...";
-            this.openfile.UseVisualStyleBackColor = true;
-            this.openfile.Click += new System.EventHandler(this.openfile_Click);
+            this.fdOpenfile.Location = new System.Drawing.Point(177, 26);
+            this.fdOpenfile.Name = "fdOpenfile";
+            this.fdOpenfile.Size = new System.Drawing.Size(27, 23);
+            this.fdOpenfile.TabIndex = 0;
+            this.fdOpenfile.Text = "...";
+            this.fdOpenfile.UseVisualStyleBackColor = true;
+            this.fdOpenfile.Click += new System.EventHandler(this.openfile_Click);
             // 
-            // uploadImage
+            // btnUploadImage
             // 
-            this.uploadImage.Location = new System.Drawing.Point(129, 38);
-            this.uploadImage.Name = "uploadImage";
-            this.uploadImage.Size = new System.Drawing.Size(75, 23);
-            this.uploadImage.TabIndex = 2;
-            this.uploadImage.Text = "Upload";
-            this.uploadImage.UseVisualStyleBackColor = true;
-            this.uploadImage.Click += new System.EventHandler(this.uploadImage_Click);
+            this.btnUploadImage.Location = new System.Drawing.Point(129, 38);
+            this.btnUploadImage.Name = "btnUploadImage";
+            this.btnUploadImage.Size = new System.Drawing.Size(75, 23);
+            this.btnUploadImage.TabIndex = 2;
+            this.btnUploadImage.Text = "Upload";
+            this.btnUploadImage.UseVisualStyleBackColor = true;
+            this.btnUploadImage.Click += new System.EventHandler(this.uploadImage_Click);
             // 
-            // imagePath
+            // tbImagePath
             // 
-            this.imagePath.Location = new System.Drawing.Point(23, 40);
-            this.imagePath.Name = "imagePath";
-            this.imagePath.Size = new System.Drawing.Size(162, 20);
-            this.imagePath.TabIndex = 3;
+            this.tbImagePath.Location = new System.Drawing.Point(23, 40);
+            this.tbImagePath.Name = "tbImagePath";
+            this.tbImagePath.Size = new System.Drawing.Size(162, 20);
+            this.tbImagePath.TabIndex = 3;
             // 
-            // downloadImage
+            // btnDownloadImage
             // 
-            this.downloadImage.Location = new System.Drawing.Point(80, 218);
-            this.downloadImage.Name = "downloadImage";
-            this.downloadImage.Size = new System.Drawing.Size(75, 23);
-            this.downloadImage.TabIndex = 4;
-            this.downloadImage.Text = "Download";
-            this.downloadImage.UseVisualStyleBackColor = true;
-            this.downloadImage.Click += new System.EventHandler(this.downloadImage_Click);
+            this.btnDownloadImage.Location = new System.Drawing.Point(80, 218);
+            this.btnDownloadImage.Name = "btnDownloadImage";
+            this.btnDownloadImage.Size = new System.Drawing.Size(75, 23);
+            this.btnDownloadImage.TabIndex = 4;
+            this.btnDownloadImage.Text = "Download";
+            this.btnDownloadImage.UseVisualStyleBackColor = true;
+            this.btnDownloadImage.Click += new System.EventHandler(this.downloadImage_Click);
             // 
-            // createAlbum
+            // btnCreateAlbum
             // 
-            this.createAlbum.Location = new System.Drawing.Point(10, 37);
-            this.createAlbum.Name = "createAlbum";
-            this.createAlbum.Size = new System.Drawing.Size(92, 23);
-            this.createAlbum.TabIndex = 5;
-            this.createAlbum.Text = "Create Album";
-            this.createAlbum.UseVisualStyleBackColor = true;
-            this.createAlbum.Click += new System.EventHandler(this.createAlbum_Click);
+            this.btnCreateAlbum.Location = new System.Drawing.Point(10, 37);
+            this.btnCreateAlbum.Name = "btnCreateAlbum";
+            this.btnCreateAlbum.Size = new System.Drawing.Size(92, 23);
+            this.btnCreateAlbum.TabIndex = 5;
+            this.btnCreateAlbum.Text = "Create Album";
+            this.btnCreateAlbum.UseVisualStyleBackColor = true;
+            this.btnCreateAlbum.Click += new System.EventHandler(this.createAlbum_Click);
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.openfile);
+            this.groupBox1.Controls.Add(this.fdOpenfile);
             this.groupBox1.Location = new System.Drawing.Point(13, 13);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(228, 74);
@@ -98,8 +98,8 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.createAlbum);
-            this.groupBox2.Controls.Add(this.uploadImage);
+            this.groupBox2.Controls.Add(this.btnCreateAlbum);
+            this.groupBox2.Controls.Add(this.btnUploadImage);
             this.groupBox2.Location = new System.Drawing.Point(13, 102);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(228, 88);
@@ -113,8 +113,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(274, 372);
             this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.downloadImage);
-            this.Controls.Add(this.imagePath);
+            this.Controls.Add(this.btnDownloadImage);
+            this.Controls.Add(this.tbImagePath);
             this.Controls.Add(this.groupBox1);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -127,11 +127,11 @@
 
         #endregion
 
-        private System.Windows.Forms.Button openfile;
-        private System.Windows.Forms.Button uploadImage;
-        private System.Windows.Forms.TextBox imagePath;
-        private System.Windows.Forms.Button downloadImage;
-        private System.Windows.Forms.Button createAlbum;
+        private System.Windows.Forms.Button fdOpenfile;
+        private System.Windows.Forms.Button btnUploadImage;
+        private System.Windows.Forms.TextBox tbImagePath;
+        private System.Windows.Forms.Button btnDownloadImage;
+        private System.Windows.Forms.Button btnCreateAlbum;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
     }

@@ -66,12 +66,14 @@ bin/
 *.lib
 *.sbr
 *.sdf
+*.exe
 ipch/
 obj/
 [Bb]in
 [Dd]ebug*/
 [Rr]elease*/
 Ankh.NoLoad
+bin/Debug
 
 #Tooling
 _ReSharper*/

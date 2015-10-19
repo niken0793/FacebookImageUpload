@@ -71,7 +71,7 @@ obj/
 [Dd]ebug*/
 [Rr]elease*/
 Ankh.NoLoad
-
+.localhistory
 #Tooling
 _ReSharper*/
 *.resharper
