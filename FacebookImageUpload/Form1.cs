@@ -10,12 +10,12 @@ using System.Text;
 using System.Windows.Forms;
 using Facebook; // PM
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using System.IO;
 using System.Net;
 using System.Drawing.Imaging;
 using FacebookImageUpload.FB_Images;
-// Test code commit
-// Test code commit niken
+
 namespace FacebookImageUpload
 {
     public partial class Form1 : Form
@@ -133,5 +133,79 @@ namespace FacebookImageUpload
           
         }
 
+        private void getAlbumlist_Click(object sender, EventArgs e)
+        {
+            var fb = new FacebookClient(_accessToken);
+            dynamic albums = fb.Get("me?fields=albums");
+            string json_string = JsonConvert.SerializeObject(albums); // parse response sang json
+            var json = JObject.Parse(json_string);
+            int i = 0;
+            ImageList photoList = new ImageList();
+            photoList.TransparentColor = Color.Blue;
+            photoList.ColorDepth = ColorDepth.Depth32Bit;
+            photoList.ImageSize = new Size(50, 50);
+
+            Dictionary<int, string> dic_albumId = new Dictionary<int, string>();
+
+            foreach (var obj in json["albums"]["data"])
+            {
+                string albumName = (string)obj["name"];
+
+                dynamic coverPhotos = fb.Get(obj["id"].ToString() + "?fields=cover_photo");
+                string coverPhotos_json_string = JsonConvert.SerializeObject(coverPhotos); // parse response sang json
+                var coverPhotos_json = JObject.Parse(coverPhotos_json_string);
+
+                string cover_photo_id = (string)coverPhotos_json["id"];
+                dynamic cover_link = fb.Get(cover_photo_id + "?fields=picture");
+                string cover_link_json_string = JsonConvert.SerializeObject(cover_link); // parse response sang json
+                var cover_link_json = JObject.Parse(cover_link_json_string);
+
+                /* download ảnh */
+                using (WebClient webClient = new WebClient())
+                {
+                    byte[] data = webClient.DownloadData((string)cover_link_json["picture"]["data"]["url"]);
+
+                    using (MemoryStream mem = new MemoryStream(data))
+                    {
+                        using (var yourImage = Image.FromStream(mem))
+                        {
+                            yourImage.Save(FB_Image.BaseDirectory + obj["id"].ToString() + ".jpg", ImageFormat.Jpeg);
+                            string img_url = FB_Image.BaseDirectory + obj["id"].ToString() + ".jpg";
+                            photoList.Images.Add(Image.FromFile(img_url));
+                            photoList.Images.SetKeyName(i, albumName);
+                            dic_albumId.Add(i, obj["id"].ToString());
+                            i++;
+                        }
+                    }
+
+                }
+
+
+            }
+
+            this.albumList.View = View.LargeIcon;
+            this.albumList.LargeImageList = photoList;
+
+            for (int j = 0; j < photoList.Images.Count; j++)
+            {
+                ListViewItem item = new ListViewItem();
+                item.Text = photoList.Images.Keys[j].ToString();
+                item.Name = dic_albumId[j];
+                item.ImageIndex = j;
+                this.albumList.Items.Add(item);
+            }
+        }
+
+        private void albumList_ItemActivate(object sender, EventArgs e)
+        {
+            DialogResult dlg = MessageBox.Show("Do you want to choose this Album for upload?", "Choose Album", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dlg == DialogResult.Yes)
+            {
+                ListViewItem item = ((ListView)sender).SelectedItems[0];
+                pictureBox1.Image = (Image)item.ImageList.Images[item.ImageIndex];
+                albumName.Text = item.Text.ToString();
+                albumId.Text = item.Name.ToString();
+            }
+        }
     }
 }
