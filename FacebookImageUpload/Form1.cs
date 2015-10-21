@@ -26,9 +26,7 @@ namespace FacebookImageUpload
         }
 
         FB_Image browseImage = new FB_Image();
-        string _accessToken = "CAAVUMKQz7ZB0BAJG21S5gyhrBOpK7qvIZCViGPfbwMYckHWhXy8nPYcI5ZBxQOMZCjz5ieT9IydD6hDiE7sLEn6taU3K7ztbmZCgcHohnLqQw3vZAJPdXs5LjefrOEy4fIxQSPWXMe57n1TBCtmqUiWHdr4JSyq5ujBtQXWYlg5pdZBpQJncIvfU2rvPIkslQZCaZAs9ZAf8CRpQZDZD";
         int temp = 0; // biến để đặt tên file tải về
-        string _albumid = ""; // lấy album id để up ảnh
 
         private void openfile_Click(object sender, EventArgs e)
         {
@@ -55,36 +53,48 @@ namespace FacebookImageUpload
 
         private void createAlbum_Click(object sender, EventArgs e)
         {
-            //create album
-            dynamic albumPost = new ExpandoObject();  // tạo đối tượng
-            albumPost.message = "Album desc";  // truyền tham số 
-            albumPost.name = "Stegano";
-            var fb = new FacebookClient(_accessToken);
-            dynamic result = fb.Post("me/albums", albumPost); //request facebook api dạng: /{album-id}?field=message,name
-            _albumid = result.id; // lấy album id
-
+            try
+            {
+                FacebookAlbum album = new FacebookAlbum();
+                lbAlbumId.Text = album.createAlbum(FB_Image.AccessToken, tbAlbumDesc.Text, tbAlbumName.Text);
+                lbAlbumName.Text = album.getName(FB_Image.AccessToken);
+                pBoxAlbumCover.Image = FacebookImageUpload.Properties.Resources._default;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void uploadImage_Click(object sender, EventArgs e)
         {
             //upload photo
-            var imgstream = File.OpenRead(tbImagePath.Text);
-            var fb = new FacebookClient(_accessToken);
-            dynamic res = fb.Post(_albumid + "/photos", new
+            try
             {
-                message = "Image description",
-                file = new FacebookMediaStream{  
-                    ContentType = "image/jpeg",
-                    FileName = browseImage.FileName,
-                }.SetValue(imgstream)
-            });
-            browseImage.ImageID = res.id;
-            MessageBox.Show("Picture ID is :" + res.id);
+                var imgstream = File.OpenRead(tbImagePath.Text);
+                var fb = new FacebookClient(FB_Image.AccessToken);
+                dynamic res = fb.Post(lbAlbumId.Text + "/photos", new
+                {
+                    message = "Image description",
+                    file = new FacebookMediaStream
+                    {
+                        ContentType = "image/jpeg",
+                        FileName = browseImage.FileName,
+                    }.SetValue(imgstream)
+                });
+                browseImage.ImageID = res.id;
+                MessageBox.Show("Picture ID is :" + res.id);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            
         }
 
         private void downloadImage_Click(object sender, EventArgs e)
         {
             temp++; // biến để đặt tên
-            var fb = new FacebookClient(_accessToken);
+            var fb = new FacebookClient(FB_Image.AccessToken);
             dynamic res = fb.Get(browseImage.ImageID + "?fields=images");  // query đường dẫn + độ phân giải ảnh
             string json_string = Newtonsoft.Json.JsonConvert.SerializeObject(res); // parse response sang json
             dynamic json = JObject.Parse(json_string);
@@ -128,14 +138,12 @@ namespace FacebookImageUpload
 
             }
             long ratio = browseImage.UpFileSize / browseImage.DownFileSize; // lấy tỉ lệ
-            MessageBox.Show(ratio.ToString());
-
-          
+            MessageBox.Show(ratio.ToString());        
         }
 
-        private void getAlbumlist_Click(object sender, EventArgs e)
+        private void btngetAlbumlist_Click(object sender, EventArgs e)
         {
-            var fb = new FacebookClient(_accessToken);
+            var fb = new FacebookClient(FB_Image.AccessToken);
             dynamic albums = fb.Get("me?fields=albums");
             string json_string = JsonConvert.SerializeObject(albums); // parse response sang json
             var json = JObject.Parse(json_string);
@@ -183,8 +191,8 @@ namespace FacebookImageUpload
 
             }
 
-            this.albumList.View = View.LargeIcon;
-            this.albumList.LargeImageList = photoList;
+            this.ListViewalbumList.View = View.LargeIcon;
+            this.ListViewalbumList.LargeImageList = photoList;
 
             for (int j = 0; j < photoList.Images.Count; j++)
             {
@@ -192,19 +200,19 @@ namespace FacebookImageUpload
                 item.Text = photoList.Images.Keys[j].ToString();
                 item.Name = dic_albumId[j];
                 item.ImageIndex = j;
-                this.albumList.Items.Add(item);
+                this.ListViewalbumList.Items.Add(item);
             }
         }
 
-        private void albumList_ItemActivate(object sender, EventArgs e)
+        private void ListViewalbumList_ItemActivate(object sender, EventArgs e)
         {
             DialogResult dlg = MessageBox.Show("Do you want to choose this Album for upload?", "Choose Album", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dlg == DialogResult.Yes)
             {
                 ListViewItem item = ((ListView)sender).SelectedItems[0];
-                pictureBox1.Image = (Image)item.ImageList.Images[item.ImageIndex];
-                albumName.Text = item.Text.ToString();
-                albumId.Text = item.Name.ToString();
+                pBoxAlbumCover.Image = (Image)item.ImageList.Images[item.ImageIndex];
+                lbAlbumName.Text = item.Text.ToString();
+                lbAlbumId.Text = item.Name.ToString();
             }
         }
     }
