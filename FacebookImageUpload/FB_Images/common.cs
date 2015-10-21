@@ -16,6 +16,7 @@ using System.Net;
 using System.Drawing.Imaging;
 using FacebookImageUpload.FB_Images;
 
+// Đạt file
 namespace FacebookImageUpload
 {
     public class common

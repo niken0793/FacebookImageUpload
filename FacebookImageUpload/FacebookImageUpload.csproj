@@ -58,6 +58,9 @@
     <Compile Include="FB_Images\common.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="FB_Images\common1.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
