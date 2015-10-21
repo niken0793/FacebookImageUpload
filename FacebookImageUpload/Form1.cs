@@ -98,7 +98,7 @@ namespace FacebookImageUpload
             {
                 int image_height = Int32.Parse((string)imagesJson[i]["height"]);
                 int image_width = Int32.Parse((string)imagesJson[i]["width"]);
-                if (image_height == image_source_height && image_width == image_source_width)
+                if (image_height == browseImage.Height && image_width == browseImage.Width)
                 {
                     source_url = imagesJson[i]["source"];
                     break;
