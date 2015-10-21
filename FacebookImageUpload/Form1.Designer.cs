@@ -40,12 +40,12 @@
             this.btngetAlbumlist = new System.Windows.Forms.Button();
             this.ListViewalbumList = new System.Windows.Forms.ListView();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.fdOpenfile = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.lbAlbumName = new System.Windows.Forms.Label();
             this.lbAlbumId = new System.Windows.Forms.Label();
             this.pBoxAlbumCover = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.fdOpenfile = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pBoxAlbumCover)).BeginInit();
@@ -173,6 +173,16 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Album";
             // 
+            // fdOpenfile
+            // 
+            this.fdOpenfile.Location = new System.Drawing.Point(196, 111);
+            this.fdOpenfile.Name = "fdOpenfile";
+            this.fdOpenfile.Size = new System.Drawing.Size(27, 23);
+            this.fdOpenfile.TabIndex = 0;
+            this.fdOpenfile.Text = "...";
+            this.fdOpenfile.UseVisualStyleBackColor = true;
+            this.fdOpenfile.Click += new System.EventHandler(this.openfile_Click);
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -217,16 +227,6 @@
             this.label3.Size = new System.Drawing.Size(70, 13);
             this.label3.TabIndex = 8;
             this.label3.Text = "Album Name:";
-            // 
-            // fdOpenfile
-            // 
-            this.fdOpenfile.Location = new System.Drawing.Point(196, 111);
-            this.fdOpenfile.Name = "fdOpenfile";
-            this.fdOpenfile.Size = new System.Drawing.Size(27, 23);
-            this.fdOpenfile.TabIndex = 0;
-            this.fdOpenfile.Text = "...";
-            this.fdOpenfile.UseVisualStyleBackColor = true;
-            this.fdOpenfile.Click += new System.EventHandler(this.openfile_Click);
             // 
             // Form1
             // 
