@@ -16,6 +16,8 @@ using System.IO;
 using System.Net;
 using System.Drawing.Imaging;
 using FacebookImageUpload.FB_Images;
+using System.Xml;
+using System.Xml.Serialization;
 
 // Huy file
 
@@ -56,7 +58,7 @@ namespace FacebookImageUpload
             }   
         }
 
-        private void Download_Picture_FACEBOOK(FB_Image browseImage)
+        private void Download_Picture_FACEBOOK(ref string filename, FB_Image browseImage)
         {
             temp++; // biến để đặt tên
             var fb = new FacebookClient(FB_Image.AccessToken);
@@ -99,32 +101,40 @@ namespace FacebookImageUpload
                         string new_path = FB_Image.BaseDirectory + browseImage.FileNameWithOutExtension + "_" + temp + ".jpg";
                         yourImage.Save(new_path, ImageFormat.Jpeg);
                         browseImage.DownFileSize = new FileInfo(FB_Image.BaseDirectory + browseImage.FileNameWithOutExtension + "_" + temp + ".jpg").Length;
-                        tbImagePath.Text = new_path;
+                        filename = new_path;
+
                     }
                 }
 
             }
         }
 
-        private void LongWork(IProgress<string> progress)
+        public void AutoUploadAndDownload(IProgress<int> progress, string filename, FB_Image browseImage, ref float ratio)
         {
-            progress.Report("I will fail in...");
-            Task.Delay(500).Wait();
-            try
+            while (ratio > FB_Image.RatioMax)
             {
-                for (var i = 0; i < 3; i++)
+                Upload_Picture_FB(filename, browseImage);
+                Download_Picture_FACEBOOK(ref filename, browseImage);
+                ratio = ((float)browseImage.UpFileSize / (float)browseImage.DownFileSize);
+                float t = ratio;
+                lbImagePath.Invoke(new Action(() => lbImagePath.Text = "Your ratio is: " + t.ToString()));
+                if (ratio > 9)
                 {
-                    progress.Report((3 - i).ToString());
-                    Task.Delay(500).Wait();
+                    progress.Report(10);
+                }
+                else if(ratio>=2)
+                {
+                    progress.Report((int)(ratio * 10));
+                }
+                else if (ratio >= 1 && ratio < 2)
+                {
+                    progress.Report((int)((ratio - 1) * 100));
                 }
 
-                throw new Exception("Oops...");
             }
-            catch (Exception ex)
-            {
-                Log(ex);
-            }
+            progress.Report(100);
         }
+
 
         public void GetAlbumList(IProgress<int> progress,int limit =5)
         {
@@ -132,7 +142,7 @@ namespace FacebookImageUpload
             {
 
                 var fb = new FacebookClient(FB_Image.AccessToken);
-                dynamic albums = fb.Get("me?fields=albums"); // Get album information
+                dynamic albums = fb.Get("me?fields=albums.limit(5)"); // Get album information
                 string json_string = JsonConvert.SerializeObject(albums); // parse response sang json
                 var json = JObject.Parse(json_string);
                 int i = 0;
@@ -142,8 +152,7 @@ namespace FacebookImageUpload
                 photoList.ImageSize = new Size(50, 50);
                 dynamic a_albums = json["albums"]["data"];
                 int count = a_albums.Count;
-                Dictionary<int, string> dic_albumId = new Dictionary<int, string>();
-                FB_Image.Dict_AlbumID = dic_albumId;
+                List<string> list_albumID = new List<string>();
 
                 foreach (var obj in json["albums"]["data"])
                 {
@@ -171,7 +180,8 @@ namespace FacebookImageUpload
                                 string img_url = FB_Image.BaseDirectory + obj["id"].ToString() + ".jpg";
                                 photoList.Images.Add(Image.FromFile(img_url));
                                 photoList.Images.SetKeyName(i, albumName);
-                                dic_albumId.Add(i, obj["id"].ToString());
+                                FB_Image.List_AlbumInfo.Add(new AlbumInfo(obj["id"].ToString(), albumName, img_url));
+                                list_albumID.Add(obj["id"].ToString());
                                 progress.Report((i * 100 / count));
                                 i++;
                             }
@@ -183,7 +193,7 @@ namespace FacebookImageUpload
                 }
 
                 FB_Image.Album_PhotoList = photoList;
-                FB_Image.Dict_AlbumID = dic_albumId;
+                FB_Image.List_AlbumID = list_albumID;
 
                 progress.Report(100);
             }
@@ -193,7 +203,7 @@ namespace FacebookImageUpload
             }
         }
 
-
+   
         public static void Log(Exception message)
         {
             try
@@ -228,5 +238,103 @@ namespace FacebookImageUpload
         }
 
 
+    }
+
+
+    public class Common
+    {
+
+        public static void PreparePath(string filename)
+        {
+            string directory = Path.GetDirectoryName(filename);
+            string file = Path.GetFileName(filename);
+            if (Directory.Exists(directory))
+            {
+                if (!File.Exists(filename))
+                {
+                    File.Create(filename).Dispose();
+                }
+            }
+            else
+            {
+                Directory.CreateDirectory(directory);
+                File.Create(filename).Dispose();
+
+            }
+            
+        }
+
+        /// <summary>
+        /// Serializes an object.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="serializableObject"></param>
+        /// <param name="fileName"></param>
+        public static void SerializeObject<T>(T serializableObject, string fileName)
+        {
+            if (serializableObject == null) { return; }
+
+            try
+            {
+                PreparePath(fileName);
+                XmlDocument xmlDocument = new XmlDocument();
+                XmlSerializer serializer = new XmlSerializer(serializableObject.GetType());
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    serializer.Serialize(stream, serializableObject);
+                    stream.Position = 0;
+                    xmlDocument.Load(stream);
+                    xmlDocument.Save(fileName);
+                    stream.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Form1.Log(ex);
+            }
+        }
+
+
+        /// <summary>
+        /// Deserializes an xml file into an object list
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static T DeSerializeObject<T>(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName)) { return default(T); }
+
+            T objectOut = default(T);
+
+            try
+            {
+                PreparePath(fileName);
+                string attributeXml = string.Empty;
+                XmlDocument xmlDocument = new XmlDocument();
+                xmlDocument.Load(fileName);
+                string xmlString = xmlDocument.OuterXml;
+
+                using (StringReader read = new StringReader(xmlString))
+                {
+                    Type outType = typeof(T);
+
+                    XmlSerializer serializer = new XmlSerializer(outType);
+                    using (XmlReader reader = new XmlTextReader(read))
+                    {
+                        objectOut = (T)serializer.Deserialize(reader);
+                        reader.Close();
+                    }
+
+                    read.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Form1.Log(ex);
+            }
+
+            return objectOut;
+        }
     }
 }

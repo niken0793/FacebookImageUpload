@@ -132,7 +132,9 @@ namespace FacebookImageUpload
 
             //}
             #endregion
-            Download_Picture_FACEBOOK(browseImage);
+            string file = tbImagePath.Text;
+
+            Download_Picture_FACEBOOK(ref file, browseImage);
             float ratio = (float)(browseImage.UpFileSize / browseImage.DownFileSize); // lấy tỉ lệ
             MessageBox.Show(ratio.ToString());        
         }
@@ -154,10 +156,14 @@ namespace FacebookImageUpload
                 {
                     ListViewItem item = new ListViewItem();
                     item.Text = FB_Image.Album_PhotoList.Images.Keys[j].ToString();
-                    item.Name = FB_Image.Dict_AlbumID[j];
+                    item.Name = FB_Image.List_AlbumID[j];
                     item.ImageIndex = j;
                     this.ListViewalbumList.Items.Add(item);
                 }
+                string path = Path.Combine(FB_Image.RelativeDirectory, FB_Image.AlbumDirectory);
+                Common.SerializeObject(FB_Image.List_AlbumInfo, path);
+
+              
 
             }
             catch (Exception ex)
@@ -180,38 +186,40 @@ namespace FacebookImageUpload
             }
         }
 
-        private void btnAuto_Click(object sender, EventArgs e)
+        private async void btnAuto_Click(object sender, EventArgs e)
         {
             float ratio = 5.0F;
-            while (ratio > FB_Image.RatioMax )
-            {
-                Upload_Picture_FB(tbImagePath.Text, browseImage);
-                Download_Picture_FACEBOOK(browseImage);
-                ratio = ((float)browseImage.UpFileSize/(float)browseImage.DownFileSize);
-                lbImagePath.Text = "Your ratio is: " + ratio.ToString();
-
-            }
-
-            MessageBox.Show("Ratio is " + ratio);
-            lbImageName.Text = browseImage.FileName;
-            lbImagePath.Text = browseImage.DownFileSize.ToString();
-
-        }
-
-        private async void btnTask_Click(object sender, EventArgs e)
-        {
-            btnTask.Enabled = false;
+            btnAuto.Enabled = false;
+            pbStatus.Value = 0;
             try
             {
-                var progress = new Progress<string>(s => lbImagePath.Text = s);
-                await Task.Factory.StartNew(()=>LongWork(progress),TaskCreationOptions.LongRunning);
+                var progress = new Progress<int>(s => { pbStatus.Value = s; });
+                await Task.Factory.StartNew(() => AutoUploadAndDownload(progress,tbImagePath.Text,browseImage,ref ratio), TaskCreationOptions.LongRunning);
 
             }
             catch (Exception ex)
             {
                 Log(ex);
             }
-            btnTask.Enabled = true;
+
+            btnAuto.Enabled = true;
+            MessageBox.Show("Ratio is " + ratio);
+            lbImageName.Text = browseImage.FileName;
+            lbImagePath.Text = browseImage.DownFileSize.ToString();
+
         }
+
+        private  void btnTask_Click(object sender, EventArgs e)
+        {
+            List<AlbumInfo> album = new List<AlbumInfo>();
+            for (int i = 0; i < 3; i++)
+            {
+                album.Add(new AlbumInfo(i.ToString(), "album " + i.ToString(), "d:\\"));
+            }
+            string path = Path.Combine(FB_Image.RelativeDirectory, FB_Image.AlbumDirectory);
+            Common.SerializeObject(album, path);
+            
+        }
+
     }
 }

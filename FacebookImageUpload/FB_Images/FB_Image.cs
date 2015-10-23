@@ -17,11 +17,13 @@ namespace FacebookImageUpload.FB_Images
         public static string RelativeDirectory =
             System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public static string LogDirectory = "Log/";
+        public static string AlbumDirectory = "Album_Save/album.xml";
         public static string DefaultAlbumID = "";
         public static int ImageSize = 960;
         public static float RatioMax = 1.25F;
         public static float RatioMin = 0.9F;
-        public static Dictionary<int, string> Dict_AlbumID;
+        public static List<string> List_AlbumID;
+        public static List<AlbumInfo> List_AlbumInfo = new List<AlbumInfo>();
         public static ImageList Album_PhotoList;
         string imageID;
         string fileName;

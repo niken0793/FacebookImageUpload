@@ -36,4 +36,22 @@ namespace FacebookImageUpload
             return result.name;
         }
     }
+
+    [Serializable]
+    public class AlbumInfo
+    {
+        public string id;
+        public string name;
+        public string path;
+
+        public AlbumInfo()
+        {
+        }
+        public AlbumInfo(string paramID, string paramName, string paramPath)
+        {
+            id = paramID;
+            name = paramName;
+            path = paramPath;
+        }
+    }
 }
