@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reflection;
+using System.Drawing.Imaging;
+using System.Windows.Forms;
+
 
 namespace FacebookImageUpload.FB_Images
 {
@@ -10,10 +14,15 @@ namespace FacebookImageUpload.FB_Images
         public static string AccessToken = "CAAVUMKQz7ZB0BAJG21S5gyhrBOpK7qvIZCViGPfbwMYckHWhXy8nPYcI5ZBxQOMZCjz5ieT9IydD6hDiE7sLEn6taU3K7ztbmZCgcHohnLqQw3vZAJPdXs5LjefrOEy4fIxQSPWXMe57n1TBCtmqUiWHdr4JSyq5ujBtQXWYlg5pdZBpQJncIvfU2rvPIkslQZCaZAs9ZAf8CRpQZDZD";
         public static int Temp = 0;
         public static string BaseDirectory = @"E:\Tai lieu UIT\Khoa luan\Test\";
+        public static string RelativeDirectory =
+            System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        public static string LogDirectory = "Log/";
         public static string DefaultAlbumID = "";
         public static int ImageSize = 960;
         public static float RatioMax = 1.25F;
         public static float RatioMin = 0.9F;
+        public static Dictionary<int, string> Dict_AlbumID;
+        public static ImageList Album_PhotoList;
         string imageID;
         string fileName;
         string fileNameWithOutExtension;

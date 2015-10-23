@@ -8,6 +8,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 using Facebook; // PM
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
@@ -136,67 +137,35 @@ namespace FacebookImageUpload
             MessageBox.Show(ratio.ToString());        
         }
 
-        private void btngetAlbumlist_Click(object sender, EventArgs e)
+        private async void btngetAlbumlist_Click(object sender, EventArgs e)
         {
-            var fb = new FacebookClient(FB_Image.AccessToken);
-            dynamic albums = fb.Get("me?fields=albums"); // Get album information
-            string json_string = JsonConvert.SerializeObject(albums); // parse response sang json
-            var json = JObject.Parse(json_string);
-            int i = 0;
-            ImageList photoList = new ImageList(); // ImageList
-            photoList.TransparentColor = Color.Blue;
-            photoList.ColorDepth = ColorDepth.Depth32Bit;
-            photoList.ImageSize = new Size(50, 50);
-
-            Dictionary<int, string> dic_albumId = new Dictionary<int, string>();
-
-            foreach (var obj in json["albums"]["data"])
+            btngetAlbumlist.Enabled = false;
+            pbStatus.Maximum = 100;
+            pbStatus.Step = 1;
+            try
             {
-                string albumName = (string)obj["name"];
+                var progress = new Progress<int>(s => { pbStatus.Value = s; lbImagePath.Text = s.ToString(); });
+                await Task.Factory.StartNew(() => GetAlbumList(progress), TaskCreationOptions.LongRunning);
+                
+                this.ListViewalbumList.View = View.LargeIcon;
+                this.ListViewalbumList.LargeImageList = FB_Image.Album_PhotoList;
 
-                dynamic coverPhotos = fb.Get(obj["id"].ToString() + "?fields=cover_photo");
-                string coverPhotos_json_string = JsonConvert.SerializeObject(coverPhotos); // parse response sang json
-                var coverPhotos_json = JObject.Parse(coverPhotos_json_string);
-
-                string cover_photo_id = (string)coverPhotos_json["id"];
-                dynamic cover_link = fb.Get(cover_photo_id + "?fields=picture");
-                string cover_link_json_string = JsonConvert.SerializeObject(cover_link); // parse response sang json
-                var cover_link_json = JObject.Parse(cover_link_json_string);
-
-                /* download ảnh */
-                using (WebClient webClient = new WebClient())
+                for (int j = 0; j < FB_Image.Album_PhotoList.Images.Count; j++)
                 {
-                    byte[] data = webClient.DownloadData((string)cover_link_json["picture"]["data"]["url"]);
-
-                    using (MemoryStream mem = new MemoryStream(data))
-                    {
-                        using (var yourImage = Image.FromStream(mem))
-                        {
-                            yourImage.Save(FB_Image.BaseDirectory + obj["id"].ToString() + ".jpg", ImageFormat.Jpeg);
-                            string img_url = FB_Image.BaseDirectory + obj["id"].ToString() + ".jpg";
-                            photoList.Images.Add(Image.FromFile(img_url));
-                            photoList.Images.SetKeyName(i, albumName);
-                            dic_albumId.Add(i, obj["id"].ToString());
-                            i++;
-                        }
-                    }
-
+                    ListViewItem item = new ListViewItem();
+                    item.Text = FB_Image.Album_PhotoList.Images.Keys[j].ToString();
+                    item.Name = FB_Image.Dict_AlbumID[j];
+                    item.ImageIndex = j;
+                    this.ListViewalbumList.Items.Add(item);
                 }
 
-
             }
-
-            this.ListViewalbumList.View = View.LargeIcon;
-            this.ListViewalbumList.LargeImageList = photoList;
-
-            for (int j = 0; j < photoList.Images.Count; j++)
+            catch (Exception ex)
             {
-                ListViewItem item = new ListViewItem();
-                item.Text = photoList.Images.Keys[j].ToString();
-                item.Name = dic_albumId[j];
-                item.ImageIndex = j;
-                this.ListViewalbumList.Items.Add(item);
+                Log(ex);
             }
+            btngetAlbumlist.Enabled = true;
+
         }
 
         private void ListViewalbumList_ItemActivate(object sender, EventArgs e)
@@ -227,6 +196,22 @@ namespace FacebookImageUpload
             lbImageName.Text = browseImage.FileName;
             lbImagePath.Text = browseImage.DownFileSize.ToString();
 
+        }
+
+        private async void btnTask_Click(object sender, EventArgs e)
+        {
+            btnTask.Enabled = false;
+            try
+            {
+                var progress = new Progress<string>(s => lbImagePath.Text = s);
+                await Task.Factory.StartNew(()=>LongWork(progress),TaskCreationOptions.LongRunning);
+
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+            }
+            btnTask.Enabled = true;
         }
     }
 }

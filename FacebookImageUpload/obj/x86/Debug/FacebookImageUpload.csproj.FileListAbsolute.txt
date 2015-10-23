@@ -22,3 +22,4 @@ E:\GitHub\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpl
 E:\GitHub\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.Form1.resources
 E:\GitHub\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.Properties.Resources.resources
 E:\GitHub\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.csproj.GenerateResource.Cache
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\FacebookImageUpload.exe.config

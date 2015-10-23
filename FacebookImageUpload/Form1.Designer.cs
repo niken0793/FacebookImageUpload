@@ -50,6 +50,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabManual = new System.Windows.Forms.TabPage();
+            this.btnTask = new System.Windows.Forms.Button();
             this.lbImagePath = new System.Windows.Forms.Label();
             this.lbImageName = new System.Windows.Forms.Label();
             this.tabAuto = new System.Windows.Forms.TabPage();
@@ -57,6 +58,7 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.pbStatus = new System.Windows.Forms.ProgressBar();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pBoxAlbumCover)).BeginInit();
@@ -274,6 +276,8 @@
             // 
             // tabManual
             // 
+            this.tabManual.Controls.Add(this.pbStatus);
+            this.tabManual.Controls.Add(this.btnTask);
             this.tabManual.Controls.Add(this.lbImagePath);
             this.tabManual.Controls.Add(this.lbImageName);
             this.tabManual.Controls.Add(this.groupBox3);
@@ -286,6 +290,16 @@
             this.tabManual.TabIndex = 0;
             this.tabManual.Text = "Manual";
             this.tabManual.UseVisualStyleBackColor = true;
+            // 
+            // btnTask
+            // 
+            this.btnTask.Location = new System.Drawing.Point(543, 408);
+            this.btnTask.Name = "btnTask";
+            this.btnTask.Size = new System.Drawing.Size(75, 23);
+            this.btnTask.TabIndex = 14;
+            this.btnTask.Text = "Task";
+            this.btnTask.UseVisualStyleBackColor = true;
+            this.btnTask.Click += new System.EventHandler(this.btnTask_Click);
             // 
             // lbImagePath
             // 
@@ -346,6 +360,13 @@
             this.settingToolStripMenuItem1.Size = new System.Drawing.Size(108, 22);
             this.settingToolStripMenuItem1.Text = "Setting";
             // 
+            // pbStatus
+            // 
+            this.pbStatus.Location = new System.Drawing.Point(335, 463);
+            this.pbStatus.Name = "pbStatus";
+            this.pbStatus.Size = new System.Drawing.Size(140, 23);
+            this.pbStatus.TabIndex = 15;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -402,6 +423,8 @@
         private System.Windows.Forms.Button btnAuto;
         private System.Windows.Forms.Label lbImagePath;
         private System.Windows.Forms.Label lbImageName;
+        private System.Windows.Forms.Button btnTask;
+        private System.Windows.Forms.ProgressBar pbStatus;
     }
 }
 
