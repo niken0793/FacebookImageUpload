@@ -203,6 +203,43 @@ namespace FacebookImageUpload
             }
         }
 
+        public void LoadingAlbumList()
+        {
+            string filename = Path.Combine(FB_Image.RelativeDirectory,FB_Image.AlbumDirectory);
+            FB_Image.List_AlbumInfo = Common.DeSerializeObject<List<AlbumInfo>>(filename);
+            if (FB_Image.List_AlbumInfo.Count > 0)
+            {
+                FB_Image.List_AlbumID = new List<string>();
+                FB_Image.Album_PhotoList = new ImageList();
+                FB_Image.Album_PhotoList.TransparentColor = Color.Blue;
+                FB_Image.Album_PhotoList.ColorDepth = ColorDepth.Depth32Bit;
+                FB_Image.Album_PhotoList.ImageSize = new Size(50, 50);
+                for (int i = 0; i < FB_Image.List_AlbumInfo.Count; i++)
+                {
+                    AlbumInfo e = FB_Image.List_AlbumInfo[i];
+                    FB_Image.List_AlbumID.Add(e.id);
+                    FB_Image.Album_PhotoList.Images.Add(Image.FromFile(e.path));
+                    FB_Image.Album_PhotoList.Images.SetKeyName(i, e.name);
+
+                }
+                this.ListViewalbumList.View = View.LargeIcon;
+                this.ListViewalbumList.LargeImageList = FB_Image.Album_PhotoList;
+
+                for (int j = 0; j < FB_Image.Album_PhotoList.Images.Count; j++)
+                {
+                    ListViewItem item = new ListViewItem();
+                    item.Text = FB_Image.Album_PhotoList.Images.Keys[j].ToString();
+                    item.Name = FB_Image.List_AlbumID[j];
+                    item.ImageIndex = j;
+                    this.ListViewalbumList.Items.Add(item);
+                }
+
+
+
+            }
+
+        }
+
    
         public static void Log(Exception message)
         {

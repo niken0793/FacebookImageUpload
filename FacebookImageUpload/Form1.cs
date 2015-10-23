@@ -24,6 +24,7 @@ namespace FacebookImageUpload
         public Form1()
         {
             InitializeComponent();
+            LoadingAlbumList();
         }
 
         FB_Image browseImage = new FB_Image();
