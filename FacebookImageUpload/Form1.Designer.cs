@@ -40,6 +40,8 @@
             this.btngetAlbumlist = new System.Windows.Forms.Button();
             this.ListViewalbumList = new System.Windows.Forms.ListView();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.btnAuto = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
             this.fdOpenfile = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.lbAlbumName = new System.Windows.Forms.Label();
@@ -53,8 +55,8 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.label5 = new System.Windows.Forms.Label();
-            this.btnAuto = new System.Windows.Forms.Button();
+            this.lbImageName = new System.Windows.Forms.Label();
+            this.lbImagePath = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pBoxAlbumCover)).BeginInit();
@@ -159,7 +161,7 @@
             // 
             // ListViewalbumList
             // 
-            this.ListViewalbumList.Location = new System.Drawing.Point(344, 31);
+            this.ListViewalbumList.Location = new System.Drawing.Point(335, 21);
             this.ListViewalbumList.Name = "ListViewalbumList";
             this.ListViewalbumList.Size = new System.Drawing.Size(303, 346);
             this.ListViewalbumList.TabIndex = 9;
@@ -185,6 +187,25 @@
             this.groupBox3.TabIndex = 10;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Album";
+            // 
+            // btnAuto
+            // 
+            this.btnAuto.Location = new System.Drawing.Point(80, 203);
+            this.btnAuto.Name = "btnAuto";
+            this.btnAuto.Size = new System.Drawing.Size(75, 23);
+            this.btnAuto.TabIndex = 11;
+            this.btnAuto.Text = "Auto";
+            this.btnAuto.UseVisualStyleBackColor = true;
+            this.btnAuto.Click += new System.EventHandler(this.btnAuto_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(7, 95);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(54, 13);
+            this.label5.TabIndex = 10;
+            this.label5.Text = "File Path :";
             // 
             // fdOpenfile
             // 
@@ -253,6 +274,8 @@
             // 
             // tabManual
             // 
+            this.tabManual.Controls.Add(this.lbImagePath);
+            this.tabManual.Controls.Add(this.lbImageName);
             this.tabManual.Controls.Add(this.groupBox3);
             this.tabManual.Controls.Add(this.ListViewalbumList);
             this.tabManual.Controls.Add(this.groupBox2);
@@ -269,7 +292,7 @@
             this.tabAuto.Location = new System.Drawing.Point(4, 22);
             this.tabAuto.Name = "tabAuto";
             this.tabAuto.Padding = new System.Windows.Forms.Padding(3);
-            this.tabAuto.Size = new System.Drawing.Size(611, 419);
+            this.tabAuto.Size = new System.Drawing.Size(776, 507);
             this.tabAuto.TabIndex = 1;
             this.tabAuto.Text = "Auto";
             this.tabAuto.UseVisualStyleBackColor = true;
@@ -302,27 +325,26 @@
             // settingToolStripMenuItem1
             // 
             this.settingToolStripMenuItem1.Name = "settingToolStripMenuItem1";
-            this.settingToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.settingToolStripMenuItem1.Size = new System.Drawing.Size(108, 22);
             this.settingToolStripMenuItem1.Text = "Setting";
             // 
-            // label5
+            // lbImageName
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 95);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(54, 13);
-            this.label5.TabIndex = 10;
-            this.label5.Text = "File Path :";
+            this.lbImageName.AutoSize = true;
+            this.lbImageName.Location = new System.Drawing.Point(370, 397);
+            this.lbImageName.Name = "lbImageName";
+            this.lbImageName.Size = new System.Drawing.Size(72, 13);
+            this.lbImageName.TabIndex = 11;
+            this.lbImageName.Text = "lbImageName";
             // 
-            // btnAuto
+            // lbImagePath
             // 
-            this.btnAuto.Location = new System.Drawing.Point(80, 203);
-            this.btnAuto.Name = "btnAuto";
-            this.btnAuto.Size = new System.Drawing.Size(75, 23);
-            this.btnAuto.TabIndex = 11;
-            this.btnAuto.Text = "Auto";
-            this.btnAuto.UseVisualStyleBackColor = true;
-            this.btnAuto.Click += new System.EventHandler(this.btnAuto_Click);
+            this.lbImagePath.AutoSize = true;
+            this.lbImagePath.Location = new System.Drawing.Point(370, 430);
+            this.lbImagePath.Name = "lbImagePath";
+            this.lbImagePath.Size = new System.Drawing.Size(35, 13);
+            this.lbImagePath.TabIndex = 13;
+            this.lbImagePath.Text = "label8";
             // 
             // Form1
             // 
@@ -341,6 +363,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pBoxAlbumCover)).EndInit();
             this.tabControl.ResumeLayout(false);
             this.tabManual.ResumeLayout(false);
+            this.tabManual.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -377,6 +400,8 @@
         private System.Windows.Forms.ToolStripMenuItem settingToolStripMenuItem1;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button btnAuto;
+        private System.Windows.Forms.Label lbImagePath;
+        private System.Windows.Forms.Label lbImageName;
     }
 }
 

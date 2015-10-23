@@ -65,7 +65,7 @@ namespace FacebookImageUpload
             {
                 int image_height = Int32.Parse((string)imagesJson[i]["height"]);
                 int image_width = Int32.Parse((string)imagesJson[i]["width"]);
-                if (image_height == 960 && image_width == 960)
+                if (image_height == FB_Image.ImageSize|| image_width == FB_Image.ImageSize)
                 {
                     source_url = imagesJson[i]["source"];
                     break;
@@ -88,8 +88,10 @@ namespace FacebookImageUpload
                 {
                     using (var yourImage = Image.FromStream(mem))
                     {
-                        yourImage.Save(FB_Image.BaseDirectory + browseImage.FileNameWithOutExtension + "_" + temp + ".jpg", ImageFormat.Jpeg);
+                        string new_path = FB_Image.BaseDirectory + browseImage.FileNameWithOutExtension + "_" + temp + ".jpg";
+                        yourImage.Save(new_path, ImageFormat.Jpeg);
                         browseImage.DownFileSize = new FileInfo(FB_Image.BaseDirectory + browseImage.FileNameWithOutExtension + "_" + temp + ".jpg").Length;
+                        tbImagePath.Text = new_path;
                     }
                 }
 

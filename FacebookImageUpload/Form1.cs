@@ -53,6 +53,7 @@ namespace FacebookImageUpload
         }
         private void uploadImage_Click(object sender, EventArgs e)
         {
+            #region comment1
             //upload photo
             //try
             //{
@@ -74,6 +75,7 @@ namespace FacebookImageUpload
             //{
             //    MessageBox.Show(ex.Message);
             //}
+            #endregion
             Upload_Picture_FB(tbImagePath.Text, browseImage);
             MessageBox.Show("Your picture ID is: " + browseImage.ImageID);
             
@@ -82,6 +84,8 @@ namespace FacebookImageUpload
 
         private void downloadImage_Click(object sender, EventArgs e)
         {
+
+            #region commnet1
             //temp++; // biến để đặt tên
             //var fb = new FacebookClient(FB_Image.AccessToken);
             //dynamic res = fb.Get(browseImage.ImageID + "?fields=images");  // query đường dẫn + độ phân giải ảnh
@@ -126,8 +130,9 @@ namespace FacebookImageUpload
             //    }
 
             //}
+            #endregion
             Download_Picture_FACEBOOK(browseImage);
-            long ratio = browseImage.UpFileSize / browseImage.DownFileSize; // lấy tỉ lệ
+            float ratio = (float)(browseImage.UpFileSize / browseImage.DownFileSize); // lấy tỉ lệ
             MessageBox.Show(ratio.ToString());        
         }
 
@@ -208,6 +213,19 @@ namespace FacebookImageUpload
 
         private void btnAuto_Click(object sender, EventArgs e)
         {
+            float ratio = 5.0F;
+            while (ratio > FB_Image.RatioMax )
+            {
+                Upload_Picture_FB(tbImagePath.Text, browseImage);
+                Download_Picture_FACEBOOK(browseImage);
+                ratio = (float)(browseImage.UpFileSize/browseImage.DownFileSize);
+                lbImagePath.Text = "Your ratio is: " + ratio.ToString();
+
+            }
+
+            MessageBox.Show("Ratio is " + ratio);
+            lbImageName.Text = browseImage.FileName;
+            lbImagePath.Text = browseImage.DownFileSize.ToString();
 
         }
     }
