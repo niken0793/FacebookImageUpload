@@ -28,6 +28,13 @@ namespace FacebookImageUpload
             //upload photo
             try
             {
+                browseImage.FileName = Path.GetFileName(filename); // lấy file name
+                browseImage.FileNameWithOutExtension = Path.GetFileNameWithoutExtension(filename); // lấy file name ko có phần mở rộng .jpg
+                browseImage.UpFileSize = new FileInfo(filename).Length; // lấy file size
+                var image_source = Image.FromFile(filename);
+                browseImage.Height = image_source.Height;
+                browseImage.Width = image_source.Width;
+
                 var imgstream = File.OpenRead(filename);
                 var fb = new FacebookClient(FB_Image.AccessToken);
                 dynamic res = fb.Post(lbAlbumId.Text + "/photos", new

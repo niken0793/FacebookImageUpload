@@ -12,7 +12,7 @@ namespace FacebookImageUpload.FB_Images
         public static string BaseDirectory = @"E:\Tai lieu UIT\Khoa luan\Test\";
         public static string DefaultAlbumID = "";
         public static int ImageSize = 960;
-        public static float RatioMax = 1.1F;
+        public static float RatioMax = 1.25F;
         public static float RatioMin = 0.9F;
         string imageID;
         string fileName;

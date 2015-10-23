@@ -218,7 +218,7 @@ namespace FacebookImageUpload
             {
                 Upload_Picture_FB(tbImagePath.Text, browseImage);
                 Download_Picture_FACEBOOK(browseImage);
-                ratio = (float)(browseImage.UpFileSize/browseImage.DownFileSize);
+                ratio = ((float)browseImage.UpFileSize/(float)browseImage.DownFileSize);
                 lbImagePath.Text = "Your ratio is: " + ratio.ToString();
 
             }

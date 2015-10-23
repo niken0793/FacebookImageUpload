@@ -50,13 +50,13 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabManual = new System.Windows.Forms.TabPage();
+            this.lbImagePath = new System.Windows.Forms.Label();
+            this.lbImageName = new System.Windows.Forms.Label();
             this.tabAuto = new System.Windows.Forms.TabPage();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.lbImageName = new System.Windows.Forms.Label();
-            this.lbImagePath = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pBoxAlbumCover)).BeginInit();
@@ -240,9 +240,9 @@
             this.lbAlbumId.AutoSize = true;
             this.lbAlbumId.Location = new System.Drawing.Point(116, 67);
             this.lbAlbumId.Name = "lbAlbumId";
-            this.lbAlbumId.Size = new System.Drawing.Size(50, 13);
+            this.lbAlbumId.Size = new System.Drawing.Size(103, 13);
             this.lbAlbumId.TabIndex = 6;
-            this.lbAlbumId.Text = "Album ID";
+            this.lbAlbumId.Text = "1658361464376694";
             // 
             // pBoxAlbumCover
             // 
@@ -287,6 +287,24 @@
             this.tabManual.Text = "Manual";
             this.tabManual.UseVisualStyleBackColor = true;
             // 
+            // lbImagePath
+            // 
+            this.lbImagePath.AutoSize = true;
+            this.lbImagePath.Location = new System.Drawing.Point(370, 430);
+            this.lbImagePath.Name = "lbImagePath";
+            this.lbImagePath.Size = new System.Drawing.Size(35, 13);
+            this.lbImagePath.TabIndex = 13;
+            this.lbImagePath.Text = "label8";
+            // 
+            // lbImageName
+            // 
+            this.lbImageName.AutoSize = true;
+            this.lbImageName.Location = new System.Drawing.Point(370, 397);
+            this.lbImageName.Name = "lbImageName";
+            this.lbImageName.Size = new System.Drawing.Size(72, 13);
+            this.lbImageName.TabIndex = 11;
+            this.lbImageName.Text = "lbImageName";
+            // 
             // tabAuto
             // 
             this.tabAuto.Location = new System.Drawing.Point(4, 22);
@@ -327,24 +345,6 @@
             this.settingToolStripMenuItem1.Name = "settingToolStripMenuItem1";
             this.settingToolStripMenuItem1.Size = new System.Drawing.Size(108, 22);
             this.settingToolStripMenuItem1.Text = "Setting";
-            // 
-            // lbImageName
-            // 
-            this.lbImageName.AutoSize = true;
-            this.lbImageName.Location = new System.Drawing.Point(370, 397);
-            this.lbImageName.Name = "lbImageName";
-            this.lbImageName.Size = new System.Drawing.Size(72, 13);
-            this.lbImageName.TabIndex = 11;
-            this.lbImageName.Text = "lbImageName";
-            // 
-            // lbImagePath
-            // 
-            this.lbImagePath.AutoSize = true;
-            this.lbImagePath.Location = new System.Drawing.Point(370, 430);
-            this.lbImagePath.Name = "lbImagePath";
-            this.lbImagePath.Size = new System.Drawing.Size(35, 13);
-            this.lbImagePath.TabIndex = 13;
-            this.lbImagePath.Text = "label8";
             // 
             // Form1
             // 
