@@ -18,9 +18,6 @@ namespace FacebookImageUpload.FB_Images
             System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public static string LogDirectory = "Log/";
         public static string AlbumDirectory = "Album_Save/album.xml";
-        public static string LibDiracory = "Lib";
-        public static string jpHide = "jphide.exe";
-        public static string jpseek = "jpseek.exe";
         public static string DefaultAlbumID = "";
         public static int ImageSize = 960;
         public static float RatioMax = 1.25F;

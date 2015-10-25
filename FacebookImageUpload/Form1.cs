@@ -13,7 +13,6 @@ using Facebook; // PM
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.IO;
-using System.Diagnostics;
 using System.Net;
 using System.Drawing.Imaging;
 using FacebookImageUpload.FB_Images;
@@ -211,55 +210,16 @@ namespace FacebookImageUpload
 
         }
 
-        public static StringBuilder jpOutPut;
         private  void btnTask_Click(object sender, EventArgs e)
         {
-            //Process jpHide = new Process();
-            //jpHide.StartInfo.FileName = Path.Combine(FB_Image.RelativeDirectory, FB_Image.LibDiracory, FB_Image.jpHide);
-            //jpHide.StartInfo.UseShellExecute = false;
-            //jpHide.StartInfo.RedirectStandardOutput = true;
-            // jpOutPut = new StringBuilder("");
-
-            //jpHide.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
-            //jpHide.StartInfo.RedirectStandardInput = true;
-            //jpHide.StartInfo.Arguments="cipher1.jpg cipher2.jpg hello.txt";
-            //jpHide.Start();
-            //StreamWriter jpStreamWriter = jpHide.StandardInput;
-            //jpHide.BeginOutputReadLine();
-            //jpStreamWriter.WriteLine("123");
-            //jpStreamWriter.WriteLine("123");
-            //jpStreamWriter.Close();
-            //jpHide.WaitForExit();
-            //jpHide.Close();
-
-            var proc = new Process
+            List<AlbumInfo> album = new List<AlbumInfo>();
+            for (int i = 0; i < 3; i++)
             {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = Path.Combine(FB_Image.RelativeDirectory, FB_Image.LibDiracory, "jphide"),
-                    Arguments = "cipher1.jpg cipher2.jpg hello.txt 1",
-                }
-            };
-            proc.Start();
-            
-            proc.WaitForExit();
-            while (!proc.HasExited)
-            {
-                string line = proc.StandardOutput.ReadLine();
-                MessageBox.Show(line);
-                // do something with line
+                album.Add(new AlbumInfo(i.ToString(), "album " + i.ToString(), "d:\\"));
             }
-
+            string path = Path.Combine(FB_Image.RelativeDirectory, FB_Image.AlbumDirectory);
+            Common.SerializeObject(album, path);
             
-        }
-        private static void OutputHandler(object sendingProcess,
-          DataReceivedEventArgs outLine)
-        {
-            // Collect the sort command output.
-            if (!String.IsNullOrEmpty(outLine.Data))
-            {
-                MessageBox.Show(outLine.Data);
-            }
         }
 
     }
