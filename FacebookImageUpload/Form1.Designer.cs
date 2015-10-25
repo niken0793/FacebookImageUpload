@@ -50,6 +50,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabManual = new System.Windows.Forms.TabPage();
+            this.pbStatus = new System.Windows.Forms.ProgressBar();
             this.btnTask = new System.Windows.Forms.Button();
             this.lbImagePath = new System.Windows.Forms.Label();
             this.lbImageName = new System.Windows.Forms.Label();
@@ -58,7 +59,7 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.pbStatus = new System.Windows.Forms.ProgressBar();
+            this.tbMessage = new System.Windows.Forms.TextBox();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pBoxAlbumCover)).BeginInit();
@@ -165,7 +166,7 @@
             // 
             this.ListViewalbumList.Location = new System.Drawing.Point(335, 21);
             this.ListViewalbumList.Name = "ListViewalbumList";
-            this.ListViewalbumList.Size = new System.Drawing.Size(303, 346);
+            this.ListViewalbumList.Size = new System.Drawing.Size(303, 135);
             this.ListViewalbumList.TabIndex = 9;
             this.ListViewalbumList.UseCompatibleStateImageBehavior = false;
             this.ListViewalbumList.ItemActivate += new System.EventHandler(this.ListViewalbumList_ItemActivate);
@@ -276,6 +277,7 @@
             // 
             // tabManual
             // 
+            this.tabManual.Controls.Add(this.tbMessage);
             this.tabManual.Controls.Add(this.pbStatus);
             this.tabManual.Controls.Add(this.btnTask);
             this.tabManual.Controls.Add(this.lbImagePath);
@@ -290,6 +292,13 @@
             this.tabManual.TabIndex = 0;
             this.tabManual.Text = "Manual";
             this.tabManual.UseVisualStyleBackColor = true;
+            // 
+            // pbStatus
+            // 
+            this.pbStatus.Location = new System.Drawing.Point(335, 463);
+            this.pbStatus.Name = "pbStatus";
+            this.pbStatus.Size = new System.Drawing.Size(140, 23);
+            this.pbStatus.TabIndex = 15;
             // 
             // btnTask
             // 
@@ -360,12 +369,13 @@
             this.settingToolStripMenuItem1.Size = new System.Drawing.Size(108, 22);
             this.settingToolStripMenuItem1.Text = "Setting";
             // 
-            // pbStatus
+            // tbMessage
             // 
-            this.pbStatus.Location = new System.Drawing.Point(335, 463);
-            this.pbStatus.Name = "pbStatus";
-            this.pbStatus.Size = new System.Drawing.Size(140, 23);
-            this.pbStatus.TabIndex = 15;
+            this.tbMessage.Location = new System.Drawing.Point(335, 197);
+            this.tbMessage.Multiline = true;
+            this.tbMessage.Name = "tbMessage";
+            this.tbMessage.Size = new System.Drawing.Size(303, 171);
+            this.tbMessage.TabIndex = 16;
             // 
             // Form1
             // 
@@ -425,6 +435,7 @@
         private System.Windows.Forms.Label lbImageName;
         private System.Windows.Forms.Button btnTask;
         private System.Windows.Forms.ProgressBar pbStatus;
+        private System.Windows.Forms.TextBox tbMessage;
     }
 }
 

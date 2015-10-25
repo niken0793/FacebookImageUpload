@@ -207,6 +207,8 @@ namespace FacebookImageUpload
         {
             string filename = Path.Combine(FB_Image.RelativeDirectory,FB_Image.AlbumDirectory);
             FB_Image.List_AlbumInfo = Common.DeSerializeObject<List<AlbumInfo>>(filename);
+            if (FB_Image.List_AlbumInfo == null)
+                return;
             if (FB_Image.List_AlbumInfo.Count > 0)
             {
                 FB_Image.List_AlbumID = new List<string>();
