@@ -23,3 +23,16 @@ E:\GitHub\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpl
 E:\GitHub\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.Properties.Resources.resources
 E:\GitHub\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.csproj.GenerateResource.Cache
 E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\FacebookImageUpload.exe.config
+C:\Users\NIKEN\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\FacebookImageUpload.exe.config
+C:\Users\NIKEN\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.exe
+C:\Users\NIKEN\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\FacebookImageUpload.exe
+C:\Users\NIKEN\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\FacebookImageUpload.pdb
+C:\Users\NIKEN\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\Facebook.dll
+C:\Users\NIKEN\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\Newtonsoft.Json.dll
+C:\Users\NIKEN\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\Facebook.xml
+C:\Users\NIKEN\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\Newtonsoft.Json.xml
+C:\Users\NIKEN\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.csprojResolveAssemblyReference.cache
+C:\Users\NIKEN\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.Form1.resources
+C:\Users\NIKEN\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.Properties.Resources.resources
+C:\Users\NIKEN\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.csproj.GenerateResource.Cache
+C:\Users\NIKEN\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.pdb

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.btnUploadImage = new System.Windows.Forms.Button();
             this.tbImagePath = new System.Windows.Forms.TextBox();
             this.btnDownloadImage = new System.Windows.Forms.Button();
@@ -50,6 +51,18 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabManual = new System.Windows.Forms.TabPage();
+            this.gbJPHideAndSeek = new System.Windows.Forms.GroupBox();
+            this.fdHiddenFile = new System.Windows.Forms.Button();
+            this.fdJpgImageOpen = new System.Windows.Forms.Button();
+            this.tbHiddenFile = new System.Windows.Forms.TextBox();
+            this.tbJpgImage = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.lbImageInput = new System.Windows.Forms.Label();
+            this.btnJPSeek = new System.Windows.Forms.Button();
+            this.btnJPHide = new System.Windows.Forms.Button();
+            this.tbPassPhrase = new System.Windows.Forms.TextBox();
+            this.lbPassPhrase = new System.Windows.Forms.Label();
+            this.pbStatus = new System.Windows.Forms.ProgressBar();
             this.btnTask = new System.Windows.Forms.Button();
             this.lbImagePath = new System.Windows.Forms.Label();
             this.lbImageName = new System.Windows.Forms.Label();
@@ -58,12 +71,17 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.pbStatus = new System.Windows.Forms.ProgressBar();
+            this.timerEncodeInput = new System.Windows.Forms.Timer(this.components);
+            this.timerDecodeInput = new System.Windows.Forms.Timer(this.components);
+            this.btnStegoRun = new System.Windows.Forms.Button();
+            this.lbImageDir = new System.Windows.Forms.Label();
+            this.tbMessage = new System.Windows.Forms.TextBox();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pBoxAlbumCover)).BeginInit();
             this.tabControl.SuspendLayout();
             this.tabManual.SuspendLayout();
+            this.gbJPHideAndSeek.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -165,7 +183,7 @@
             // 
             this.ListViewalbumList.Location = new System.Drawing.Point(335, 21);
             this.ListViewalbumList.Name = "ListViewalbumList";
-            this.ListViewalbumList.Size = new System.Drawing.Size(303, 346);
+            this.ListViewalbumList.Size = new System.Drawing.Size(303, 135);
             this.ListViewalbumList.TabIndex = 9;
             this.ListViewalbumList.UseCompatibleStateImageBehavior = false;
             this.ListViewalbumList.ItemActivate += new System.EventHandler(this.ListViewalbumList_ItemActivate);
@@ -271,11 +289,14 @@
             this.tabControl.Location = new System.Drawing.Point(-1, 27);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(784, 533);
+            this.tabControl.Size = new System.Drawing.Size(892, 533);
             this.tabControl.TabIndex = 11;
             // 
             // tabManual
             // 
+            this.tabManual.Controls.Add(this.lbImageDir);
+            this.tabManual.Controls.Add(this.gbJPHideAndSeek);
+            this.tabManual.Controls.Add(this.tbMessage);
             this.tabManual.Controls.Add(this.pbStatus);
             this.tabManual.Controls.Add(this.btnTask);
             this.tabManual.Controls.Add(this.lbImagePath);
@@ -286,14 +307,129 @@
             this.tabManual.Location = new System.Drawing.Point(4, 22);
             this.tabManual.Name = "tabManual";
             this.tabManual.Padding = new System.Windows.Forms.Padding(3);
-            this.tabManual.Size = new System.Drawing.Size(776, 507);
+            this.tabManual.Size = new System.Drawing.Size(884, 507);
             this.tabManual.TabIndex = 0;
             this.tabManual.Text = "Manual";
             this.tabManual.UseVisualStyleBackColor = true;
             // 
+            // gbJPHideAndSeek
+            // 
+            this.gbJPHideAndSeek.Controls.Add(this.btnStegoRun);
+            this.gbJPHideAndSeek.Controls.Add(this.fdHiddenFile);
+            this.gbJPHideAndSeek.Controls.Add(this.fdJpgImageOpen);
+            this.gbJPHideAndSeek.Controls.Add(this.tbHiddenFile);
+            this.gbJPHideAndSeek.Controls.Add(this.tbJpgImage);
+            this.gbJPHideAndSeek.Controls.Add(this.label6);
+            this.gbJPHideAndSeek.Controls.Add(this.lbImageInput);
+            this.gbJPHideAndSeek.Controls.Add(this.btnJPSeek);
+            this.gbJPHideAndSeek.Controls.Add(this.btnJPHide);
+            this.gbJPHideAndSeek.Controls.Add(this.tbPassPhrase);
+            this.gbJPHideAndSeek.Controls.Add(this.lbPassPhrase);
+            this.gbJPHideAndSeek.Location = new System.Drawing.Point(651, 21);
+            this.gbJPHideAndSeek.Name = "gbJPHideAndSeek";
+            this.gbJPHideAndSeek.Size = new System.Drawing.Size(225, 304);
+            this.gbJPHideAndSeek.TabIndex = 16;
+            this.gbJPHideAndSeek.TabStop = false;
+            this.gbJPHideAndSeek.Text = "JP Hide and Seek";
+            // 
+            // fdHiddenFile
+            // 
+            this.fdHiddenFile.Location = new System.Drawing.Point(184, 98);
+            this.fdHiddenFile.Name = "fdHiddenFile";
+            this.fdHiddenFile.Size = new System.Drawing.Size(30, 23);
+            this.fdHiddenFile.TabIndex = 9;
+            this.fdHiddenFile.Text = "...";
+            this.fdHiddenFile.UseVisualStyleBackColor = true;
+            this.fdHiddenFile.Click += new System.EventHandler(this.fdHiddenFile_Click);
+            // 
+            // fdJpgImageOpen
+            // 
+            this.fdJpgImageOpen.Location = new System.Drawing.Point(184, 49);
+            this.fdJpgImageOpen.Name = "fdJpgImageOpen";
+            this.fdJpgImageOpen.Size = new System.Drawing.Size(30, 23);
+            this.fdJpgImageOpen.TabIndex = 8;
+            this.fdJpgImageOpen.Text = "...";
+            this.fdJpgImageOpen.UseVisualStyleBackColor = true;
+            this.fdJpgImageOpen.Click += new System.EventHandler(this.fdJpgImageOpen_Click);
+            // 
+            // tbHiddenFile
+            // 
+            this.tbHiddenFile.Location = new System.Drawing.Point(15, 100);
+            this.tbHiddenFile.Name = "tbHiddenFile";
+            this.tbHiddenFile.Size = new System.Drawing.Size(159, 20);
+            this.tbHiddenFile.TabIndex = 7;
+            // 
+            // tbJpgImage
+            // 
+            this.tbJpgImage.Location = new System.Drawing.Point(13, 49);
+            this.tbJpgImage.Name = "tbJpgImage";
+            this.tbJpgImage.Size = new System.Drawing.Size(161, 20);
+            this.tbJpgImage.TabIndex = 6;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(11, 81);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(60, 13);
+            this.label6.TabIndex = 5;
+            this.label6.Text = "Hidden File";
+            // 
+            // lbImageInput
+            // 
+            this.lbImageInput.AutoSize = true;
+            this.lbImageInput.Location = new System.Drawing.Point(12, 28);
+            this.lbImageInput.Name = "lbImageInput";
+            this.lbImageInput.Size = new System.Drawing.Size(89, 13);
+            this.lbImageInput.TabIndex = 4;
+            this.lbImageInput.Text = "Jpeg Image Input";
+            // 
+            // btnJPSeek
+            // 
+            this.btnJPSeek.Location = new System.Drawing.Point(77, 226);
+            this.btnJPSeek.Name = "btnJPSeek";
+            this.btnJPSeek.Size = new System.Drawing.Size(75, 23);
+            this.btnJPSeek.TabIndex = 3;
+            this.btnJPSeek.Text = "JP Seek";
+            this.btnJPSeek.UseVisualStyleBackColor = true;
+            this.btnJPSeek.Click += new System.EventHandler(this.btnJPSeek_Click);
+            // 
+            // btnJPHide
+            // 
+            this.btnJPHide.Location = new System.Drawing.Point(77, 196);
+            this.btnJPHide.Name = "btnJPHide";
+            this.btnJPHide.Size = new System.Drawing.Size(75, 23);
+            this.btnJPHide.TabIndex = 2;
+            this.btnJPHide.Text = "JP Hide";
+            this.btnJPHide.UseVisualStyleBackColor = true;
+            this.btnJPHide.Click += new System.EventHandler(this.btnJPHide_Click);
+            // 
+            // tbPassPhrase
+            // 
+            this.tbPassPhrase.Location = new System.Drawing.Point(15, 157);
+            this.tbPassPhrase.Name = "tbPassPhrase";
+            this.tbPassPhrase.Size = new System.Drawing.Size(159, 20);
+            this.tbPassPhrase.TabIndex = 1;
+            // 
+            // lbPassPhrase
+            // 
+            this.lbPassPhrase.AutoSize = true;
+            this.lbPassPhrase.Location = new System.Drawing.Point(12, 135);
+            this.lbPassPhrase.Name = "lbPassPhrase";
+            this.lbPassPhrase.Size = new System.Drawing.Size(66, 13);
+            this.lbPassPhrase.TabIndex = 0;
+            this.lbPassPhrase.Text = "Pass Phrase";
+            // 
+            // pbStatus
+            // 
+            this.pbStatus.Location = new System.Drawing.Point(335, 463);
+            this.pbStatus.Name = "pbStatus";
+            this.pbStatus.Size = new System.Drawing.Size(140, 23);
+            this.pbStatus.TabIndex = 15;
+            // 
             // btnTask
             // 
-            this.btnTask.Location = new System.Drawing.Point(543, 408);
+            this.btnTask.Location = new System.Drawing.Point(545, 392);
             this.btnTask.Name = "btnTask";
             this.btnTask.Size = new System.Drawing.Size(75, 23);
             this.btnTask.TabIndex = 14;
@@ -324,7 +460,7 @@
             this.tabAuto.Location = new System.Drawing.Point(4, 22);
             this.tabAuto.Name = "tabAuto";
             this.tabAuto.Padding = new System.Windows.Forms.Padding(3);
-            this.tabAuto.Size = new System.Drawing.Size(776, 507);
+            this.tabAuto.Size = new System.Drawing.Size(884, 507);
             this.tabAuto.TabIndex = 1;
             this.tabAuto.Text = "Auto";
             this.tabAuto.UseVisualStyleBackColor = true;
@@ -336,14 +472,14 @@
             this.settingToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(783, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(891, 24);
             this.menuStrip1.TabIndex = 12;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // settingToolStripMenuItem
@@ -351,27 +487,53 @@
             this.settingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.settingToolStripMenuItem1});
             this.settingToolStripMenuItem.Name = "settingToolStripMenuItem";
-            this.settingToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.settingToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
             this.settingToolStripMenuItem.Text = "Tool";
             // 
             // settingToolStripMenuItem1
             // 
             this.settingToolStripMenuItem1.Name = "settingToolStripMenuItem1";
-            this.settingToolStripMenuItem1.Size = new System.Drawing.Size(108, 22);
+            this.settingToolStripMenuItem1.Size = new System.Drawing.Size(111, 22);
             this.settingToolStripMenuItem1.Text = "Setting";
             // 
-            // pbStatus
+            // timerEncodeInput
             // 
-            this.pbStatus.Location = new System.Drawing.Point(335, 463);
-            this.pbStatus.Name = "pbStatus";
-            this.pbStatus.Size = new System.Drawing.Size(140, 23);
-            this.pbStatus.TabIndex = 15;
+            this.timerEncodeInput.Tick += new System.EventHandler(this.timerPassInput_Tick);
+            // 
+            // timerDecodeInput
+            // 
+            this.timerDecodeInput.Tick += new System.EventHandler(this.timerDecodeInput_Tick);
+            // 
+            // btnStegoRun
+            // 
+            this.btnStegoRun.Location = new System.Drawing.Point(77, 263);
+            this.btnStegoRun.Name = "btnStegoRun";
+            this.btnStegoRun.Size = new System.Drawing.Size(75, 23);
+            this.btnStegoRun.TabIndex = 10;
+            this.btnStegoRun.Text = "Run";
+            this.btnStegoRun.UseVisualStyleBackColor = true;
+            // 
+            // lbImageDir
+            // 
+            this.lbImageDir.AutoSize = true;
+            this.lbImageDir.Location = new System.Drawing.Point(546, 431);
+            this.lbImageDir.Name = "lbImageDir";
+            this.lbImageDir.Size = new System.Drawing.Size(49, 13);
+            this.lbImageDir.TabIndex = 17;
+            this.lbImageDir.Text = "ImageDir";
+            // tbMessage
+            // 
+            this.tbMessage.Location = new System.Drawing.Point(335, 197);
+            this.tbMessage.Multiline = true;
+            this.tbMessage.Name = "tbMessage";
+            this.tbMessage.Size = new System.Drawing.Size(303, 171);
+            this.tbMessage.TabIndex = 16;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(783, 556);
+            this.ClientSize = new System.Drawing.Size(891, 556);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -385,6 +547,8 @@
             this.tabControl.ResumeLayout(false);
             this.tabManual.ResumeLayout(false);
             this.tabManual.PerformLayout();
+            this.gbJPHideAndSeek.ResumeLayout(false);
+            this.gbJPHideAndSeek.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -425,6 +589,23 @@
         private System.Windows.Forms.Label lbImageName;
         private System.Windows.Forms.Button btnTask;
         private System.Windows.Forms.ProgressBar pbStatus;
+        private System.Windows.Forms.GroupBox gbJPHideAndSeek;
+        private System.Windows.Forms.Button btnJPSeek;
+        private System.Windows.Forms.Button btnJPHide;
+        private System.Windows.Forms.TextBox tbPassPhrase;
+        private System.Windows.Forms.Label lbPassPhrase;
+        private System.Windows.Forms.Timer timerEncodeInput;
+        private System.Windows.Forms.Button fdHiddenFile;
+        private System.Windows.Forms.Button fdJpgImageOpen;
+        private System.Windows.Forms.TextBox tbHiddenFile;
+        private System.Windows.Forms.TextBox tbJpgImage;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lbImageInput;
+        private System.Windows.Forms.Timer timerDecodeInput;
+        private System.Windows.Forms.Button btnStegoRun;
+        private System.Windows.Forms.Label lbImageDir;
+
+        private System.Windows.Forms.TextBox tbMessage;
     }
 }
 

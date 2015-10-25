@@ -24,7 +24,7 @@ namespace FacebookImageUpload
         public Form1()
         {
             InitializeComponent();
-            LoadingAlbumList();
+            //LoadingAlbumList();
         }
 
         FB_Image browseImage = new FB_Image();
@@ -220,6 +220,35 @@ namespace FacebookImageUpload
             string path = Path.Combine(FB_Image.RelativeDirectory, FB_Image.AlbumDirectory);
             Common.SerializeObject(album, path);
             
+        }
+        private void btnJPHide_Click(object sender, EventArgs e)
+        {
+            btnJPHide_Click_fn();
+        }
+
+        private void fdJpgImageOpen_Click(object sender, EventArgs e)
+        {
+            fdJpgImageOpen_Click_fn();
+        }
+
+        private void fdHiddenFile_Click(object sender, EventArgs e)
+        {
+            fdHiddenFile_Click_fn();
+        }
+
+        private void timerPassInput_Tick(object sender, EventArgs e)
+        {
+            timerPassInput_Tick_fn();
+        }
+
+        private void btnJPSeek_Click(object sender, EventArgs e)
+        {
+            btnJPSeek_Click_fn();
+        }
+
+        private void timerDecodeInput_Tick(object sender, EventArgs e)
+        {
+            timerDecodeInput_Tick_fn();
         }
 
     }
