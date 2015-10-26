@@ -88,6 +88,7 @@ namespace FacebookImageUpload
                 proc.StartInfo.FileName = "cmd.exe";
                 proc.StartInfo.WorkingDirectory = FB_Image.BaseDirectory;
                 proc.StartInfo.Arguments = "/C jphide " + imageName + " " + enImageName + " " + hiddenFileName;
+               
                 proc.Start();
                 timerEncodeInput.Enabled = true;
                 timerEncodeInput.Interval = 5 * 1000;

@@ -51,7 +51,9 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabManual = new System.Windows.Forms.TabPage();
+            this.lbImageDir = new System.Windows.Forms.Label();
             this.gbJPHideAndSeek = new System.Windows.Forms.GroupBox();
+            this.btnStegoRun = new System.Windows.Forms.Button();
             this.fdHiddenFile = new System.Windows.Forms.Button();
             this.fdJpgImageOpen = new System.Windows.Forms.Button();
             this.tbHiddenFile = new System.Windows.Forms.TextBox();
@@ -62,6 +64,7 @@
             this.btnJPHide = new System.Windows.Forms.Button();
             this.tbPassPhrase = new System.Windows.Forms.TextBox();
             this.lbPassPhrase = new System.Windows.Forms.Label();
+            this.tbMessage = new System.Windows.Forms.TextBox();
             this.pbStatus = new System.Windows.Forms.ProgressBar();
             this.btnTask = new System.Windows.Forms.Button();
             this.lbImagePath = new System.Windows.Forms.Label();
@@ -73,9 +76,6 @@
             this.settingToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.timerEncodeInput = new System.Windows.Forms.Timer(this.components);
             this.timerDecodeInput = new System.Windows.Forms.Timer(this.components);
-            this.btnStegoRun = new System.Windows.Forms.Button();
-            this.lbImageDir = new System.Windows.Forms.Label();
-            this.tbMessage = new System.Windows.Forms.TextBox();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pBoxAlbumCover)).BeginInit();
@@ -312,6 +312,15 @@
             this.tabManual.Text = "Manual";
             this.tabManual.UseVisualStyleBackColor = true;
             // 
+            // lbImageDir
+            // 
+            this.lbImageDir.AutoSize = true;
+            this.lbImageDir.Location = new System.Drawing.Point(546, 431);
+            this.lbImageDir.Name = "lbImageDir";
+            this.lbImageDir.Size = new System.Drawing.Size(49, 13);
+            this.lbImageDir.TabIndex = 17;
+            this.lbImageDir.Text = "ImageDir";
+            // 
             // gbJPHideAndSeek
             // 
             this.gbJPHideAndSeek.Controls.Add(this.btnStegoRun);
@@ -331,6 +340,16 @@
             this.gbJPHideAndSeek.TabIndex = 16;
             this.gbJPHideAndSeek.TabStop = false;
             this.gbJPHideAndSeek.Text = "JP Hide and Seek";
+            // 
+            // btnStegoRun
+            // 
+            this.btnStegoRun.Location = new System.Drawing.Point(77, 263);
+            this.btnStegoRun.Name = "btnStegoRun";
+            this.btnStegoRun.Size = new System.Drawing.Size(75, 23);
+            this.btnStegoRun.TabIndex = 10;
+            this.btnStegoRun.Text = "Run";
+            this.btnStegoRun.UseVisualStyleBackColor = true;
+            this.btnStegoRun.Click += new System.EventHandler(this.btnStegoRun_Click);
             // 
             // fdHiddenFile
             // 
@@ -420,6 +439,14 @@
             this.lbPassPhrase.TabIndex = 0;
             this.lbPassPhrase.Text = "Pass Phrase";
             // 
+            // tbMessage
+            // 
+            this.tbMessage.Location = new System.Drawing.Point(335, 197);
+            this.tbMessage.Multiline = true;
+            this.tbMessage.Name = "tbMessage";
+            this.tbMessage.Size = new System.Drawing.Size(303, 171);
+            this.tbMessage.TabIndex = 16;
+            // 
             // pbStatus
             // 
             this.pbStatus.Location = new System.Drawing.Point(335, 463);
@@ -479,7 +506,7 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // settingToolStripMenuItem
@@ -487,13 +514,13 @@
             this.settingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.settingToolStripMenuItem1});
             this.settingToolStripMenuItem.Name = "settingToolStripMenuItem";
-            this.settingToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
+            this.settingToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.settingToolStripMenuItem.Text = "Tool";
             // 
             // settingToolStripMenuItem1
             // 
             this.settingToolStripMenuItem1.Name = "settingToolStripMenuItem1";
-            this.settingToolStripMenuItem1.Size = new System.Drawing.Size(111, 22);
+            this.settingToolStripMenuItem1.Size = new System.Drawing.Size(108, 22);
             this.settingToolStripMenuItem1.Text = "Setting";
             // 
             // timerEncodeInput
@@ -503,31 +530,6 @@
             // timerDecodeInput
             // 
             this.timerDecodeInput.Tick += new System.EventHandler(this.timerDecodeInput_Tick);
-            // 
-            // btnStegoRun
-            // 
-            this.btnStegoRun.Location = new System.Drawing.Point(77, 263);
-            this.btnStegoRun.Name = "btnStegoRun";
-            this.btnStegoRun.Size = new System.Drawing.Size(75, 23);
-            this.btnStegoRun.TabIndex = 10;
-            this.btnStegoRun.Text = "Run";
-            this.btnStegoRun.UseVisualStyleBackColor = true;
-            // 
-            // lbImageDir
-            // 
-            this.lbImageDir.AutoSize = true;
-            this.lbImageDir.Location = new System.Drawing.Point(546, 431);
-            this.lbImageDir.Name = "lbImageDir";
-            this.lbImageDir.Size = new System.Drawing.Size(49, 13);
-            this.lbImageDir.TabIndex = 17;
-            this.lbImageDir.Text = "ImageDir";
-            // tbMessage
-            // 
-            this.tbMessage.Location = new System.Drawing.Point(335, 197);
-            this.tbMessage.Multiline = true;
-            this.tbMessage.Name = "tbMessage";
-            this.tbMessage.Size = new System.Drawing.Size(303, 171);
-            this.tbMessage.TabIndex = 16;
             // 
             // Form1
             // 

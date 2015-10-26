@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Net;
 using System.Drawing.Imaging;
+using System.Diagnostics;
 using FacebookImageUpload.FB_Images;
 
 namespace FacebookImageUpload
@@ -210,17 +211,62 @@ namespace FacebookImageUpload
 
         }
 
+        private static StringBuilder sortOutput = null;
+       private static StreamWriter sortStreamWriter = null;
         private  void btnTask_Click(object sender, EventArgs e)
         {
-            List<AlbumInfo> album = new List<AlbumInfo>();
-            for (int i = 0; i < 3; i++)
-            {
-                album.Add(new AlbumInfo(i.ToString(), "album " + i.ToString(), "d:\\"));
-            }
-            string path = Path.Combine(FB_Image.RelativeDirectory, FB_Image.AlbumDirectory);
-            Common.SerializeObject(album, path);
+
+            Process sortProcess;
+            sortProcess = new Process();
+            sortProcess.StartInfo.FileName = "cmd.exe";
+            sortProcess.StartInfo.WorkingDirectory = Path.Combine(FB_Image.RelativeDirectory,"Lib");
+            sortProcess.StartInfo.Arguments = "/C jphide cipher1.jpg cipher3.jpg hello.txt";
+
+            // Set UseShellExecute to false for redirection.
+            sortProcess.StartInfo.UseShellExecute = false;
+
+            // Redirect the standard output of the sort command.  
+            // This stream is read asynchronously using an event handler.
+            sortProcess.StartInfo.RedirectStandardOutput = true;
+            sortProcess.StartInfo.CreateNoWindow = true;
+            sortOutput = new StringBuilder("");
+
+            // Set our event handler to asynchronously read the sort output.
+            sortProcess.OutputDataReceived += new DataReceivedEventHandler(SortOutputHandler);
+
+            // Redirect standard input as well.  This stream
+            // is used synchronously.
+            sortProcess.StartInfo.RedirectStandardInput = true;
+            
+            // Start the process.
+            sortProcess.Start();
+            // Use a stream writer to synchronously write the sort input.
+          
+
+            // Start the asynchronous read of the sort output stream.
+            sortProcess.BeginOutputReadLine();
+            sortStreamWriter = sortProcess.StandardInput;
+            sortStreamWriter.WriteLine("abc");
+            sortStreamWriter.WriteLine("\n");
+
+
+
             
         }
+        private static int n = 0;
+        private static void SortOutputHandler(object sendingProcess,
+           DataReceivedEventArgs outLine)
+        {
+            // Collect the sort command output.
+            if (!String.IsNullOrEmpty(outLine.Data))
+            {
+                n = 1;
+                sortOutput.Append(outLine.Data);
+                MessageBox.Show(sortOutput.ToString());
+                sortStreamWriter.WriteLine("123");
+            }
+        }
+
         private void btnJPHide_Click(object sender, EventArgs e)
         {
             btnJPHide_Click_fn();
@@ -249,6 +295,11 @@ namespace FacebookImageUpload
         private void timerDecodeInput_Tick(object sender, EventArgs e)
         {
             timerDecodeInput_Tick_fn();
+        }
+
+        private void btnStegoRun_Click(object sender, EventArgs e)
+        {
+
         }
 
     }
