@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.btnUploadImage = new System.Windows.Forms.Button();
             this.tbImagePath = new System.Windows.Forms.TextBox();
             this.btnDownloadImage = new System.Windows.Forms.Button();
@@ -74,8 +73,6 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.timerEncodeInput = new System.Windows.Forms.Timer(this.components);
-            this.timerDecodeInput = new System.Windows.Forms.Timer(this.components);
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pBoxAlbumCover)).BeginInit();
@@ -523,14 +520,6 @@
             this.settingToolStripMenuItem1.Size = new System.Drawing.Size(108, 22);
             this.settingToolStripMenuItem1.Text = "Setting";
             // 
-            // timerEncodeInput
-            // 
-            this.timerEncodeInput.Tick += new System.EventHandler(this.timerPassInput_Tick);
-            // 
-            // timerDecodeInput
-            // 
-            this.timerDecodeInput.Tick += new System.EventHandler(this.timerDecodeInput_Tick);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -596,14 +585,12 @@
         private System.Windows.Forms.Button btnJPHide;
         private System.Windows.Forms.TextBox tbPassPhrase;
         private System.Windows.Forms.Label lbPassPhrase;
-        private System.Windows.Forms.Timer timerEncodeInput;
         private System.Windows.Forms.Button fdHiddenFile;
         private System.Windows.Forms.Button fdJpgImageOpen;
         private System.Windows.Forms.TextBox tbHiddenFile;
         private System.Windows.Forms.TextBox tbJpgImage;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label lbImageInput;
-        private System.Windows.Forms.Timer timerDecodeInput;
         private System.Windows.Forms.Button btnStegoRun;
         private System.Windows.Forms.Label lbImageDir;
 

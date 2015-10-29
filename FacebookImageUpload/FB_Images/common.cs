@@ -87,34 +87,21 @@ namespace FacebookImageUpload
                 Process proc = new Process();
                 proc.StartInfo.FileName = "cmd.exe";
                 proc.StartInfo.WorkingDirectory = FB_Image.BaseDirectory;
-                proc.StartInfo.Arguments = "/C jphide " + imageName + " " + enImageName + " " + hiddenFileName;
+                proc.StartInfo.Arguments = "/C jphide_modify " + imageName + " " + enImageName + " " + hiddenFileName;
+                proc.StartInfo.CreateNoWindow = true;
+                proc.StartInfo.UseShellExecute = false;
                
                 proc.Start();
-                timerEncodeInput.Enabled = true;
-                timerEncodeInput.Interval = 5 * 1000;
-                timerEncodeInput.Start();
+                while (!proc.HasExited)
+                    ;
+                MessageBox.Show("Success");
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
             }
         }
-        int count = 0;
-        public void timerPassInput_Tick_fn()
-        {
-            if (count < 2)
-            {
-                SendKeys.Send(tbPassPhrase.Text);
-                SendKeys.Send("{ENTER}");
-                count++;
-            }
-            else
-            {
-                timerEncodeInput.Stop();
-                MessageBox.Show("Image encoded successfully!");
-                count = 0;
-            }
-        }
+
         public void btnJPSeek_Click_fn()
         {
             try
@@ -124,32 +111,20 @@ namespace FacebookImageUpload
                 Process proc = new Process();
                 proc.StartInfo.FileName = "cmd.exe";
                 proc.StartInfo.WorkingDirectory = FB_Image.BaseDirectory;
-                proc.StartInfo.Arguments = "/C jpseek " + imageName + " " + hiddenFileName;
+                proc.StartInfo.Arguments = "/C jpseek_modify " + imageName + " " + hiddenFileName;
+                proc.StartInfo.CreateNoWindow = true;
+                proc.StartInfo.UseShellExecute = false;
                 proc.Start();
-                timerDecodeInput.Enabled = true;
-                timerDecodeInput.Interval = 5 * 1000;
-                timerDecodeInput.Start();
+                while (!proc.HasExited)
+                    ;
+                MessageBox.Show("Success");
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
             }
         }
-        public void timerDecodeInput_Tick_fn()
-        {
-            if (count < 1)
-            {
-                SendKeys.Send(tbPassPhrase.Text);
-                SendKeys.Send("{ENTER}");
-                count++;
-            }
-            else
-            {
-                timerDecodeInput.Stop();
-                MessageBox.Show("Message decoded successfully!");
-                count = 0;
-            }
-        }
+
     }
 
 }

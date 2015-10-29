@@ -282,20 +282,13 @@ namespace FacebookImageUpload
             fdHiddenFile_Click_fn();
         }
 
-        private void timerPassInput_Tick(object sender, EventArgs e)
-        {
-            timerPassInput_Tick_fn();
-        }
+
 
         private void btnJPSeek_Click(object sender, EventArgs e)
         {
             btnJPSeek_Click_fn();
         }
 
-        private void timerDecodeInput_Tick(object sender, EventArgs e)
-        {
-            timerDecodeInput_Tick_fn();
-        }
 
         private void btnStegoRun_Click(object sender, EventArgs e)
         {
