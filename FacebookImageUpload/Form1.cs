@@ -295,5 +295,10 @@ namespace FacebookImageUpload
 
         }
 
+        private void btnCrc32_Click(object sender, EventArgs e)
+        {
+            btnCrc32_Click_fn();
+        }
+
     }
 }

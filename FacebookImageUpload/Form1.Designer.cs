@@ -73,6 +73,9 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnCrc32 = new System.Windows.Forms.Button();
+            this.lbCrc32 = new System.Windows.Forms.Label();
+            this.lbCrc32String = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pBoxAlbumCover)).BeginInit();
@@ -320,6 +323,9 @@
             // 
             // gbJPHideAndSeek
             // 
+            this.gbJPHideAndSeek.Controls.Add(this.lbCrc32String);
+            this.gbJPHideAndSeek.Controls.Add(this.lbCrc32);
+            this.gbJPHideAndSeek.Controls.Add(this.btnCrc32);
             this.gbJPHideAndSeek.Controls.Add(this.btnStegoRun);
             this.gbJPHideAndSeek.Controls.Add(this.fdHiddenFile);
             this.gbJPHideAndSeek.Controls.Add(this.fdJpgImageOpen);
@@ -333,14 +339,14 @@
             this.gbJPHideAndSeek.Controls.Add(this.lbPassPhrase);
             this.gbJPHideAndSeek.Location = new System.Drawing.Point(651, 21);
             this.gbJPHideAndSeek.Name = "gbJPHideAndSeek";
-            this.gbJPHideAndSeek.Size = new System.Drawing.Size(225, 304);
+            this.gbJPHideAndSeek.Size = new System.Drawing.Size(225, 347);
             this.gbJPHideAndSeek.TabIndex = 16;
             this.gbJPHideAndSeek.TabStop = false;
             this.gbJPHideAndSeek.Text = "JP Hide and Seek";
             // 
             // btnStegoRun
             // 
-            this.btnStegoRun.Location = new System.Drawing.Point(77, 263);
+            this.btnStegoRun.Location = new System.Drawing.Point(77, 254);
             this.btnStegoRun.Name = "btnStegoRun";
             this.btnStegoRun.Size = new System.Drawing.Size(75, 23);
             this.btnStegoRun.TabIndex = 10;
@@ -503,7 +509,7 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // settingToolStripMenuItem
@@ -511,14 +517,42 @@
             this.settingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.settingToolStripMenuItem1});
             this.settingToolStripMenuItem.Name = "settingToolStripMenuItem";
-            this.settingToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.settingToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
             this.settingToolStripMenuItem.Text = "Tool";
             // 
             // settingToolStripMenuItem1
             // 
             this.settingToolStripMenuItem1.Name = "settingToolStripMenuItem1";
-            this.settingToolStripMenuItem1.Size = new System.Drawing.Size(108, 22);
+            this.settingToolStripMenuItem1.Size = new System.Drawing.Size(111, 22);
             this.settingToolStripMenuItem1.Text = "Setting";
+            // 
+            // btnCrc32
+            // 
+            this.btnCrc32.Location = new System.Drawing.Point(77, 286);
+            this.btnCrc32.Name = "btnCrc32";
+            this.btnCrc32.Size = new System.Drawing.Size(75, 23);
+            this.btnCrc32.TabIndex = 18;
+            this.btnCrc32.Text = "CRC32";
+            this.btnCrc32.UseVisualStyleBackColor = true;
+            this.btnCrc32.Click += new System.EventHandler(this.btnCrc32_Click);
+            // 
+            // lbCrc32
+            // 
+            this.lbCrc32.AutoSize = true;
+            this.lbCrc32.Location = new System.Drawing.Point(7, 322);
+            this.lbCrc32.Name = "lbCrc32";
+            this.lbCrc32.Size = new System.Drawing.Size(44, 13);
+            this.lbCrc32.TabIndex = 19;
+            this.lbCrc32.Text = "CRC32:";
+            // 
+            // lbCrc32String
+            // 
+            this.lbCrc32String.AutoSize = true;
+            this.lbCrc32String.Location = new System.Drawing.Point(54, 322);
+            this.lbCrc32String.Name = "lbCrc32String";
+            this.lbCrc32String.Size = new System.Drawing.Size(70, 13);
+            this.lbCrc32String.TabIndex = 20;
+            this.lbCrc32String.Text = "lbCrc32String";
             // 
             // Form1
             // 
@@ -595,6 +629,9 @@
         private System.Windows.Forms.Label lbImageDir;
 
         private System.Windows.Forms.TextBox tbMessage;
+        private System.Windows.Forms.Label lbCrc32String;
+        private System.Windows.Forms.Label lbCrc32;
+        private System.Windows.Forms.Button btnCrc32;
     }
 }
 

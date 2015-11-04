@@ -124,6 +124,15 @@ namespace FacebookImageUpload
                 MessageBox.Show(e.Message);
             }
         }
+        public void btnCrc32_Click_fn()
+        {
+            Crc32 crc32 = new Crc32();
+            String hash = String.Empty;
+
+            using (FileStream fs = File.Open("D:\\malwarescanner.zip", FileMode.Open))
+                foreach (byte b in crc32.ComputeHash(fs)) hash += b.ToString("x2").ToLower();
+            MessageBox.Show("CRC-32 is " + hash);
+        }
 
     }
 
