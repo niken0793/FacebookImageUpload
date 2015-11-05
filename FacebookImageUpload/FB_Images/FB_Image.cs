@@ -34,7 +34,6 @@ namespace FacebookImageUpload.FB_Images
         int width;
         long upFileSize;
         long downFileSize;
- 
         public string ImageID
         {
             get { return imageID; }
@@ -90,10 +89,10 @@ namespace FacebookImageUpload.FB_Images
             this.directory = "";
             this.height = this.width = 480;
             this.upFileSize = this.downFileSize = 0;
-            
+
         }
 
-        public FB_Image(string paramImageID, string paramFileName,string paramFileNameNo, string paramDirectory,
+        public FB_Image(string paramImageID, string paramFileName, string paramFileNameNo, string paramDirectory,
             string paramAlbum, int paramHeight, int paramWidth, long paramUp, long paramDown)
         {
             imageID = paramImageID;
@@ -107,7 +106,7 @@ namespace FacebookImageUpload.FB_Images
             downFileSize = paramDown;
         }
 
-       
+
 
     }
 }
