@@ -282,8 +282,6 @@ namespace FacebookImageUpload
             fdHiddenFile_Click_fn();
         }
 
-
-
         private void btnJPSeek_Click(object sender, EventArgs e)
         {
             btnJPSeek_Click_fn();
@@ -295,10 +293,6 @@ namespace FacebookImageUpload
 
         }
 
-        private void btnCrc32_Click(object sender, EventArgs e)
-        {
-            btnCrc32_Click_fn();
-        }
 
     }
 }

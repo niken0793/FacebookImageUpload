@@ -86,7 +86,7 @@ namespace FacebookImageUpload
                 string enImageName = "en_" + imageName;
                 Process proc = new Process();
                 proc.StartInfo.FileName = "cmd.exe";
-                proc.StartInfo.WorkingDirectory = FB_Image.BaseDirectory;
+                proc.StartInfo.WorkingDirectory = "Lib";
                 proc.StartInfo.Arguments = "/C jphide_modify " + imageName + " " + enImageName + " " + hiddenFileName;
                 proc.StartInfo.CreateNoWindow = true;
                 proc.StartInfo.UseShellExecute = false;
@@ -95,6 +95,14 @@ namespace FacebookImageUpload
                 while (!proc.HasExited)
                     ;
                 MessageBox.Show("Success");
+
+                Crc32 crc32 = new Crc32();
+                String hash = String.Empty;
+
+                using (FileStream fs = File.Open("Lib\\" + hiddenFileName, FileMode.Open))
+                    foreach (byte b in crc32.ComputeHash(fs)) hash += b.ToString("x2").ToLower();
+                MessageBox.Show("CRC-32 is " + hash);
+                lbCrc32String.Text = hash;
             }
             catch (Exception e)
             {
@@ -110,28 +118,33 @@ namespace FacebookImageUpload
                 string hiddenFileName = Path.GetFileName(tbHiddenFile.Text);
                 Process proc = new Process();
                 proc.StartInfo.FileName = "cmd.exe";
-                proc.StartInfo.WorkingDirectory = FB_Image.BaseDirectory;
+                proc.StartInfo.WorkingDirectory = "Lib";
                 proc.StartInfo.Arguments = "/C jpseek_modify " + imageName + " " + hiddenFileName;
                 proc.StartInfo.CreateNoWindow = true;
                 proc.StartInfo.UseShellExecute = false;
                 proc.Start();
                 while (!proc.HasExited)
                     ;
-                MessageBox.Show("Success");
+
+                string Crc32 = lbCrc32String.Text;
+                Crc32 crc32 = new Crc32();
+                String hash = String.Empty;
+                using (FileStream fs = File.Open("Lib\\" + hiddenFileName, FileMode.Open))
+                    foreach (byte b in crc32.ComputeHash(fs)) hash += b.ToString("x2").ToLower();
+                if (hash == Crc32)
+                {
+                    MessageBox.Show("CRC-32 check successfully!");
+                }
+                else
+                {
+                    MessageBox.Show("CRC-32 check failed!");
+                }
+               
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
             }
-        }
-        public void btnCrc32_Click_fn()
-        {
-            Crc32 crc32 = new Crc32();
-            String hash = String.Empty;
-
-            using (FileStream fs = File.Open("D:\\malwarescanner.zip", FileMode.Open))
-                foreach (byte b in crc32.ComputeHash(fs)) hash += b.ToString("x2").ToLower();
-            MessageBox.Show("CRC-32 is " + hash);
         }
 
     }
