@@ -287,7 +287,6 @@ namespace FacebookImageUpload
             btnJPSeek_Click_fn();
         }
 
-
         private void btnStegoRun_Click(object sender, EventArgs e)
         {
 
