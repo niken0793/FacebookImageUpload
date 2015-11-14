@@ -18,6 +18,8 @@ using System.Drawing.Imaging;
 using FacebookImageUpload.FB_Images;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 // Huy file
 
@@ -26,116 +28,355 @@ namespace FacebookImageUpload
 
     public partial class Form1 : Form
     {
-        private void Upload_Picture_FB(string filename, FB_Image browseImage)
+        Random r;
+        private string Upload_Picture_FB(string filename, FB_Image browseImageUP,string albumID)
         {
             //upload photo
             try
             {
-                browseImage.FileName = Path.GetFileName(filename); // lấy file name
-                browseImage.FileNameWithOutExtension = Path.GetFileNameWithoutExtension(filename); // lấy file name ko có phần mở rộng .jpg
-                browseImage.UpFileSize = new FileInfo(filename).Length; // lấy file size
+                browseImageUP.FileName = Path.GetFileName(filename); // lấy file name
+                browseImageUP.Directory = Path.GetDirectoryName(filename); // get path
+                browseImageUP.FileNameWithOutExtension = Path.GetFileNameWithoutExtension(filename); // lấy file name ko có phần mở rộng .jpg
+                browseImageUP.FileSize = new FileInfo(filename).Length; // lấy file size
                 var image_source = Image.FromFile(filename);
-                browseImage.Height = image_source.Height;
-                browseImage.Width = image_source.Width;
+                browseImageUP.Height = image_source.Height;
+                browseImageUP.Width = image_source.Width;
 
                 var imgstream = File.OpenRead(filename);
                 var fb = new FacebookClient(FB_Image.AccessToken);
-                dynamic res = fb.Post(lbAlbumId.Text + "/photos", new
+                dynamic res = fb.Post(albumID + "/photos", new
                 {
                     message = "Image description",
                     file = new FacebookMediaStream
                     {
                         ContentType = "image/jpeg",
-                        FileName = browseImage.FileName,
+                        FileName = browseImageUP.FileName,
                     }.SetValue(imgstream)
                 });
-                browseImage.ImageID = res.id;
+               return res.id;
                
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return null;
             }   
         }
 
-        private void Download_Picture_FACEBOOK(ref string filename, FB_Image browseImage)
+        private string Download_Picture_FB(FB_Image browseImageDown)
         {
-            temp++; // biến để đặt tên
-            var fb = new FacebookClient(FB_Image.AccessToken);
-            dynamic res = fb.Get(browseImage.ImageID + "?fields=images");  // query đường dẫn + độ phân giải ảnh
-            string json_string = Newtonsoft.Json.JsonConvert.SerializeObject(res); // parse response sang json
-            dynamic json = JObject.Parse(json_string);
-            dynamic imagesJson = json["images"];
-            int count = imagesJson.Count;
-            int i = 0;
-            string source_url = "";
-
-            /* lấy độ phân giải trùng với độ phân giải của ảnh đã up */
-            while (i < count && imagesJson[i] != null)
+            try
             {
-                int image_height = Int32.Parse((string)imagesJson[i]["height"]);
-                int image_width = Int32.Parse((string)imagesJson[i]["width"]);
-                if (image_height == FB_Image.ImageSize|| image_width == FB_Image.ImageSize)
+                temp++; // biến để đặt tên
+                var fb = new FacebookClient(FB_Image.AccessToken);
+                dynamic res = fb.Get(browseImageDown.ImageID + "?fields=images");  // query đường dẫn + độ phân giải ảnh
+                string json_string = Newtonsoft.Json.JsonConvert.SerializeObject(res); // parse response sang json
+                dynamic json = JObject.Parse(json_string);
+                dynamic imagesJson = json["images"];
+                int count = imagesJson.Count;
+                int i = 0;
+                string source_url = "";
+
+                /* lấy độ phân giải trùng với độ phân giải của ảnh đã up */
+                while (i < count && imagesJson[i] != null)
                 {
-                    source_url = imagesJson[i]["source"];
-                    break;
-                }
-                i++;
-
-            }
-            if (i >= count)
-            {
-                source_url = imagesJson[0]["source"];
-            }
-
-            /*------*/
-            /* download ảnh */
-            using (WebClient webClient = new WebClient())
-            {
-                byte[] data = webClient.DownloadData(source_url);
-
-                using (MemoryStream mem = new MemoryStream(data))
-                {
-                    using (var yourImage = Image.FromStream(mem))
+                    int image_height = Int32.Parse((string)imagesJson[i]["height"]);
+                    int image_width = Int32.Parse((string)imagesJson[i]["width"]);
+                    if (image_height == FB_Image.ImageSize || image_width == FB_Image.ImageSize)
                     {
-                        string new_path = FB_Image.BaseDirectory + browseImage.FileNameWithOutExtension + "_" + temp + ".jpg";
-                        yourImage.Save(new_path, ImageFormat.Jpeg);
-                        browseImage.DownFileSize = new FileInfo(FB_Image.BaseDirectory + browseImage.FileNameWithOutExtension + "_" + temp + ".jpg").Length;
-                        filename = new_path;
+                        source_url = imagesJson[i]["source"];
+                        break;
+                    }
+                    i++;
 
+                }
+                if (i >= count)
+                {
+                    source_url = imagesJson[0]["source"];
+                }
+
+                /*------*/
+                /* download ảnh */
+                using (WebClient webClient = new WebClient())
+                {
+                    byte[] data = webClient.DownloadData(source_url);
+
+                    using (MemoryStream mem = new MemoryStream(data))
+                    {
+                        using (var yourImage = Image.FromStream(mem))
+                        {
+                            string new_path = FB_Image.BaseDirectory + browseImageDown.FileNameWithOutExtension + "_" + temp + ".jpg";
+                            yourImage.Save(new_path, ImageFormat.Jpeg);
+                            browseImageDown.FileSize = new FileInfo(FB_Image.BaseDirectory + browseImageDown.FileNameWithOutExtension + "_" + temp + ".jpg").Length;
+                            string filename = new_path;
+                            browseImageDown.FileName = Path.GetFileName(new_path);
+                            browseImageDown.Directory = Path.GetDirectoryName(new_path);
+                            return filename;
+                            
+
+                        }
+                    }
+
+                }
+             
+            }
+            catch (Exception e)
+            {
+                Log(e);
+                return null;
+            }
+        }
+        public string TestEncodeSuccessRate(string filename,string inputText,string albumID,bool test = true)
+        {
+            if (test)
+            {
+                inputText = Path.Combine(FB_Image.BaseDirectory, "test.txt");
+                albumID = FB_Image.Album_Test;
+            }
+
+            //Reduce size ratio of picture
+            List<FB_Image> listFile = AutoUploadAndDownload(filename, null);
+            FB_Image coverImage = listFile[listFile.Count - 1];
+            string coverImageFileName = coverImage.FileName;
+            string messageFile = Common.CopyFileTo(inputText, FB_Image.BaseDirectory);
+
+            //Encode
+            string encodeFile = JPHideEncode(Path.GetFileName(coverImageFileName),Path.GetFileName(inputText));
+            FB_Image encodeImage = new FB_Image();
+            string id = Upload_Picture_FB(Path.Combine(FB_Image.BaseDirectory, encodeFile), encodeImage,albumID);
+            FB_Image downloadImage = new FB_Image();
+            encodeImage.CopyTo(downloadImage);
+            downloadImage.ImageID = id;
+            string tempFileName = Download_Picture_FB(downloadImage);
+            //Decode
+            string outputText = Common.AppenFileName(inputText, "_ouput");
+            if (outputText == null)
+                outputText = "output_test.txt";
+            JPSeekDecode(Path.GetFileName(tempFileName),outputText);
+            outputText = Path.Combine(FB_Image.BaseDirectory, outputText);
+
+            //compare 2 file
+            if (Common.CompareOutputFile(inputText, outputText, tbMessage))
+            {
+                return downloadImage.ImageID;
+            }
+            else
+            {
+                return null;
+            }    
+        }
+
+        private string SendMessageWithTestedSource(string filename, string inputText, string albumID)
+        {
+
+            string coverImage = Common.CopyFileTo(filename, FB_Image.BaseDirectory);
+            string messageFile = Common.CopyFileTo(inputText, FB_Image.BaseDirectory);
+
+            //Encode
+            string encodeFile = JPHideEncode(Path.GetFileName(coverImage),Path.GetFileName(messageFile));
+            FB_Image encodeImage = new FB_Image();
+            string id = Upload_Picture_FB(Path.Combine(FB_Image.BaseDirectory, encodeFile), encodeImage, albumID);
+            FB_Image downloadImage = new FB_Image();
+            encodeImage.CopyTo(downloadImage);
+            downloadImage.ImageID = id;
+            string tempFileName = Download_Picture_FB(downloadImage);
+            //Decode
+            string outputText = Common.AppenFileName(inputText,"_ouput");
+            if(outputText == null)
+                outputText="output_test.txt";
+            outputText= JPSeekDecode(Path.GetFileName(tempFileName),outputText);
+            outputText = Path.Combine(FB_Image.BaseDirectory, outputText);
+
+            //compare 2 file
+            if (Common.CompareOutputFile(inputText, outputText, tbMessage))
+            {
+                return downloadImage.ImageID;
+            }
+            else
+            {
+                return null;
+            }    
+        }
+
+        public string JPHideEncode(string filename,string input)
+        {
+            try
+            {
+                if (Path.GetDirectoryName(filename) != "" && Path.GetDirectoryName(input) != "")
+                {
+                    throw new Exception("No need for full path");
+                }
+
+                input=Path.GetFileName(InsertCrc32(input));
+                
+                string enImageName = Path.GetFileNameWithoutExtension(filename)+"_encode"+Path.GetExtension(filename);
+                Process proc = new Process();
+                proc.StartInfo.FileName = "cmd.exe";
+                proc.StartInfo.WorkingDirectory = FB_Image.BaseDirectory;
+                proc.StartInfo.Arguments = "/C jphide_modify " + filename + " " + enImageName + " " + input;
+                proc.StartInfo.CreateNoWindow = true;
+                proc.StartInfo.UseShellExecute = false;
+                proc.StartInfo.RedirectStandardError = true;
+
+                proc.Start();
+                while (!proc.StandardError.EndOfStream)
+                {
+                    string line = proc.StandardError.ReadLine();
+                    //tbMessage.AppendText(line);
+                }
+                return enImageName;
+              
+            }
+            catch (Exception e)
+            {
+                Log(e);
+                return null;
+            }
+        }
+
+        private string InsertCrc32(string input)
+        {
+
+            string input_path = Path.Combine(FB_Image.BaseDirectory, input);
+            string hash = Crc32Hash(input_path);
+            string crc = "[crc:" + hash + "]";
+            if (File.Exists(input_path))
+            {
+                string currentContent = File.ReadAllText(input_path);
+                string newinput = Path.Combine(FB_Image.BaseDirectory, Common.AppenFileName(input, "_" + (r.Next(1337)).ToString()));
+                File.WriteAllText(newinput, crc + currentContent);
+                return newinput;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public string JPSeekDecode(string filename,string output)
+        {
+            try
+            {
+                if (Path.GetDirectoryName(filename) != "" && Path.GetDirectoryName(output) != "")
+                {
+                    throw new Exception("No need for full path");
+                }
+                string imageName = filename;
+                string hiddenFileName = output;
+                Process proc = new Process();
+                proc.StartInfo.FileName = "cmd.exe";
+                proc.StartInfo.WorkingDirectory = FB_Image.BaseDirectory;
+                proc.StartInfo.Arguments = "/C jpseek_modify " + imageName + " " + hiddenFileName;
+                proc.StartInfo.CreateNoWindow = true;
+                proc.StartInfo.UseShellExecute = false;
+                proc.Start();
+                while (!proc.HasExited)
+                    ;
+
+                hiddenFileName = CheckCrc32(hiddenFileName);
+                if (hiddenFileName != null)
+                    return Path.GetFileName(hiddenFileName);
+                else
+                    return null;
+            }
+            catch (Exception e)
+            {
+                Log(e);
+                return null;
+            }
+        }
+
+        public string CheckCrc32(string filename)
+        {
+            string oldpath = Path.Combine(FB_Image.BaseDirectory, filename);
+            string newpath = Path.Combine(FB_Image.BaseDirectory, Common.AppenFileName(filename, "_check"));
+            string crc = "";
+            Regex g = new Regex(@"(\[)(crc)(:).*?(\])");
+
+            using (StreamWriter w = new StreamWriter(newpath))
+            {
+
+                using (StreamReader r = new StreamReader(oldpath))
+                {
+                    string line;
+                    line = r.ReadToEnd();
+
+                    Match m = g.Match(line);
+                    if (m.Success)
+                    {
+                        string[] words = line.Split(':');
+                        crc = words[1].Remove(8);
+                        line = line.Remove(0, 14);
+                        w.Write(line);
+                    }
+                }
+
+
+            }
+            string hash = Crc32Hash(newpath);
+            if (hash == crc)
+            {
+                tbMessage.Text = File.ReadAllText(newpath);
+                return newpath;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public List<FB_Image> AutoUploadAndDownload(string filename,IProgress<int> progress = null)
+        {
+            string tempName = filename;
+            List<FB_Image> uploadedImage = new List<FB_Image>();      
+            FB_Image currentImage = new FB_Image();
+            float ratio = 15;
+            while (ratio > FB_Image.RatioMax)
+            {
+                string id = Upload_Picture_FB(tempName, currentImage,FB_Image.Album_Test);
+                if (currentImage.ImageID.Equals(""))
+                {
+                    FB_Image temp = new FB_Image();
+                    currentImage.CopyTo(temp);
+                    uploadedImage.Add(temp);
+                }
+
+                FB_Image downImage = new FB_Image();
+                currentImage.CopyTo(downImage);
+                downImage.ImageID = id;
+                tempName= Download_Picture_FB(downImage);
+                ratio = ((float)currentImage.FileSize / (float)downImage.FileSize);
+                FB_Image k = new FB_Image();
+                downImage.CopyTo(k);
+                uploadedImage.Add(k);
+                downImage.CopyTo(currentImage);
+                if (progress != null)
+                {
+                    float t = ratio;
+                    lbImagePath.Invoke(new Action(() => lbImagePath.Text = "Your ratio is: " + t.ToString()));
+                    if (ratio > 9)
+                    {
+                        progress.Report(10);
+                    }
+                    else if (ratio >= 2)
+                    {
+                        progress.Report((int)(ratio * 10));
+                    }
+                    else if (ratio >= 1 && ratio < 2)
+                    {
+                        progress.Report((int)((ratio - 1) * 100));
                     }
                 }
 
             }
-        }
+            if(progress != null)
+                progress.Report(100);
 
-        public void AutoUploadAndDownload(IProgress<int> progress, string filename, FB_Image browseImage, ref float ratio)
-        {
-            while (ratio > FB_Image.RatioMax)
-            {
-                Upload_Picture_FB(filename, browseImage);
-                Download_Picture_FACEBOOK(ref filename, browseImage);
-                ratio = ((float)browseImage.UpFileSize / (float)browseImage.DownFileSize);
-                float t = ratio;
-                lbImagePath.Invoke(new Action(() => lbImagePath.Text = "Your ratio is: " + t.ToString()));
-                if (ratio > 9)
-                {
-                    progress.Report(10);
-                }
-                else if(ratio>=2)
-                {
-                    progress.Report((int)(ratio * 10));
-                }
-                else if (ratio >= 1 && ratio < 2)
-                {
-                    progress.Report((int)((ratio - 1) * 100));
-                }
-
-            }
-            progress.Report(100);
+            return uploadedImage;
         }
 
 
+        /*
         public void GetAlbumList(IProgress<int> progress,int limit =5)
         {
             try
@@ -153,6 +394,7 @@ namespace FacebookImageUpload
                 dynamic a_albums = json["albums"]["data"];
                 int count = a_albums.Count;
                 List<string> list_albumID = new List<string>();
+                FB_Image.List_AlbumInfo = new List<AlbumInfo>();
 
                 foreach (var obj in json["albums"]["data"])
                 {
@@ -168,7 +410,8 @@ namespace FacebookImageUpload
                     var cover_link_json = JObject.Parse(cover_link_json_string);
 
                     /* download ảnh */
-                    using (WebClient webClient = new WebClient())
+
+        /*            using (WebClient webClient = new WebClient())
                     {
                         byte[] data = webClient.DownloadData((string)cover_link_json["picture"]["data"]["url"]);
 
@@ -201,13 +444,213 @@ namespace FacebookImageUpload
             {
                 Log(ex);
             }
+        
+         */
+
+
+        public void GetAlbumList_1(IProgress<int> progress, List<string> inboxAlbums = null, int limit = 5)
+        {
+            try
+            {
+
+                var fb = new FacebookClient(FB_Image.AccessToken);
+                dynamic albums = fb.Get("me/albums?fields=count,created_time,updated_time,name,cover_photo,picture&limit=5&date_format=U)"); // Get album information
+                string json_string = JsonConvert.SerializeObject(albums); // parse response sang json
+                var json = JObject.Parse(json_string);
+                int i = 0;
+                ImageList photoList = new ImageList(); // ImageList
+                photoList.TransparentColor = Color.Blue;
+                photoList.ColorDepth = ColorDepth.Depth32Bit;
+                photoList.ImageSize = new Size(50, 50);
+                dynamic a_albums = json["data"];
+                int count = a_albums.Count;
+                List<string> list_albumID = new List<string>();
+
+                foreach (var obj in json["data"])
+                {
+                    string albumName = (string)obj["name"];
+                    string albumID = (string )obj["id"];
+                    string createdTime = (string)obj["created_time"];
+                    string updatedTime = (string)obj["updated_time"];
+                    createdTime= createdTime.TrimEnd(')');
+                    updatedTime= updatedTime.TrimEnd(')');
+                    
+                    string img_url ="";
+                    if (inboxAlbums != null)        // chỉ kiểm tra các album đã quy định trước
+                    {
+                        var match = inboxAlbums.Where(x => x.Equals(albumID));
+                        if (match == null)
+                            continue;
+                    }
+
+                    var match1 = FB_Image.List_AlbumInfo.Where(x => x.Id.Equals(albumID)); // album đã có thông tin hay chưa
+                    AlbumInfo info = null;
+                    if (match1.Count() == 1)
+                    {
+                        info = match1.First();
+                    }
+             
+                    /* download ảnh */
+                    using (WebClient webClient = new WebClient())
+                    {
+                        byte[] data = webClient.DownloadData((string)obj["picture"]["data"]["url"]);
+
+                        using (MemoryStream mem = new MemoryStream(data))
+                        {
+                            using (var yourImage = Image.FromStream(mem))
+                            {
+                                yourImage.Save(FB_Image.BaseDirectory + obj["id"].ToString() + ".jpg", ImageFormat.Jpeg);
+                                img_url = FB_Image.BaseDirectory + obj["id"].ToString() + ".jpg";
+                                photoList.Images.Add(Image.FromFile(img_url));
+                                photoList.Images.SetKeyName(i, albumName);
+                            }
+                        }
+
+                    }
+
+
+                    // Xử lý thông tin albums
+                    if (info == null)
+                    {
+                        FB_Image.List_AlbumInfo.Add(
+                            new AlbumInfo(
+                                obj["id"].ToString(),
+                                albumName,
+                                img_url,
+                                Int32.Parse(obj["count"].ToString()),
+                                long.Parse(createdTime),
+                                long.Parse(updatedTime),
+                                Int32.Parse(obj["count"].ToString())
+                                ));
+                        list_albumID.Add(obj["id"].ToString());
+                    }
+                    else
+                    {
+                        int newCount = Int32.Parse(obj["count"].ToString());
+                        if (info.Count < newCount)
+                        {
+                            info.NewNupdatedTime = long.Parse(createdTime);
+                            info.NewNumber = newCount - info.Count;
+                        }
+                        else
+                        {
+                            info.NewNupdatedTime = long.Parse(updatedTime);
+                            info.NewNumber = 0;
+                        }
+                    }
+                    progress.Report((i * 100 / count));
+                    i++;
+
+
+                }
+
+                FB_Image.Album_PhotoList = photoList;
+                FB_Image.List_AlbumID = list_albumID;
+
+                progress.Report(100);
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+            }
+        }
+
+        private List<FB_Message> GetNewMessageFromAlbum(string albumID)
+        {
+            AlbumInfo album = Common.GetAlbumInfoByID(FB_Image.List_AlbumInfo, albumID);
+            if (album.NewNumber > 0)
+            {
+                string limit = "&limit=" + album.NewNumber;
+                string since = "&since=" + album.CreatedTime;
+                string dateFormat = "&date_format=U";
+                List<FB_Message> ListMessages = new List<FB_Message>();
+
+                var fb = new FacebookClient(FB_Image.AccessToken);
+                dynamic albums = fb.Get(albumID+"/photos?pretty=1"+limit+since+dateFormat); // Get album information
+                string json_string = JsonConvert.SerializeObject(albums); // parse response sang json
+                var json = JObject.Parse(json_string);
+                dynamic photos = json["data"];
+                int count = photos.Count;
+                if (count > 0)
+                {
+                    foreach (var obj in photos)
+                    {
+                        FB_Message message = new FB_Message();
+                        FB_Image messageImage = new FB_Image();
+                        dynamic images = obj["images"];
+                        int images_count = images.Count;
+                        if (images_count > 0)
+                        {
+                        
+                            foreach (var m in obj["images"])
+                            {
+                                if (((string)m["width"]).Equals("960"))
+                                {
+                                    string img_path;
+
+                                    /* download ảnh */
+                                    using (WebClient webClient = new WebClient())
+                                    {
+                                        byte[] data = webClient.DownloadData((string)m["source"]);
+
+                                        using (MemoryStream mem = new MemoryStream(data))
+                                        {
+                                            using (var yourImage = Image.FromStream(mem))
+                                            {
+                                                img_path = FB_Image.BaseDirectory + obj["id"].ToString() + ".jpg";
+                                                yourImage.Save(img_path, ImageFormat.Jpeg);
+                                                messageImage.FileName = Path.GetFileName(img_path);
+                                                messageImage.Directory = Path.GetDirectoryName(img_path);
+                                                messageImage.ImageID = obj["id"].ToString();
+                                                break;
+
+                                            }
+                                        }
+
+                                    }
+
+
+                                }
+
+
+
+                            }
+
+                        }
+
+                        message.Image = messageImage;
+                        if (message.Image.FileName != "")
+                        {
+                            string output = JPSeekDecode(message.Image.FileName, Path.GetFileNameWithoutExtension(message.Image.FileName) + ".txt");
+                            if (output != null || output != "")
+                            {
+                                // check CRC
+                                message.Content = File.ReadAllText(Path.Combine(FB_Image.BaseDirectory,output));
+                            }
+                            
+                        }
+                        ListMessages.Add(message);
+                    }
+                    return ListMessages;
+
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+
         }
 
         public void LoadingAlbumList()
         {
             string filename = Path.Combine(FB_Image.RelativeDirectory,FB_Image.AlbumDirectory);
             FB_Image.List_AlbumInfo = Common.DeSerializeObject<List<AlbumInfo>>(filename);
-            if (FB_Image.List_AlbumInfo.Count > 0)
+            if (FB_Image.List_AlbumInfo != null && FB_Image.List_AlbumInfo.Count > 0)
             {
                 FB_Image.List_AlbumID = new List<string>();
                 FB_Image.Album_PhotoList = new ImageList();
@@ -217,9 +660,9 @@ namespace FacebookImageUpload
                 for (int i = 0; i < FB_Image.List_AlbumInfo.Count; i++)
                 {
                     AlbumInfo e = FB_Image.List_AlbumInfo[i];
-                    FB_Image.List_AlbumID.Add(e.id);
-                    FB_Image.Album_PhotoList.Images.Add(Image.FromFile(e.path));
-                    FB_Image.Album_PhotoList.Images.SetKeyName(i, e.name);
+                    FB_Image.List_AlbumID.Add(e.Id);
+                    FB_Image.Album_PhotoList.Images.Add(Image.FromFile(e.Path));
+                    FB_Image.Album_PhotoList.Images.SetKeyName(i, e.Name);
 
                 }
                 this.ListViewalbumList.View = View.LargeIcon;
@@ -236,6 +679,28 @@ namespace FacebookImageUpload
 
 
 
+            }
+            else
+            {
+                FB_Image.List_AlbumInfo = new List<AlbumInfo>();
+            }
+
+        }
+
+        private void cmbSelectTextType_SelectedIndexChangedHandle(object sender, EventArgs e)
+        {
+            ComboBox c = (ComboBox)sender;
+            if (c.SelectedIndex == c.Items.IndexOf("From File"))
+            {
+                tbInputMessage.Enabled = false;
+                btnSelectFile.Enabled = true;
+                tbMessagePath.Enabled = true;
+            }
+            else if (c.SelectedIndex == c.Items.IndexOf("From Text"))
+            {
+                tbInputMessage.Enabled = true; 
+                btnSelectFile.Enabled = false;
+                tbMessagePath.Enabled = false;
             }
 
         }
@@ -278,100 +743,5 @@ namespace FacebookImageUpload
     }
 
 
-    public class Common
-    {
-
-        public static void PreparePath(string filename)
-        {
-            string directory = Path.GetDirectoryName(filename);
-            string file = Path.GetFileName(filename);
-            if (Directory.Exists(directory))
-            {
-                if (!File.Exists(filename))
-                {
-                    File.Create(filename).Dispose();
-                }
-            }
-            else
-            {
-                Directory.CreateDirectory(directory);
-                File.Create(filename).Dispose();
-
-            }
-            
-        }
-
-        /// <summary>
-        /// Serializes an object.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="serializableObject"></param>
-        /// <param name="fileName"></param>
-        public static void SerializeObject<T>(T serializableObject, string fileName)
-        {
-            if (serializableObject == null) { return; }
-
-            try
-            {
-                PreparePath(fileName);
-                XmlDocument xmlDocument = new XmlDocument();
-                XmlSerializer serializer = new XmlSerializer(serializableObject.GetType());
-                using (MemoryStream stream = new MemoryStream())
-                {
-                    serializer.Serialize(stream, serializableObject);
-                    stream.Position = 0;
-                    xmlDocument.Load(stream);
-                    xmlDocument.Save(fileName);
-                    stream.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                Form1.Log(ex);
-            }
-        }
-
-
-        /// <summary>
-        /// Deserializes an xml file into an object list
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        public static T DeSerializeObject<T>(string fileName)
-        {
-            if (string.IsNullOrEmpty(fileName)) { return default(T); }
-
-            T objectOut = default(T);
-
-            try
-            {
-                PreparePath(fileName);
-                string attributeXml = string.Empty;
-                XmlDocument xmlDocument = new XmlDocument();
-                xmlDocument.Load(fileName);
-                string xmlString = xmlDocument.OuterXml;
-
-                using (StringReader read = new StringReader(xmlString))
-                {
-                    Type outType = typeof(T);
-
-                    XmlSerializer serializer = new XmlSerializer(outType);
-                    using (XmlReader reader = new XmlTextReader(read))
-                    {
-                        objectOut = (T)serializer.Deserialize(reader);
-                        reader.Close();
-                    }
-
-                    read.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                Form1.Log(ex);
-            }
-
-            return objectOut;
-        }
-    }
+   
 }

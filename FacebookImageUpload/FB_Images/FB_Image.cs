@@ -12,6 +12,7 @@ namespace FacebookImageUpload.FB_Images
     public class FB_Image
     {
         public static string AccessToken = "CAAVUMKQz7ZB0BAJG21S5gyhrBOpK7qvIZCViGPfbwMYckHWhXy8nPYcI5ZBxQOMZCjz5ieT9IydD6hDiE7sLEn6taU3K7ztbmZCgcHohnLqQw3vZAJPdXs5LjefrOEy4fIxQSPWXMe57n1TBCtmqUiWHdr4JSyq5ujBtQXWYlg5pdZBpQJncIvfU2rvPIkslQZCaZAs9ZAf8CRpQZDZD";
+        public static string Album_Test = "1661607290718778";
         public static int Temp = 0;
         public static string BaseDirectory = @"E:\Tai lieu UIT\Khoa luan\Test\";
         public static string RelativeDirectory =
@@ -25,6 +26,9 @@ namespace FacebookImageUpload.FB_Images
         public static List<string> List_AlbumID;
         public static List<AlbumInfo> List_AlbumInfo = new List<AlbumInfo>();
         public static ImageList Album_PhotoList;
+
+
+
         string imageID;
         string fileName;
         string fileNameWithOutExtension;
@@ -32,8 +36,8 @@ namespace FacebookImageUpload.FB_Images
         string albumID;
         int height;
         int width;
-        long upFileSize;
-        long downFileSize;
+        long fileSize;
+ 
         public string ImageID
         {
             get { return imageID; }
@@ -69,31 +73,26 @@ namespace FacebookImageUpload.FB_Images
             get { return width; }
             set { width = value; }
         }
-        public long UpFileSize
+        public long FileSize
         {
-            get { return upFileSize; }
-            set { upFileSize = value; }
-        }
-        public long DownFileSize
-        {
-            get { return downFileSize; }
-            set { downFileSize = value; }
+            get { return fileSize; }
+            set { fileSize = value; }
         }
 
         public FB_Image()
         {
-            this.albumID = "0";
+            this.albumID = "";
             this.imageID = "";
             this.fileName = "";
             this.fileNameWithOutExtension = "";
             this.directory = "";
             this.height = this.width = 480;
-            this.upFileSize = this.downFileSize = 0;
-
+            this.fileSize = 0;
+            
         }
 
-        public FB_Image(string paramImageID, string paramFileName, string paramFileNameNo, string paramDirectory,
-            string paramAlbum, int paramHeight, int paramWidth, long paramUp, long paramDown)
+        public FB_Image(string paramImageID, string paramFileName,string paramFileNameNo, string paramDirectory,
+            string paramAlbum, int paramHeight, int paramWidth, long paramUp)
         {
             imageID = paramImageID;
             fileName = paramFileName;
@@ -102,11 +101,39 @@ namespace FacebookImageUpload.FB_Images
             albumID = paramAlbum;
             height = paramHeight;
             width = paramWidth;
-            upFileSize = paramUp;
-            downFileSize = paramDown;
+            fileSize = paramUp;
+        }
+
+        public void CopyTo(FB_Image paramImage)
+        {
+            paramImage.FileName = this.FileName;
+            paramImage.FileNameWithOutExtension = this.FileNameWithOutExtension;
+            paramImage.FileSize = this.FileSize;
+            paramImage.Directory = this.Directory;
+            paramImage.Height = this.Height;
+            paramImage.Width = this.Width;
+            paramImage.ImageID = this.ImageID;
+            paramImage.AlbumID = this.AlbumID;
+        }
+
+        public override string ToString()
+        {
+            return String.Format(
+                    @"FileName : {0} 
+Directoty : {1} 
+ID :  {2}
+Size : {3} 
+Height,Width {4} - {5}
+
+",
+                     this.FileName, this.Directory, this.ImageID, this.FileSize, this.Height, this.Width);
+                                  
         }
 
 
+
+
+       
 
     }
 }

@@ -40,18 +40,101 @@ namespace FacebookImageUpload
     [Serializable]
     public class AlbumInfo
     {
-        public string id;
-        public string name;
-        public string path;
+        private string id;
+
+        public string Id
+        {
+            get { return id; }
+            set { id = value; }
+        }
+        private string name;
+
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+        private string path;
+
+        public string Path
+        {
+            get { return path; }
+            set { path = value; }
+        }
+        private int count;
+
+        public int Count
+        {
+            get { return count; }
+            set { count = value; }
+        }
+        private long createdTime;
+
+        public long CreatedTime
+        {
+            get { return createdTime; }
+            set { createdTime = value; }
+        }
+        private long updatedTime;
+
+        public long UpdatedTime
+        {
+            get { return updatedTime; }
+            set { updatedTime = value; }
+        }
+
+        private long newNupdatedTime;
+
+        public long NewNupdatedTime
+        {
+            get { return newNupdatedTime; }
+            set { newNupdatedTime = value; }
+        }
+
+        private int newNumber;
+
+        public int NewNumber
+        {
+            get { return newNumber; }
+            set { newNumber = value; }
+        }
 
         public AlbumInfo()
         {
         }
-        public AlbumInfo(string paramID, string paramName, string paramPath)
+        public AlbumInfo(string paramID, string paramName
+            , string paramPath,int paramCount, long paramCreate, long paramUpdate)
         {
             id = paramID;
             name = paramName;
             path = paramPath;
+            count = paramCount;
+            createdTime = paramCreate;
+            updatedTime = paramUpdate;
         }
+        public AlbumInfo(string paramID, string paramName
+           , string paramPath, int paramCount, long paramCreate, long paramUpdate, int paramNew)
+        {
+            id = paramID;
+            name = paramName;
+            path = paramPath;
+            count = paramCount;
+            createdTime = paramCreate;
+            updatedTime = paramUpdate;
+            newNumber = paramNew;
+        }
+        public AlbumInfo(string paramID, string paramName
+            , string paramPath)
+        {
+            id = paramID;
+            name = paramName;
+            path = paramPath;
+            count = 0;
+            createdTime = 0;
+            updatedTime = 0;
+        }
+
+        
+
     }
 }

@@ -25,7 +25,11 @@ namespace FacebookImageUpload
         public Form1()
         {
             InitializeComponent();
-            //LoadingAlbumList();
+            LoadingAlbumList();
+
+            cmbSelectTextType.SelectedIndex = 0;
+            tbInputMessage.Enabled = false;
+            r = new Random();
         }
 
         FB_Image browseImage = new FB_Image();
@@ -35,9 +39,14 @@ namespace FacebookImageUpload
 
         private void openfile_Click(object sender, EventArgs e)
         {
-
-            openfile_Click_fn();
+            string filter = "Image Files(*.jpg; *.jpeg)|*.jpg; *.jpeg";
+            openfile_Click_fn(tbImagePath,filter);
            
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string filter = "Text Files(*.txt)|*.txt";
+            openfile_Click_fn(tbMessagePath,filter);
         }
 
         private void createAlbum_Click(object sender, EventArgs e)
@@ -45,7 +54,7 @@ namespace FacebookImageUpload
             try
             {
                 FacebookAlbum album = new FacebookAlbum();
-                lbAlbumId.Text = album.createAlbum(FB_Image.AccessToken, tbAlbumDesc.Text, tbAlbumName.Text);
+                tbAlbumID.Text = album.createAlbum(FB_Image.AccessToken, tbAlbumDesc.Text, tbAlbumName.Text);
                 lbAlbumName.Text = album.getName(FB_Image.AccessToken);
                 pBoxAlbumCover.Image = FacebookImageUpload.Properties.Resources._default;
             }
@@ -56,100 +65,62 @@ namespace FacebookImageUpload
         }
         private void uploadImage_Click(object sender, EventArgs e)
         {
-            #region comment1
-            //upload photo
-            //try
-            //{
-            //    var imgstream = File.OpenRead(tbImagePath.Text);
-            //    var fb = new FacebookClient(FB_Image.AccessToken);
-            //    dynamic res = fb.Post(lbAlbumId.Text + "/photos", new
-            //    {
-            //        message = "Image description",
-            //        file = new FacebookMediaStream
-            //        {
-            //            ContentType = "image/jpeg",
-            //            FileName = browseImage.FileName,
-            //        }.SetValue(imgstream)
-            //    });
-            //    browseImage.ImageID = res.id;
-            //    MessageBox.Show("Picture ID is :" + res.id);
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message);
-            //}
-            #endregion
-            Upload_Picture_FB(tbImagePath.Text, browseImage);
-            MessageBox.Show("Your picture ID is: " + browseImage.ImageID);
+            string messagePath = "";
+            tbMessage.AppendText("Input Text: " + Environment.NewLine);
+            if (cmbSelectTextType.SelectedIndex == cmbSelectTextType.Items.IndexOf("From File"))
+            {
+                messagePath = tbMessagePath.Text;
+                tbMessage.AppendText(File.ReadAllText(tbMessagePath.Text));
+                tbMessage.AppendText(Environment.NewLine);
+            }
+            else if (cmbSelectTextType.SelectedIndex == cmbSelectTextType.Items.IndexOf("From Text"))
+            {
+                string tempMessagePath = Path.Combine(FB_Image.RelativeDirectory, "temp", "temp_message.txt");
+                File.WriteAllText(tempMessagePath, tbInputMessage.Text);
+                messagePath = tempMessagePath;
+
+            }
+            if (cbIsTested.Checked)
+            {
+                string flag = SendMessageWithTestedSource(tbImagePath.Text, messagePath, tbAlbumID.Text);
+                if (flag != null)
+                {
+                    MessageBox.Show("The message has been sent");
+                }
+                else
+                {
+                    MessageBox.Show("This image is not ready for sending your message");
+                }
+            }
+            else
+            {
+                string flag = TestEncodeSuccessRate(tbImagePath.Text, messagePath, tbAlbumID.Text,false);
+                if (flag != null)
+                {
+                    MessageBox.Show("The message has been sent");
+                }
+                else
+                {
+                    MessageBox.Show("This image is not ready for sending your message");
+                }
+            }
+            
             
             
         }
 
-        private void downloadImage_Click(object sender, EventArgs e)
-        {
-
-            #region commnet1
-            //temp++; // biến để đặt tên
-            //var fb = new FacebookClient(FB_Image.AccessToken);
-            //dynamic res = fb.Get(browseImage.ImageID + "?fields=images");  // query đường dẫn + độ phân giải ảnh
-            //string json_string = Newtonsoft.Json.JsonConvert.SerializeObject(res); // parse response sang json
-            //dynamic json = JObject.Parse(json_string);
-            //dynamic imagesJson = json["images"];
-            //int count = imagesJson.Count;
-            //int i = 0;
-            //string source_url = "";
-
-            ///* lấy độ phân giải trùng với độ phân giải của ảnh đã up */
-            //while (i < count && imagesJson[i] != null)
-            //{
-            //    int image_height = Int32.Parse((string)imagesJson[i]["height"]);
-            //    int image_width = Int32.Parse((string)imagesJson[i]["width"]);
-            //    if (image_height == browseImage.Height && image_width == browseImage.Width)
-            //    {
-            //        source_url = imagesJson[i]["source"];
-            //        break;
-            //    }
-            //    i++;
-
-            //}
-            //if (i >= count)
-            //{
-            //    source_url = imagesJson[0]["source"];
-            //}
-           
-            ///*------*/
-            ///* download ảnh */
-            //using (WebClient webClient = new WebClient())
-            //{
-            //    byte[] data = webClient.DownloadData(source_url);
-
-            //    using (MemoryStream mem = new MemoryStream(data))
-            //    {
-            //        using (var yourImage = Image.FromStream(mem))
-            //        {
-            //            yourImage.Save(FB_Image.BaseDirectory + browseImage.FileNameWithOutExtension + "_" + temp + ".jpg", ImageFormat.Jpeg);
-            //            browseImage.DownFileSize = new FileInfo(FB_Image.BaseDirectory + browseImage.FileNameWithOutExtension + "_" + temp + ".jpg").Length;
-            //        }
-            //    }
-
-            //}
-            #endregion
-            string file = tbImagePath.Text;
-
-            Download_Picture_FACEBOOK(ref file, browseImage);
-            float ratio = (float)(browseImage.UpFileSize / browseImage.DownFileSize); // lấy tỉ lệ
-            MessageBox.Show(ratio.ToString());        
-        }
 
         private async void btngetAlbumlist_Click(object sender, EventArgs e)
         {
             btngetAlbumlist.Enabled = false;
             pbStatus.Maximum = 100;
             pbStatus.Step = 1;
+            //List<string> inboxAlbums = new List<string> { "1661869480692559", "1658361464376694", "1661205730758934" };
+            List<string> inboxAlbums = null;
             try
             {
                 var progress = new Progress<int>(s => { pbStatus.Value = s; lbImagePath.Text = s.ToString(); });
-                await Task.Factory.StartNew(() => GetAlbumList(progress), TaskCreationOptions.LongRunning);
+                await Task.Factory.StartNew(() => GetAlbumList_1(progress,inboxAlbums,5), TaskCreationOptions.LongRunning);
                 
                 this.ListViewalbumList.View = View.LargeIcon;
                 this.ListViewalbumList.LargeImageList = FB_Image.Album_PhotoList;
@@ -157,8 +128,16 @@ namespace FacebookImageUpload
                 for (int j = 0; j < FB_Image.Album_PhotoList.Images.Count; j++)
                 {
                     ListViewItem item = new ListViewItem();
-                    item.Text = FB_Image.Album_PhotoList.Images.Keys[j].ToString();
                     item.Name = FB_Image.List_AlbumID[j];
+                   
+                    if (FB_Image.List_AlbumInfo[j].NewNumber > 0)
+                    {
+                        item.Text = string.Format("{0} ({1})", FB_Image.Album_PhotoList.Images.Keys[j].ToString(), FB_Image.List_AlbumInfo[j].NewNumber);
+                    }
+                    else
+                    {
+                        item.Text = FB_Image.Album_PhotoList.Images.Keys[j].ToString();
+                    }
                     item.ImageIndex = j;
                     this.ListViewalbumList.Items.Add(item);
                 }
@@ -184,19 +163,20 @@ namespace FacebookImageUpload
                 ListViewItem item = ((ListView)sender).SelectedItems[0];
                 pBoxAlbumCover.Image = (Image)item.ImageList.Images[item.ImageIndex];
                 lbAlbumName.Text = item.Text.ToString();
-                lbAlbumId.Text = item.Name.ToString();
+                tbAlbumID.Text = item.Name.ToString();
             }
         }
 
         private async void btnAuto_Click(object sender, EventArgs e)
         {
-            float ratio = 5.0F;
-            btnAuto.Enabled = false;
+
+           
             pbStatus.Value = 0;
+            List<FB_Image> listFile = new List<FB_Image>();
             try
             {
                 var progress = new Progress<int>(s => { pbStatus.Value = s; });
-                await Task.Factory.StartNew(() => AutoUploadAndDownload(progress,tbImagePath.Text,browseImage,ref ratio), TaskCreationOptions.LongRunning);
+                await Task.Factory.StartNew(() => listFile= AutoUploadAndDownload(tbImagePath.Text,progress), TaskCreationOptions.LongRunning);
 
             }
             catch (Exception ex)
@@ -204,93 +184,65 @@ namespace FacebookImageUpload
                 Log(ex);
             }
 
-            btnAuto.Enabled = true;
-            MessageBox.Show("Ratio is " + ratio);
-            lbImageName.Text = browseImage.FileName;
-            lbImagePath.Text = browseImage.DownFileSize.ToString();
+          
+            if (listFile.Count > 0)
+            {
+                foreach (FB_Image i in listFile)
+                {
+                    tbMessage.AppendText(i.ToString());
+                }
+            }
+
 
         }
 
-        private static StringBuilder sortOutput = null;
-       private static StreamWriter sortStreamWriter = null;
+
         private  void btnTask_Click(object sender, EventArgs e)
         {
 
-            Process sortProcess;
-            sortProcess = new Process();
-            sortProcess.StartInfo.FileName = "cmd.exe";
-            sortProcess.StartInfo.WorkingDirectory = Path.Combine(FB_Image.RelativeDirectory,"Lib");
-            sortProcess.StartInfo.Arguments = "/C jphide cipher1.jpg cipher3.jpg hello.txt";
+            //var a = ListViewalbumList.SelectedItems;
+            //if (a.Count > 0)
+            //{
+            //    foreach (ListViewItem i in a)
+            //    {
+            //        string albumID = i.Name;
+            //        List<FB_Message> listMessage = GetNewMessageFromAlbum(albumID);
+            //        foreach (FB_Message m in listMessage)
+            //        {
+            //            if (m.Content != "")
+            //            {
+            //                tbMessage.AppendText("Output of " + m.Image.FileName + " : " + Environment.NewLine);
+            //                tbMessage.AppendText(m.Content + Environment.NewLine);
+            //            }
+            //            else
+            //            {
+            //                tbMessage.AppendText("Output of " + m.Image.FileName + " : " + Environment.NewLine);
+            //                tbMessage.AppendText("No ouput" + Environment.NewLine);
+            //            }
+                        
+            //        }
 
-            // Set UseShellExecute to false for redirection.
-            sortProcess.StartInfo.UseShellExecute = false;
+            //    }
+            //    MessageBox.Show("get message is finished");
+            //}
 
-            // Redirect the standard output of the sort command.  
-            // This stream is read asynchronously using an event handler.
-            sortProcess.StartInfo.RedirectStandardOutput = true;
-            sortProcess.StartInfo.CreateNoWindow = true;
-            sortOutput = new StringBuilder("");
+            //string crc1 = Crc32Hash(Path.Combine(FB_Image.BaseDirectory, "test.txt"));
+            //string crc2 = Crc32Hash(Path.Combine(FB_Image.BaseDirectory, "test1.txt"));
 
-            // Set our event handler to asynchronously read the sort output.
-            sortProcess.OutputDataReceived += new DataReceivedEventHandler(SortOutputHandler);
+            string input = InsertCrc32("test.txt");
+            tbMessage.AppendText(File.ReadAllText(input) + Environment.NewLine);
+            string output = CheckCrc32(input);
+            if (output != null)
+                tbMessage.AppendText(File.ReadAllText(output));
 
-            // Redirect standard input as well.  This stream
-            // is used synchronously.
-            sortProcess.StartInfo.RedirectStandardInput = true;
             
-            // Start the process.
-            sortProcess.Start();
-            // Use a stream writer to synchronously write the sort input.
-          
-
-            // Start the asynchronous read of the sort output stream.
-            sortProcess.BeginOutputReadLine();
-            sortStreamWriter = sortProcess.StandardInput;
-            sortStreamWriter.WriteLine("abc");
-            sortStreamWriter.WriteLine("\n");
-
-
-
-            
         }
-        private static int n = 0;
-        private static void SortOutputHandler(object sendingProcess,
-           DataReceivedEventArgs outLine)
+
+        private void cmbSelectTextType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Collect the sort command output.
-            if (!String.IsNullOrEmpty(outLine.Data))
-            {
-                n = 1;
-                sortOutput.Append(outLine.Data);
-                MessageBox.Show(sortOutput.ToString());
-                sortStreamWriter.WriteLine("123");
-            }
+            cmbSelectTextType_SelectedIndexChangedHandle(sender, e);
         }
 
-        private void btnJPHide_Click(object sender, EventArgs e)
-        {
-            btnJPHide_Click_fn();
-        }
-
-        private void fdJpgImageOpen_Click(object sender, EventArgs e)
-        {
-            fdJpgImageOpen_Click_fn();
-        }
-
-        private void fdHiddenFile_Click(object sender, EventArgs e)
-        {
-            fdHiddenFile_Click_fn();
-        }
-
-        private void btnJPSeek_Click(object sender, EventArgs e)
-        {
-            btnJPSeek_Click_fn();
-        }
-
-        private void btnStegoRun_Click(object sender, EventArgs e)
-        {
-
-        }
 
 
     }
