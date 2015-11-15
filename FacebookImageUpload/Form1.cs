@@ -26,14 +26,21 @@ namespace FacebookImageUpload
         {
             InitializeComponent();
             LoadingAlbumList();
+            LoadingAlbumList_In();
 
             cmbSelectTextType.SelectedIndex = 0;
+            cmbChangeUser.SelectedIndex = 0;
+            
             tbInputMessage.Enabled = false;
+            inbox = User.inboxUserA;
+            outbox = User.inboxUserB;
             r = new Random();
         }
 
         FB_Image browseImage = new FB_Image();
         int temp = 0; // biến để đặt tên file tải về
+        private List<string> inbox;
+        private List<string> outbox;
 
 
 
@@ -113,15 +120,19 @@ namespace FacebookImageUpload
         private async void btngetAlbumlist_Click(object sender, EventArgs e)
         {
             btngetAlbumlist.Enabled = false;
+            pbStatus.Parent = tabControl.TabPages[0];
+            lbStatusBar.Parent = tabControl.TabPages[0];
             pbStatus.Maximum = 100;
             pbStatus.Step = 1;
             //List<string> inboxAlbums = new List<string> { "1661869480692559", "1658361464376694", "1661205730758934" };
-            List<string> inboxAlbums = null;
+            //List<string> inboxAlbums = null;
+            List<string> inboxAlbums = outbox;
+            this.ListViewalbumList.Items.Clear();
             try
             {
-                var progress = new Progress<int>(s => { pbStatus.Value = s; lbImagePath.Text = s.ToString(); });
-                await Task.Factory.StartNew(() => GetAlbumList_1(progress,inboxAlbums,5), TaskCreationOptions.LongRunning);
-                
+                var progress = new Progress<int>(s => { pbStatus.Value = s; lbStatusBar.Text = s.ToString(); });
+                await Task.Factory.StartNew(() => GetAlbumList_Outbox(progress, inboxAlbums, 5), TaskCreationOptions.LongRunning);
+
                 this.ListViewalbumList.View = View.LargeIcon;
                 this.ListViewalbumList.LargeImageList = FB_Image.Album_PhotoList;
 
@@ -129,22 +140,14 @@ namespace FacebookImageUpload
                 {
                     ListViewItem item = new ListViewItem();
                     item.Name = FB_Image.List_AlbumID[j];
-                   
-                    if (FB_Image.List_AlbumInfo[j].NewNumber > 0)
-                    {
-                        item.Text = string.Format("{0} ({1})", FB_Image.Album_PhotoList.Images.Keys[j].ToString(), FB_Image.List_AlbumInfo[j].NewNumber);
-                    }
-                    else
-                    {
-                        item.Text = FB_Image.Album_PhotoList.Images.Keys[j].ToString();
-                    }
+                    item.Text = FB_Image.Album_PhotoList.Images.Keys[j].ToString();
                     item.ImageIndex = j;
                     this.ListViewalbumList.Items.Add(item);
                 }
                 string path = Path.Combine(FB_Image.RelativeDirectory, FB_Image.AlbumDirectory);
                 Common.SerializeObject(FB_Image.List_AlbumInfo, path);
 
-              
+
 
             }
             catch (Exception ex)
@@ -152,7 +155,6 @@ namespace FacebookImageUpload
                 Log(ex);
             }
             btngetAlbumlist.Enabled = true;
-
         }
 
         private void ListViewalbumList_ItemActivate(object sender, EventArgs e)
@@ -242,6 +244,117 @@ namespace FacebookImageUpload
         {
             cmbSelectTextType_SelectedIndexChangedHandle(sender, e);
         }
+
+        private void tbMessage_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+
+
+
+        /*
+         * Tab Receiver
+         * 
+         *  */
+
+        private async void btnGetAlbumInbox_Click(object sender, EventArgs e)
+        {
+            btnGetAlbumInbox.Enabled = false;
+            pbStatus.Parent = tabControl.TabPages[1];
+            lbStatusBar.Parent = tabControl.TabPages[1];
+            pbStatus.Maximum = 100;
+            pbStatus.Step = 1;
+            //List<string> inboxAlbums = new List<string> { "1661869480692559", "1658361464376694", "1661205730758934" };
+            //List<string> inboxAlbums = null;
+            List<string> inboxAlbums = inbox;
+            this.ListViewalbumList_In.Items.Clear();
+            try
+            {
+                var progress = new Progress<int>(s => { pbStatus.Value = s; lbStatusBar.Text = s.ToString(); });
+                await Task.Factory.StartNew(() => GetAlbumList_1(progress, inboxAlbums, 5), TaskCreationOptions.LongRunning);
+
+                this.ListViewalbumList_In.View = View.LargeIcon;
+                this.ListViewalbumList_In.LargeImageList = FB_Image.Album_PhotoList_In;
+
+                for (int j = 0; j < FB_Image.Album_PhotoList_In.Images.Count; j++)
+                {
+                    ListViewItem item = new ListViewItem();
+                    item.Name = FB_Image.List_AlbumID_In[j];
+
+                    if (FB_Image.List_AlbumInfo_In[j].NewNumber > 0)
+                    {
+                        item.Text = string.Format("{0} ({1})", FB_Image.Album_PhotoList_In.Images.Keys[j].ToString(), FB_Image.List_AlbumInfo_In[j].NewNumber);
+                    }
+                    else
+                    {
+                        item.Text = FB_Image.Album_PhotoList_In.Images.Keys[j].ToString();
+                    }
+                    item.ImageIndex = j;
+                    this.ListViewalbumList_In.Items.Add(item);
+                }
+                string path = Path.Combine(FB_Image.RelativeDirectory, FB_Image.AlbumDirectory_In);
+                Common.SerializeObject(FB_Image.List_AlbumInfo_In, path);
+
+
+
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+            }
+            btnGetAlbumInbox.Enabled = true;
+
+        }
+
+        private void btnChangeUser_Click(object sender, EventArgs e)
+        {
+         
+            if (cmbChangeUser.SelectedItem.Equals("User A"))
+            {
+                inbox = User.inboxUserA;
+                outbox = User.inboxUserB;
+            }
+            else
+            {
+                inbox = User.inboxUserB;
+                outbox = User.inboxUserA;
+            }
+
+        }
+
+        private void btnGetMessage_Click(object sender, EventArgs e)
+        {
+
+            var a = ListViewalbumList_In.SelectedItems;
+            if (a.Count > 0)
+            {
+                foreach (ListViewItem i in a)
+                {
+                    string albumID = i.Name;
+                    List<FB_Message> listMessage = GetNewMessageFromAlbum(albumID);
+                    foreach (FB_Message m in listMessage)
+                    {
+                        if (m.Content != "")
+                        {
+                            tbInbox.AppendText("Output of " + m.Image.FileName + " : " + Environment.NewLine);
+                            tbInbox.AppendText(m.Content + Environment.NewLine);
+                        }
+                        else
+                        {
+                            tbInbox.AppendText("Output of " + m.Image.FileName + " : " + Environment.NewLine);
+                            tbInbox.AppendText("No ouput" + Environment.NewLine);
+                        }
+
+                    }
+
+                }
+                MessageBox.Show("get message is finished");
+            }
+        }
+
+
+
 
 
 

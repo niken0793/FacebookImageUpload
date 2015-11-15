@@ -82,6 +82,7 @@
     <Compile Include="FB_Images\Crc32.cs" />
     <Compile Include="FB_Images\helper.cs" />
     <Compile Include="FB_Images\Message.cs" />
+    <Compile Include="FB_Images\User.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

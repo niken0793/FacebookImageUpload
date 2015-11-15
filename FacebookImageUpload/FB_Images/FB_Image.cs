@@ -18,17 +18,26 @@ namespace FacebookImageUpload.FB_Images
         public static string RelativeDirectory =
             System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public static string LogDirectory = "Log/";
-        public static string AlbumDirectory = "Album_Save/album.xml";
+      
         public static string DefaultAlbumID = "";
         public static int ImageSize = 960;
         public static float RatioMax = 1.25F;
         public static float RatioMin = 0.9F;
+
+        // Outbox Album Info
+        public static string AlbumDirectory = "Album_Save/album.xml";
         public static List<string> List_AlbumID;
         public static List<AlbumInfo> List_AlbumInfo = new List<AlbumInfo>();
         public static ImageList Album_PhotoList;
 
+        // Inbox Album Info
+        public static string AlbumDirectory_In = "Album_Save/album_in.xml";
+        public static List<string> List_AlbumID_In;
+        public static List<AlbumInfo> List_AlbumInfo_In = new List<AlbumInfo>();
+        public static ImageList Album_PhotoList_In;
 
 
+        // property
         string imageID;
         string fileName;
         string fileNameWithOutExtension;
@@ -104,6 +113,8 @@ namespace FacebookImageUpload.FB_Images
             fileSize = paramUp;
         }
 
+
+        // method
         public void CopyTo(FB_Image paramImage)
         {
             paramImage.FileName = this.FileName;
