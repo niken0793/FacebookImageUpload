@@ -24,6 +24,104 @@ namespace FacebookImageUpload.FB_Images
 {
     public class Common
     {
+        public static List<string> listFileDelete = new List<string>();
+
+
+        public static void ShowProgressBar(string progress,ToolStripProgressBar pb, ToolStripLabel lbPercent,ToolStripLabel lbDoing)
+        {
+            if (progress != null && progress.Length > 0)
+            {
+                string[] a = progress.Split('|');
+                if (a.Length == 3)
+                {
+                    if (pb != null)
+                    {
+                        pb.Value = Int16.Parse(a[0]);
+
+                    }
+                    if(lbPercent!= null)
+                    {
+                        lbPercent.Text = a[1] +" %";
+                    }
+                    if(lbDoing != null)
+                    {
+                        lbDoing.Text = a[2];
+                    }
+                }
+            }
+        }
+
+        public static void ResetStatusTrip(ToolStripProgressBar pb, ToolStripLabel lbPercent, ToolStripLabel lbDoing)
+        {
+             if (pb != null)
+                    {
+                        pb.Value = 0;
+
+                    }
+                    if(lbPercent!= null)
+                    {
+                        lbPercent.Text = "...";
+                    }
+                    if(lbDoing != null)
+                    {
+                        lbDoing.Text = "Facebook Image Stegano";
+                    }
+        }
+
+
+        public static String BytesToString(long byteCount)
+        {
+            string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" }; //Longs run out around EB
+            if (byteCount == 0)
+                return "0" + suf[0];
+            long bytes = Math.Abs(byteCount);
+            int place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
+            double num = Math.Round(bytes / Math.Pow(1024, place), 1);
+            return (Math.Sign(byteCount) * num).ToString() + " "+suf[place];
+        }
+
+        public static void DeleteFile(string path)
+        {
+            if (path != null && path != "" && File.Exists(path))
+            {
+                File.Delete(path);
+            }
+        }
+        public static void DeleteFile(List<string> pathes)
+        {
+            try
+            {
+                List<string> errorFile = new List<string>();
+                if (pathes != null && pathes.Count > 0)
+                {
+                    foreach (string path in pathes)
+                    {
+                        try
+                        {
+                            if (path != null && path != "" && File.Exists(path))
+                            {
+                                File.Delete(path);
+                                
+                            }
+                        }
+                        catch (Exception ee)
+                        {
+                            Form1.Log(ee);
+                            errorFile.Add(path);
+                        }
+                    }
+                    pathes.Clear();
+                    pathes.AddRange(errorFile);
+
+                   
+                }
+            }
+            catch (Exception e)
+            {
+                Form1.Log(e);
+
+            }
+        }
 
         public static void PreparePath(string filename)
         {
@@ -53,8 +151,6 @@ namespace FacebookImageUpload.FB_Images
                 string s_out = File.ReadAllText(path_file_out);
                 if (tb != null)
                 {
-                    tb.AppendText("Output: " + Environment.NewLine);
-                    tb.AppendText(s_out);
                 }
                 File.Delete(path_file_out);
                 if (s_in.Equals(s_out))

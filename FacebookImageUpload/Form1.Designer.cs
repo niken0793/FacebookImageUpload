@@ -32,9 +32,11 @@
             this.tbImagePath = new System.Windows.Forms.TextBox();
             this.ListViewalbumList = new System.Windows.Forms.ListView();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.lbMessageLength = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
             this.cbIsTested = new System.Windows.Forms.CheckBox();
-            this.cmbSelectTextType = new System.Windows.Forms.ComboBox();
             this.tbInputMessage = new System.Windows.Forms.TextBox();
+            this.cmbSelectTextType = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
             this.btnSelectFile = new System.Windows.Forms.Button();
             this.tbMessagePath = new System.Windows.Forms.TextBox();
@@ -47,14 +49,20 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabSender = new System.Windows.Forms.TabPage();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.lbImageSize = new System.Windows.Forms.Label();
+            this.lbImageDirectory = new System.Windows.Forms.Label();
+            this.lbImageName = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.pbImage = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btngetAlbumlist = new System.Windows.Forms.Button();
-            this.tbMessage = new System.Windows.Forms.TextBox();
-            this.pbStatus = new System.Windows.Forms.ProgressBar();
-            this.btnTask = new System.Windows.Forms.Button();
-            this.lbStatusBar = new System.Windows.Forms.Label();
             this.tabReceiver = new System.Windows.Forms.TabPage();
+            this.tbInbox = new System.Windows.Forms.TextBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.btnGetMessage = new System.Windows.Forms.Button();
             this.btnGetAlbumInbox = new System.Windows.Forms.Button();
             this.ListViewalbumList_In = new System.Windows.Forms.ListView();
             this.tabSetting = new System.Windows.Forms.TabPage();
@@ -67,28 +75,41 @@
             this.tbAlbumDesc = new System.Windows.Forms.TextBox();
             this.tbAlbumName = new System.Windows.Forms.TextBox();
             this.btnCreateAlbum = new System.Windows.Forms.Button();
+            this.tabGoogle = new System.Windows.Forms.TabPage();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.listViewSuccessImage = new System.Windows.Forms.ListView();
+            this.tbGoogleLink = new System.Windows.Forms.TextBox();
+            this.btnImageSearch = new System.Windows.Forms.Button();
+            this.tbKeyWord = new System.Windows.Forms.TextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnGetMessage = new System.Windows.Forms.Button();
-            this.tbInbox = new System.Windows.Forms.TextBox();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.pbStatus = new System.Windows.Forms.ToolStripProgressBar();
+            this.lbStatusBar = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lbDoing = new System.Windows.Forms.ToolStripStatusLabel();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pBoxAlbumCover)).BeginInit();
             this.tabControl.SuspendLayout();
             this.tabSender.SuspendLayout();
+            this.groupBox7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbImage)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.tabReceiver.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.tabSetting.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.tabGoogle.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnUploadImage
             // 
-            this.btnUploadImage.Location = new System.Drawing.Point(0, 203);
+            this.btnUploadImage.Location = new System.Drawing.Point(6, 228);
             this.btnUploadImage.Name = "btnUploadImage";
             this.btnUploadImage.Size = new System.Drawing.Size(75, 23);
             this.btnUploadImage.TabIndex = 2;
@@ -107,16 +128,18 @@
             // 
             this.ListViewalbumList.Location = new System.Drawing.Point(6, 19);
             this.ListViewalbumList.Name = "ListViewalbumList";
-            this.ListViewalbumList.Size = new System.Drawing.Size(363, 240);
+            this.ListViewalbumList.Size = new System.Drawing.Size(233, 106);
             this.ListViewalbumList.TabIndex = 9;
             this.ListViewalbumList.UseCompatibleStateImageBehavior = false;
             this.ListViewalbumList.ItemActivate += new System.EventHandler(this.ListViewalbumList_ItemActivate);
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.lbMessageLength);
+            this.groupBox3.Controls.Add(this.label10);
             this.groupBox3.Controls.Add(this.cbIsTested);
-            this.groupBox3.Controls.Add(this.cmbSelectTextType);
             this.groupBox3.Controls.Add(this.tbInputMessage);
+            this.groupBox3.Controls.Add(this.cmbSelectTextType);
             this.groupBox3.Controls.Add(this.label7);
             this.groupBox3.Controls.Add(this.btnSelectFile);
             this.groupBox3.Controls.Add(this.tbMessagePath);
@@ -129,12 +152,30 @@
             this.groupBox3.Controls.Add(this.lbAlbumName);
             this.groupBox3.Controls.Add(this.pBoxAlbumCover);
             this.groupBox3.Controls.Add(this.label3);
-            this.groupBox3.Location = new System.Drawing.Point(15, 215);
+            this.groupBox3.Location = new System.Drawing.Point(15, 169);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(557, 241);
+            this.groupBox3.Size = new System.Drawing.Size(610, 264);
             this.groupBox3.TabIndex = 10;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Sending";
+            // 
+            // lbMessageLength
+            // 
+            this.lbMessageLength.AutoSize = true;
+            this.lbMessageLength.Location = new System.Drawing.Point(318, 228);
+            this.lbMessageLength.Name = "lbMessageLength";
+            this.lbMessageLength.Size = new System.Drawing.Size(16, 13);
+            this.lbMessageLength.TabIndex = 25;
+            this.lbMessageLength.Text = "...";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(263, 228);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(49, 13);
+            this.label10.TabIndex = 24;
+            this.label10.Text = "Length : ";
             // 
             // cbIsTested
             // 
@@ -145,6 +186,17 @@
             this.cbIsTested.TabIndex = 17;
             this.cbIsTested.Text = "Tested";
             this.cbIsTested.UseVisualStyleBackColor = true;
+            // 
+            // tbInputMessage
+            // 
+            this.tbInputMessage.Location = new System.Drawing.Point(266, 109);
+            this.tbInputMessage.Multiline = true;
+            this.tbInputMessage.Name = "tbInputMessage";
+            this.tbInputMessage.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbInputMessage.Size = new System.Drawing.Size(338, 98);
+            this.tbInputMessage.TabIndex = 15;
+            this.tbInputMessage.TextChanged += new System.EventHandler(this.tbInputMessage_TextChanged);
+            this.tbInputMessage.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbMessage_KeyPress);
             // 
             // cmbSelectTextType
             // 
@@ -159,18 +211,10 @@
             this.cmbSelectTextType.Text = "From file or text";
             this.cmbSelectTextType.SelectedIndexChanged += new System.EventHandler(this.cmbSelectTextType_SelectedIndexChanged);
             // 
-            // tbInputMessage
-            // 
-            this.tbInputMessage.Location = new System.Drawing.Point(266, 111);
-            this.tbInputMessage.Multiline = true;
-            this.tbInputMessage.Name = "tbInputMessage";
-            this.tbInputMessage.Size = new System.Drawing.Size(235, 82);
-            this.tbInputMessage.TabIndex = 15;
-            // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(4, 144);
+            this.label7.Location = new System.Drawing.Point(3, 156);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(81, 13);
             this.label7.TabIndex = 14;
@@ -178,7 +222,7 @@
             // 
             // btnSelectFile
             // 
-            this.btnSelectFile.Location = new System.Drawing.Point(196, 157);
+            this.btnSelectFile.Location = new System.Drawing.Point(195, 169);
             this.btnSelectFile.Name = "btnSelectFile";
             this.btnSelectFile.Size = new System.Drawing.Size(55, 23);
             this.btnSelectFile.TabIndex = 13;
@@ -188,7 +232,7 @@
             // 
             // tbMessagePath
             // 
-            this.tbMessagePath.Location = new System.Drawing.Point(4, 160);
+            this.tbMessagePath.Location = new System.Drawing.Point(3, 172);
             this.tbMessagePath.Name = "tbMessagePath";
             this.tbMessagePath.Size = new System.Drawing.Size(184, 20);
             this.tbMessagePath.TabIndex = 12;
@@ -260,83 +304,124 @@
             this.tabControl.Controls.Add(this.tabSender);
             this.tabControl.Controls.Add(this.tabReceiver);
             this.tabControl.Controls.Add(this.tabSetting);
-            this.tabControl.Location = new System.Drawing.Point(-1, 27);
+            this.tabControl.Controls.Add(this.tabGoogle);
+            this.tabControl.Location = new System.Drawing.Point(-1, 29);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(1008, 517);
+            this.tabControl.Size = new System.Drawing.Size(1008, 509);
             this.tabControl.TabIndex = 11;
             // 
             // tabSender
             // 
+            this.tabSender.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tabSender.Controls.Add(this.groupBox7);
             this.tabSender.Controls.Add(this.groupBox1);
-            this.tabSender.Controls.Add(this.tbMessage);
-            this.tabSender.Controls.Add(this.pbStatus);
-            this.tabSender.Controls.Add(this.btnTask);
-            this.tabSender.Controls.Add(this.lbStatusBar);
             this.tabSender.Controls.Add(this.groupBox3);
             this.tabSender.Location = new System.Drawing.Point(4, 22);
             this.tabSender.Name = "tabSender";
             this.tabSender.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSender.Size = new System.Drawing.Size(1000, 491);
+            this.tabSender.Size = new System.Drawing.Size(1000, 483);
             this.tabSender.TabIndex = 0;
             this.tabSender.Text = "Sender";
             this.tabSender.UseVisualStyleBackColor = true;
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.lbImageSize);
+            this.groupBox7.Controls.Add(this.lbImageDirectory);
+            this.groupBox7.Controls.Add(this.lbImageName);
+            this.groupBox7.Controls.Add(this.label9);
+            this.groupBox7.Controls.Add(this.label8);
+            this.groupBox7.Controls.Add(this.label6);
+            this.groupBox7.Controls.Add(this.pbImage);
+            this.groupBox7.Location = new System.Drawing.Point(15, 7);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(359, 156);
+            this.groupBox7.TabIndex = 19;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Image Information";
+            // 
+            // lbImageSize
+            // 
+            this.lbImageSize.AutoSize = true;
+            this.lbImageSize.Location = new System.Drawing.Point(231, 100);
+            this.lbImageSize.Name = "lbImageSize";
+            this.lbImageSize.Size = new System.Drawing.Size(0, 13);
+            this.lbImageSize.TabIndex = 23;
+            // 
+            // lbImageDirectory
+            // 
+            this.lbImageDirectory.AutoSize = true;
+            this.lbImageDirectory.Location = new System.Drawing.Point(231, 73);
+            this.lbImageDirectory.Name = "lbImageDirectory";
+            this.lbImageDirectory.Size = new System.Drawing.Size(0, 13);
+            this.lbImageDirectory.TabIndex = 22;
+            // 
+            // lbImageName
+            // 
+            this.lbImageName.AutoSize = true;
+            this.lbImageName.Location = new System.Drawing.Point(231, 43);
+            this.lbImageName.Name = "lbImageName";
+            this.lbImageName.Size = new System.Drawing.Size(0, 13);
+            this.lbImageName.TabIndex = 21;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(155, 100);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(53, 13);
+            this.label9.TabIndex = 20;
+            this.label9.Text = "File size : ";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(155, 73);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(58, 13);
+            this.label8.TabIndex = 19;
+            this.label8.Text = "Directory : ";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(155, 43);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(44, 13);
+            this.label6.TabIndex = 18;
+            this.label6.Text = "Name : ";
+            // 
+            // pbImage
+            // 
+            this.pbImage.Image = global::FacebookImageUpload.Properties.Resources._default;
+            this.pbImage.Location = new System.Drawing.Point(16, 43);
+            this.pbImage.Name = "pbImage";
+            this.pbImage.Size = new System.Drawing.Size(102, 92);
+            this.pbImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbImage.TabIndex = 18;
+            this.pbImage.TabStop = false;
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.btngetAlbumlist);
             this.groupBox1.Controls.Add(this.ListViewalbumList);
-            this.groupBox1.Location = new System.Drawing.Point(600, 6);
+            this.groupBox1.Location = new System.Drawing.Point(380, 7);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(377, 307);
+            this.groupBox1.Size = new System.Drawing.Size(245, 156);
             this.groupBox1.TabIndex = 18;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Outbox Album";
             // 
             // btngetAlbumlist
             // 
-            this.btngetAlbumlist.Location = new System.Drawing.Point(142, 274);
+            this.btngetAlbumlist.Location = new System.Drawing.Point(72, 131);
             this.btngetAlbumlist.Name = "btngetAlbumlist";
             this.btngetAlbumlist.Size = new System.Drawing.Size(92, 23);
             this.btngetAlbumlist.TabIndex = 17;
             this.btngetAlbumlist.Text = "Get Albums List";
             this.btngetAlbumlist.UseVisualStyleBackColor = true;
             this.btngetAlbumlist.Click += new System.EventHandler(this.btngetAlbumlist_Click);
-            // 
-            // tbMessage
-            // 
-            this.tbMessage.Location = new System.Drawing.Point(15, 29);
-            this.tbMessage.Multiline = true;
-            this.tbMessage.Name = "tbMessage";
-            this.tbMessage.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbMessage.Size = new System.Drawing.Size(551, 159);
-            this.tbMessage.TabIndex = 16;
-            this.tbMessage.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbMessage_KeyPress);
-            // 
-            // pbStatus
-            // 
-            this.pbStatus.Location = new System.Drawing.Point(15, 479);
-            this.pbStatus.Name = "pbStatus";
-            this.pbStatus.Size = new System.Drawing.Size(551, 12);
-            this.pbStatus.TabIndex = 15;
-            // 
-            // btnTask
-            // 
-            this.btnTask.Location = new System.Drawing.Point(783, 387);
-            this.btnTask.Name = "btnTask";
-            this.btnTask.Size = new System.Drawing.Size(75, 23);
-            this.btnTask.TabIndex = 14;
-            this.btnTask.Text = "Task";
-            this.btnTask.UseVisualStyleBackColor = true;
-            this.btnTask.Click += new System.EventHandler(this.btnTask_Click);
-            // 
-            // lbStatusBar
-            // 
-            this.lbStatusBar.AutoSize = true;
-            this.lbStatusBar.Location = new System.Drawing.Point(583, 475);
-            this.lbStatusBar.Name = "lbStatusBar";
-            this.lbStatusBar.Size = new System.Drawing.Size(0, 13);
-            this.lbStatusBar.TabIndex = 13;
             // 
             // tabReceiver
             // 
@@ -345,22 +430,40 @@
             this.tabReceiver.Location = new System.Drawing.Point(4, 22);
             this.tabReceiver.Name = "tabReceiver";
             this.tabReceiver.Padding = new System.Windows.Forms.Padding(3);
-            this.tabReceiver.Size = new System.Drawing.Size(1000, 491);
+            this.tabReceiver.Size = new System.Drawing.Size(1000, 483);
             this.tabReceiver.TabIndex = 1;
             this.tabReceiver.Text = "Receiver";
             this.tabReceiver.UseVisualStyleBackColor = true;
+            // 
+            // tbInbox
+            // 
+            this.tbInbox.Location = new System.Drawing.Point(9, 22);
+            this.tbInbox.Multiline = true;
+            this.tbInbox.Name = "tbInbox";
+            this.tbInbox.Size = new System.Drawing.Size(335, 94);
+            this.tbInbox.TabIndex = 2;
             // 
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.btnGetMessage);
             this.groupBox4.Controls.Add(this.btnGetAlbumInbox);
             this.groupBox4.Controls.Add(this.ListViewalbumList_In);
-            this.groupBox4.Location = new System.Drawing.Point(629, 22);
+            this.groupBox4.Location = new System.Drawing.Point(9, 134);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(335, 266);
             this.groupBox4.TabIndex = 1;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Inbox Album";
+            // 
+            // btnGetMessage
+            // 
+            this.btnGetMessage.Location = new System.Drawing.Point(162, 223);
+            this.btnGetMessage.Name = "btnGetMessage";
+            this.btnGetMessage.Size = new System.Drawing.Size(92, 23);
+            this.btnGetMessage.TabIndex = 19;
+            this.btnGetMessage.Text = "Get Message";
+            this.btnGetMessage.UseVisualStyleBackColor = true;
+            this.btnGetMessage.Click += new System.EventHandler(this.btnGetMessage_Click);
             // 
             // btnGetAlbumInbox
             // 
@@ -376,7 +479,7 @@
             // 
             this.ListViewalbumList_In.Location = new System.Drawing.Point(0, 19);
             this.ListViewalbumList_In.Name = "ListViewalbumList_In";
-            this.ListViewalbumList_In.Size = new System.Drawing.Size(335, 181);
+            this.ListViewalbumList_In.Size = new System.Drawing.Size(329, 181);
             this.ListViewalbumList_In.TabIndex = 10;
             this.ListViewalbumList_In.UseCompatibleStateImageBehavior = false;
             // 
@@ -387,7 +490,7 @@
             this.tabSetting.Location = new System.Drawing.Point(4, 22);
             this.tabSetting.Name = "tabSetting";
             this.tabSetting.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSetting.Size = new System.Drawing.Size(1000, 491);
+            this.tabSetting.Size = new System.Drawing.Size(1000, 483);
             this.tabSetting.TabIndex = 2;
             this.tabSetting.Text = "Setting";
             this.tabSetting.UseVisualStyleBackColor = true;
@@ -479,6 +582,64 @@
             this.btnCreateAlbum.Text = "Create Album";
             this.btnCreateAlbum.UseVisualStyleBackColor = true;
             // 
+            // tabGoogle
+            // 
+            this.tabGoogle.Controls.Add(this.groupBox6);
+            this.tabGoogle.Controls.Add(this.tbGoogleLink);
+            this.tabGoogle.Controls.Add(this.btnImageSearch);
+            this.tabGoogle.Controls.Add(this.tbKeyWord);
+            this.tabGoogle.Location = new System.Drawing.Point(4, 22);
+            this.tabGoogle.Name = "tabGoogle";
+            this.tabGoogle.Padding = new System.Windows.Forms.Padding(3);
+            this.tabGoogle.Size = new System.Drawing.Size(1000, 483);
+            this.tabGoogle.TabIndex = 3;
+            this.tabGoogle.Text = "Google Images Search";
+            this.tabGoogle.UseVisualStyleBackColor = true;
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.listViewSuccessImage);
+            this.groupBox6.Location = new System.Drawing.Point(432, 45);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(508, 281);
+            this.groupBox6.TabIndex = 20;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Success Images";
+            // 
+            // listViewSuccessImage
+            // 
+            this.listViewSuccessImage.Location = new System.Drawing.Point(9, 19);
+            this.listViewSuccessImage.MultiSelect = false;
+            this.listViewSuccessImage.Name = "listViewSuccessImage";
+            this.listViewSuccessImage.Size = new System.Drawing.Size(493, 242);
+            this.listViewSuccessImage.TabIndex = 18;
+            this.listViewSuccessImage.UseCompatibleStateImageBehavior = false;
+            // 
+            // tbGoogleLink
+            // 
+            this.tbGoogleLink.Location = new System.Drawing.Point(9, 45);
+            this.tbGoogleLink.Multiline = true;
+            this.tbGoogleLink.Name = "tbGoogleLink";
+            this.tbGoogleLink.Size = new System.Drawing.Size(417, 406);
+            this.tbGoogleLink.TabIndex = 18;
+            // 
+            // btnImageSearch
+            // 
+            this.btnImageSearch.Location = new System.Drawing.Point(334, 0);
+            this.btnImageSearch.Name = "btnImageSearch";
+            this.btnImageSearch.Size = new System.Drawing.Size(93, 23);
+            this.btnImageSearch.TabIndex = 17;
+            this.btnImageSearch.Text = "Image Search";
+            this.btnImageSearch.UseVisualStyleBackColor = true;
+            this.btnImageSearch.Click += new System.EventHandler(this.btnImageSearch_Click);
+            // 
+            // tbKeyWord
+            // 
+            this.tbKeyWord.Location = new System.Drawing.Point(10, 3);
+            this.tbKeyWord.Name = "tbKeyWord";
+            this.tbKeyWord.Size = new System.Drawing.Size(307, 20);
+            this.tbKeyWord.TabIndex = 16;
+            // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -493,7 +654,7 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // settingToolStripMenuItem
@@ -501,49 +662,73 @@
             this.settingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.settingToolStripMenuItem1});
             this.settingToolStripMenuItem.Name = "settingToolStripMenuItem";
-            this.settingToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.settingToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
             this.settingToolStripMenuItem.Text = "Tool";
             // 
             // settingToolStripMenuItem1
             // 
             this.settingToolStripMenuItem1.Name = "settingToolStripMenuItem1";
-            this.settingToolStripMenuItem1.Size = new System.Drawing.Size(108, 22);
+            this.settingToolStripMenuItem1.Size = new System.Drawing.Size(111, 22);
             this.settingToolStripMenuItem1.Text = "Setting";
             // 
-            // btnGetMessage
+            // statusStrip1
             // 
-            this.btnGetMessage.Location = new System.Drawing.Point(162, 223);
-            this.btnGetMessage.Name = "btnGetMessage";
-            this.btnGetMessage.Size = new System.Drawing.Size(92, 23);
-            this.btnGetMessage.TabIndex = 19;
-            this.btnGetMessage.Text = "Get Message";
-            this.btnGetMessage.UseVisualStyleBackColor = true;
-            this.btnGetMessage.Click += new System.EventHandler(this.btnGetMessage_Click);
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.pbStatus,
+            this.lbStatusBar,
+            this.lbDoing});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 526);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
+            this.statusStrip1.Size = new System.Drawing.Size(1007, 24);
+            this.statusStrip1.TabIndex = 13;
+            this.statusStrip1.Text = "statusStrip1";
             // 
-            // tbInbox
+            // pbStatus
             // 
-            this.tbInbox.Location = new System.Drawing.Point(9, 22);
-            this.tbInbox.Multiline = true;
-            this.tbInbox.Name = "tbInbox";
-            this.tbInbox.Size = new System.Drawing.Size(597, 266);
-            this.tbInbox.TabIndex = 2;
+            this.pbStatus.AutoToolTip = true;
+            this.pbStatus.Name = "pbStatus";
+            this.pbStatus.Size = new System.Drawing.Size(250, 18);
+            this.pbStatus.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            // 
+            // lbStatusBar
+            // 
+            this.lbStatusBar.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)));
+            this.lbStatusBar.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
+            this.lbStatusBar.Name = "lbStatusBar";
+            this.lbStatusBar.Size = new System.Drawing.Size(20, 19);
+            this.lbStatusBar.Text = "...";
+            this.lbStatusBar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lbDoing
+            // 
+            this.lbDoing.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)));
+            this.lbDoing.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
+            this.lbDoing.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.lbDoing.Name = "lbDoing";
+            this.lbDoing.Size = new System.Drawing.Size(720, 19);
+            this.lbDoing.Spring = true;
+            this.lbDoing.Text = "Sender Tab";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1007, 536);
+            this.ClientSize = new System.Drawing.Size(1007, 550);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Facebook Image Stegano";
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pBoxAlbumCover)).EndInit();
             this.tabControl.ResumeLayout(false);
             this.tabSender.ResumeLayout(false);
-            this.tabSender.PerformLayout();
+            this.groupBox7.ResumeLayout(false);
+            this.groupBox7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbImage)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.tabReceiver.ResumeLayout(false);
             this.tabReceiver.PerformLayout();
@@ -552,8 +737,13 @@
             this.groupBox5.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.tabGoogle.ResumeLayout(false);
+            this.tabGoogle.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -577,11 +767,6 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingToolStripMenuItem1;
-        private System.Windows.Forms.Label lbStatusBar;
-        private System.Windows.Forms.Button btnTask;
-        private System.Windows.Forms.ProgressBar pbStatus;
-
-        private System.Windows.Forms.TextBox tbMessage;
         private System.Windows.Forms.TextBox tbAlbumID;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button btnSelectFile;
@@ -607,6 +792,26 @@
         private System.Windows.Forms.ComboBox cmbChangeUser;
         private System.Windows.Forms.Button btnGetMessage;
         private System.Windows.Forms.TextBox tbInbox;
+        private System.Windows.Forms.TabPage tabGoogle;
+        private System.Windows.Forms.TextBox tbGoogleLink;
+        private System.Windows.Forms.Button btnImageSearch;
+        private System.Windows.Forms.TextBox tbKeyWord;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.ListView listViewSuccessImage;
+        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.Label lbImageSize;
+        private System.Windows.Forms.Label lbImageDirectory;
+        private System.Windows.Forms.Label lbImageName;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.PictureBox pbImage;
+        private System.Windows.Forms.Label lbMessageLength;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripProgressBar pbStatus;
+        private System.Windows.Forms.ToolStripStatusLabel lbStatusBar;
+        private System.Windows.Forms.ToolStripStatusLabel lbDoing;
     }
 }
 

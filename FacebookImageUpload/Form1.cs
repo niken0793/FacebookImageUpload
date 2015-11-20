@@ -17,6 +17,8 @@ using System.Net;
 using System.Drawing.Imaging;
 using System.Diagnostics;
 using FacebookImageUpload.FB_Images;
+// project test sync
+//ss
 
 namespace FacebookImageUpload
 {
@@ -31,7 +33,6 @@ namespace FacebookImageUpload
             cmbSelectTextType.SelectedIndex = 0;
             cmbChangeUser.SelectedIndex = 0;
             
-            tbInputMessage.Enabled = false;
             inbox = User.inboxUserA;
             outbox = User.inboxUserB;
             r = new Random();
@@ -41,13 +42,14 @@ namespace FacebookImageUpload
         int temp = 0; // biến để đặt tên file tải về
         private List<string> inbox;
         private List<string> outbox;
+        private bool isFromFile = true;
 
 
 
         private void openfile_Click(object sender, EventArgs e)
         {
             string filter = "Image Files(*.jpg; *.jpeg)|*.jpg; *.jpeg";
-            openfile_Click_fn(tbImagePath,filter);
+            openfile_Click_fn(tbImagePath,filter,true);
            
         }
         private void button1_Click(object sender, EventArgs e)
@@ -70,15 +72,12 @@ namespace FacebookImageUpload
                 MessageBox.Show(ex.Message);
             }
         }
-        private void uploadImage_Click(object sender, EventArgs e)
+        private async void uploadImage_Click(object sender, EventArgs e)
         {
             string messagePath = "";
-            tbMessage.AppendText("Input Text: " + Environment.NewLine);
             if (cmbSelectTextType.SelectedIndex == cmbSelectTextType.Items.IndexOf("From File"))
             {
                 messagePath = tbMessagePath.Text;
-                tbMessage.AppendText(File.ReadAllText(tbMessagePath.Text));
-                tbMessage.AppendText(Environment.NewLine);
             }
             else if (cmbSelectTextType.SelectedIndex == cmbSelectTextType.Items.IndexOf("From Text"))
             {
@@ -87,9 +86,15 @@ namespace FacebookImageUpload
                 messagePath = tempMessagePath;
 
             }
+
+            var progress = new Progress<string>(s => { Common.ShowProgressBar(s, pbStatus, lbStatusBar, lbDoing); });
+            //await Task.Factory.StartNew(() => GetAlbumList_1(progress, inboxAlbums, 5), TaskCreationOptions.LongRunning);
+
             if (cbIsTested.Checked)
             {
-                string flag = SendMessageWithTestedSource(tbImagePath.Text, messagePath, tbAlbumID.Text);
+                string flag="";
+                await Task.Factory.StartNew(() => flag=SendMessageWithTestedSource(progress,tbImagePath.Text, messagePath, tbAlbumID.Text), TaskCreationOptions.LongRunning);
+               
                 if (flag != null)
                 {
                     MessageBox.Show("The message has been sent");
@@ -101,7 +106,8 @@ namespace FacebookImageUpload
             }
             else
             {
-                string flag = TestEncodeSuccessRate(tbImagePath.Text, messagePath, tbAlbumID.Text,false);
+                string flag = "";
+                await Task.Factory.StartNew(() => TestEncodeSuccessRate(progress, tbImagePath.Text, messagePath, tbAlbumID.Text, false));
                 if (flag != null)
                 {
                     MessageBox.Show("The message has been sent");
@@ -111,6 +117,8 @@ namespace FacebookImageUpload
                     MessageBox.Show("This image is not ready for sending your message");
                 }
             }
+            Common.ResetStatusTrip(pbStatus, lbStatusBar, lbDoing);
+            Common.DeleteFile(Common.listFileDelete);
             
             
             
@@ -120,8 +128,6 @@ namespace FacebookImageUpload
         private async void btngetAlbumlist_Click(object sender, EventArgs e)
         {
             btngetAlbumlist.Enabled = false;
-            pbStatus.Parent = tabControl.TabPages[0];
-            lbStatusBar.Parent = tabControl.TabPages[0];
             pbStatus.Maximum = 100;
             pbStatus.Step = 1;
             //List<string> inboxAlbums = new List<string> { "1661869480692559", "1658361464376694", "1661205730758934" };
@@ -157,6 +163,7 @@ namespace FacebookImageUpload
             btngetAlbumlist.Enabled = true;
         }
 
+
         private void ListViewalbumList_ItemActivate(object sender, EventArgs e)
         {
             DialogResult dlg = MessageBox.Show("Do you want to choose this Album for upload?", "Choose Album", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -169,85 +176,16 @@ namespace FacebookImageUpload
             }
         }
 
-        private async void btnAuto_Click(object sender, EventArgs e)
-        {
-
-           
-            pbStatus.Value = 0;
-            List<FB_Image> listFile = new List<FB_Image>();
-            try
-            {
-                var progress = new Progress<int>(s => { pbStatus.Value = s; });
-                await Task.Factory.StartNew(() => listFile= AutoUploadAndDownload(tbImagePath.Text,progress), TaskCreationOptions.LongRunning);
-
-            }
-            catch (Exception ex)
-            {
-                Log(ex);
-            }
-
-          
-            if (listFile.Count > 0)
-            {
-                foreach (FB_Image i in listFile)
-                {
-                    tbMessage.AppendText(i.ToString());
-                }
-            }
-
-
-        }
-
-
-        private  void btnTask_Click(object sender, EventArgs e)
-        {
-
-            //var a = ListViewalbumList.SelectedItems;
-            //if (a.Count > 0)
-            //{
-            //    foreach (ListViewItem i in a)
-            //    {
-            //        string albumID = i.Name;
-            //        List<FB_Message> listMessage = GetNewMessageFromAlbum(albumID);
-            //        foreach (FB_Message m in listMessage)
-            //        {
-            //            if (m.Content != "")
-            //            {
-            //                tbMessage.AppendText("Output of " + m.Image.FileName + " : " + Environment.NewLine);
-            //                tbMessage.AppendText(m.Content + Environment.NewLine);
-            //            }
-            //            else
-            //            {
-            //                tbMessage.AppendText("Output of " + m.Image.FileName + " : " + Environment.NewLine);
-            //                tbMessage.AppendText("No ouput" + Environment.NewLine);
-            //            }
-                        
-            //        }
-
-            //    }
-            //    MessageBox.Show("get message is finished");
-            //}
-
-            //string crc1 = Crc32Hash(Path.Combine(FB_Image.BaseDirectory, "test.txt"));
-            //string crc2 = Crc32Hash(Path.Combine(FB_Image.BaseDirectory, "test1.txt"));
-
-            string input = InsertCrc32("test.txt");
-            tbMessage.AppendText(File.ReadAllText(input) + Environment.NewLine);
-            string output = CheckCrc32(input);
-            if (output != null)
-                tbMessage.AppendText(File.ReadAllText(output));
-
-            
-        }
 
         private void cmbSelectTextType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            cmbSelectTextType_SelectedIndexChangedHandle(sender, e);
+            cmbSelectTextType_SelectedIndexChanged_Handle(sender, e);
         }
 
         private void tbMessage_KeyPress(object sender, KeyPressEventArgs e)
         {
-            e.Handled = true;
+            if(isFromFile)
+                e.Handled = true;
         }
 
 
@@ -261,8 +199,6 @@ namespace FacebookImageUpload
         private async void btnGetAlbumInbox_Click(object sender, EventArgs e)
         {
             btnGetAlbumInbox.Enabled = false;
-            pbStatus.Parent = tabControl.TabPages[1];
-            lbStatusBar.Parent = tabControl.TabPages[1];
             pbStatus.Maximum = 100;
             pbStatus.Step = 1;
             //List<string> inboxAlbums = new List<string> { "1661869480692559", "1658361464376694", "1661205730758934" };
@@ -281,15 +217,7 @@ namespace FacebookImageUpload
                 {
                     ListViewItem item = new ListViewItem();
                     item.Name = FB_Image.List_AlbumID_In[j];
-
-                    if (FB_Image.List_AlbumInfo_In[j].NewNumber > 0)
-                    {
-                        item.Text = string.Format("{0} ({1})", FB_Image.Album_PhotoList_In.Images.Keys[j].ToString(), FB_Image.List_AlbumInfo_In[j].NewNumber);
-                    }
-                    else
-                    {
-                        item.Text = FB_Image.Album_PhotoList_In.Images.Keys[j].ToString();
-                    }
+                    item.Text = GetInboxText(FB_Image.Album_PhotoList_In.Images.Keys[j].ToString(), FB_Image.List_AlbumInfo_In[j].NewNumber);
                     item.ImageIndex = j;
                     this.ListViewalbumList_In.Items.Add(item);
                 }
@@ -305,6 +233,20 @@ namespace FacebookImageUpload
             }
             btnGetAlbumInbox.Enabled = true;
 
+        }
+
+        private string GetInboxText(string name, int count)
+        {
+            string text;
+            if (count > 0)
+            {
+                text = string.Format("{0} - ({1})", name, count);
+            }
+            else
+            {
+                text = name;
+            }
+            return text;
         }
 
         private void btnChangeUser_Click(object sender, EventArgs e)
@@ -323,16 +265,27 @@ namespace FacebookImageUpload
 
         }
 
-        private void btnGetMessage_Click(object sender, EventArgs e)
+        private async void btnGetMessage_Click(object sender, EventArgs e)
         {
 
             var a = ListViewalbumList_In.SelectedItems;
             if (a.Count > 0)
             {
+
                 foreach (ListViewItem i in a)
                 {
                     string albumID = i.Name;
-                    List<FB_Message> listMessage = GetNewMessageFromAlbum(albumID);
+                    string text = i.Text;
+                    if( text.IndexOf('-')>0)
+                        text = text.Substring(0, text.IndexOf('-'));
+                    List<FB_Message> listMessage=null;
+                    var progress = new Progress<string>(s => { });
+                    await Task.Factory.StartNew(()=>{listMessage= GetNewMessageFromAlbum(progress,albumID);},TaskCreationOptions.LongRunning);
+                    if (listMessage == null)
+                    {
+                        tbInbox.AppendText("No ouput" + Environment.NewLine);
+                        return;
+                    }
                     foreach (FB_Message m in listMessage)
                     {
                         if (m.Content != "")
@@ -348,10 +301,42 @@ namespace FacebookImageUpload
 
                     }
 
+                    i.Text = text;
                 }
+
                 MessageBox.Show("get message is finished");
             }
         }
+
+
+        private async void btnImageSearch_Click(object sender, EventArgs e)
+        {
+            string progressString;
+            try
+            {
+                var progress = new Progress<string>
+                    (s => { 
+                        progressString = s;
+                        tbGoogleLink.AppendText(progressString + Environment.NewLine);
+                });
+                await Task.Factory.StartNew(() => btnImageSearch_Click_fn(progress), TaskCreationOptions.LongRunning);
+                MessageBox.Show("Searching is finish");
+
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+            }
+            
+        }
+
+        private void tbInputMessage_TextChanged(object sender, EventArgs e)
+        {
+            tbInputMessage_TextChanged_Hanlde(sender, e);
+        }
+
+
+
 
 
 

@@ -18,6 +18,7 @@ namespace FacebookImageUpload.FB_Images
         public static string RelativeDirectory =
             System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public static string LogDirectory = "Log/";
+        public static string DefaultImage = "images/default.jpg";
       
         public static string DefaultAlbumID = "";
         public static int ImageSize = 960;
@@ -43,6 +44,7 @@ namespace FacebookImageUpload.FB_Images
         string fileNameWithOutExtension;
         string directory;
         string albumID;
+        string fullPath;
         int height;
         int width;
         long fileSize;
@@ -51,6 +53,11 @@ namespace FacebookImageUpload.FB_Images
         {
             get { return imageID; }
             set { imageID = value; }
+        }
+        public string FullPath
+        {
+            get { return fullPath; }
+            set { fullPath = value; }
         }
         public string FileName
         {
@@ -62,6 +69,7 @@ namespace FacebookImageUpload.FB_Images
             get { return fileNameWithOutExtension; }
             set { fileNameWithOutExtension = value; }
         }
+
         public string Directory
         {
             get { return directory; }
