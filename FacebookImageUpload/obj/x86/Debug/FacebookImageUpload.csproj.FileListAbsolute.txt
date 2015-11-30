@@ -106,3 +106,30 @@ C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookI
 C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\System.Net.Http.Primitives.xml
 C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\Zlib.Portable.xml
 C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.csproj.App.config
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\Google.Apis.Core.dll
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\Google.Apis.Customsearch.v1.dll
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\Google.Apis.dll
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\Google.Apis.PlatformServices.dll
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\log4net.dll
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\Microsoft.Threading.Tasks.dll
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\Microsoft.Threading.Tasks.Extensions.Desktop.dll
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\Microsoft.Threading.Tasks.Extensions.dll
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\System.Net.Http.Extensions.dll
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\System.Net.Http.Primitives.dll
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\Zlib.Portable.dll
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\Google.Apis.pdb
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\Google.Apis.xml
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\Google.Apis.Core.pdb
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\Google.Apis.Core.xml
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\Google.Apis.Customsearch.v1.pdb
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\Google.Apis.Customsearch.v1.xml
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\Google.Apis.PlatformServices.pdb
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\Google.Apis.PlatformServices.xml
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\log4net.xml
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\Microsoft.Threading.Tasks.xml
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\Microsoft.Threading.Tasks.Extensions.xml
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\Microsoft.Threading.Tasks.Extensions.Desktop.xml
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\System.Net.Http.Extensions.xml
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\System.Net.Http.Primitives.xml
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\Zlib.Portable.xml
+E:\GitHub\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.csproj.App.config

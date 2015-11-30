@@ -56,7 +56,6 @@ Temporary Items
 *_p.c
 *.ncb
 *.suo
-*.pdb
 *.tlb
 *.tlh
 *.bak
