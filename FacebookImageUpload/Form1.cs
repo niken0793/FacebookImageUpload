@@ -335,6 +335,17 @@ namespace FacebookImageUpload
             tbInputMessage_TextChanged_Hanlde(sender, e);
         }
 
+        private void btnCoverImage_Click(object sender, EventArgs e)
+        {
+            btnCoverImage_Click_fn();
+        }
+
+        private void btnFacebookLogin_Click(object sender, EventArgs e)
+        {
+            btnFacebookLogin_Click_fn();
+        }
+
+
 
 
 

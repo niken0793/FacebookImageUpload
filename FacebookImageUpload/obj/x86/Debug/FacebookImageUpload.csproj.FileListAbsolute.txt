@@ -133,3 +133,5 @@ E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\System.Net.Http.Exte
 E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\System.Net.Http.Primitives.xml
 E:\GitHub\FacebookImageUpload\FacebookImageUpload\bin\Debug\Zlib.Portable.xml
 E:\GitHub\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.csproj.App.config
+C:\Users\NIKEN\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.CoverImageForm.resources
+C:\Users\NIKEN\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.FacebookLoginForm.resources

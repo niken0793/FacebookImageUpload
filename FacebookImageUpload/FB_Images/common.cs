@@ -30,6 +30,9 @@ namespace FacebookImageUpload
 
     public partial class Form1 : Form
     {
+        private CoverImageForm coverImageForm;
+        private FacebookLoginForm facebookLoginForm;
+
         public void openfile_Click_fn(TextBox tb, string filter, bool isPicture=false)
         {
             try
@@ -145,39 +148,29 @@ namespace FacebookImageUpload
             start += 10;
         }
 
-        public void LoadSuccessImage()
+        public void btnCoverImage_Click_fn()
         {
-            DirectoryInfo dir = new DirectoryInfo(@"SuccessImage");
-            ImageList successImage = new ImageList();
-            int i = 0;
-            foreach (FileInfo file in dir.GetFiles())
-            {
-                try
-                {
-                    successImage.Images.Add(Image.FromFile(file.FullName));
-                    successImage.Images.SetKeyName(i, file.Name);
-                    i += 1;
-                }
-                catch
-                {
-
-                }
-            }
-            this.listViewSuccessImage.View = View.LargeIcon;
-            successImage.TransparentColor = Color.Blue;
-            successImage.ColorDepth = ColorDepth.Depth32Bit;
-            successImage.ImageSize = new Size(50, 50);
-            this.listViewSuccessImage.LargeImageList = successImage;
-            for (int j = 0; j < successImage.Images.Count; j++)
-            {
-                ListViewItem item = new ListViewItem();
-                item.Text = successImage.Images.Keys[j].ToString();
-                item.ImageIndex = j;
-                this.listViewSuccessImage.Items.Add(item);
-            }
+            coverImageForm = new CoverImageForm();
+            coverImageForm.Show();
+            coverImageForm.FormClosed += new FormClosedEventHandler(coverImageForm_FormClosed);
         }
-
-       
+        void coverImageForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            tbImagePath.Text = coverImageForm.imageLink;
+        }
+        public void btnFacebookLogin_Click_fn()
+        {
+            facebookLoginForm = new FacebookLoginForm();
+            facebookLoginForm.Show();
+            facebookLoginForm.FormClosed += new FormClosedEventHandler(facebookLoginForm_FormClosed);
+        }
+        void facebookLoginForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            tbUserAccessToken.Text = facebookLoginForm.userAccessToken;
+            lbFacebookUserName.Text = facebookLoginForm.userName;
+            lbAccessTokenExpire.Text = facebookLoginForm.userAccessTokenExpire;
+            pBoxUserAvatar.ImageLocation = facebookLoginForm.userAvatarPath;
+        }
 
     }
 
