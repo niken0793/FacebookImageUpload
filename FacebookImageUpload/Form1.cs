@@ -28,7 +28,7 @@ namespace FacebookImageUpload
         {
             InitializeComponent();
             LoadingAlbumList();
-            LoadingAlbumList_In();
+            //LoadingAlbumList_In();
 
             cmbSelectTextType.SelectedIndex = 0;
             cmbChangeUser.SelectedIndex = 0;
@@ -43,7 +43,6 @@ namespace FacebookImageUpload
         private List<string> inbox;
         private List<string> outbox;
         private bool isFromFile = true;
-
 
 
         private void openfile_Click(object sender, EventArgs e)
@@ -72,6 +71,7 @@ namespace FacebookImageUpload
                 MessageBox.Show(ex.Message);
             }
         }
+
         private async void uploadImage_Click(object sender, EventArgs e)
         {
             string messagePath = "";
@@ -93,8 +93,8 @@ namespace FacebookImageUpload
             if (cbIsTested.Checked)
             {
                 string flag="";
-                await Task.Factory.StartNew(() => flag=SendMessageWithTestedSource(progress,tbImagePath.Text, messagePath, tbAlbumID.Text), TaskCreationOptions.LongRunning);
-               
+                //await Task.Factory.StartNew(() => flag=SendMessageWithTestedSource(progress,tbImagePath.Text, messagePath, tbAlbumID.Text), TaskCreationOptions.LongRunning);
+                await Task.Factory.StartNew(() => flag = SendImageWithTag(progress, tbImagePath.Text, messagePath, lbUserIdComm.Text), TaskCreationOptions.LongRunning);
                 if (flag != null)
                 {
                     MessageBox.Show("The message has been sent");
@@ -118,9 +118,7 @@ namespace FacebookImageUpload
                 }
             }
             Common.ResetStatusTrip(pbStatus, lbStatusBar, lbDoing);
-            Common.DeleteFile(Common.listFileDelete);
-            
-            
+            Common.DeleteFile(Common.listFileDelete);      
             
         }
 
@@ -187,9 +185,6 @@ namespace FacebookImageUpload
             if(isFromFile)
                 e.Handled = true;
         }
-
-
-
 
         /*
          * Tab Receiver
@@ -335,24 +330,73 @@ namespace FacebookImageUpload
             tbInputMessage_TextChanged_Hanlde(sender, e);
         }
 
-        private void btnCoverImage_Click(object sender, EventArgs e)
+        private async void btnGetImageTagged_Click(object sender, EventArgs e)
         {
-            btnCoverImage_Click_fn();
+            btnGetImageTagged.Enabled = false;
+            pbStatus.Maximum = 100;
+            pbStatus.Step = 1;
+            List<string> inboxImage = inbox;
+            this.listViewTagImage.Items.Clear();
+            try
+            {
+                var progress = new Progress<int>(s => { pbStatus.Value = s; lbStatusBar.Text = s.ToString(); });
+                await Task.Factory.StartNew(() => GetImageTagged(progress), TaskCreationOptions.LongRunning);
+
+                this.listViewTagImage.View = View.LargeIcon;
+                this.listViewTagImage.LargeImageList = FB_Image.Image_Tags_In;
+
+                for (int j = 0; j < FB_Image.Image_Tags_In.Images.Count; j++)
+                {
+                    ListViewItem item = new ListViewItem();
+                    item.Name = FB_Image.Image_TagsID_In[j];
+                    item.Text = FB_Image.Image_Tags_In.Images.Keys[j].ToString();
+                    item.ImageIndex = j;
+                    this.listViewTagImage.Items.Add(item);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+            }
+            btnGetImageTagged.Enabled = true;
         }
 
-        private void btnFacebookLogin_Click(object sender, EventArgs e)
+        private async void btnGetImageMessage_Click(object sender, EventArgs e)
         {
-            btnFacebookLogin_Click_fn();
-        }
+            var a = listViewTagImage.SelectedItems;
+            if (a.Count > 0)
+            {
 
+                foreach (ListViewItem i in a)
+                {
+                    List<FB_Message> listMessage = null;
+                    var progress = new Progress<string>(s => { });
+                    await Task.Factory.StartNew(() => { listMessage = GetNewMessageFromImage(progress,i.Text); }, TaskCreationOptions.LongRunning);
+                    if (listMessage == null)
+                    {
+                        tbInbox.AppendText("No ouput" + Environment.NewLine);
+                        return;
+                    }
+                    foreach (FB_Message m in listMessage)
+                    {
+                        if (m.Content != "")
+                        {
+                            tbInbox.AppendText("Output of " + m.Image.FileName + " : " + Environment.NewLine);
+                            tbInbox.AppendText(m.Content + Environment.NewLine);
+                        }
+                        else
+                        {
+                            tbInbox.AppendText("Output of " + m.Image.FileName + " : " + Environment.NewLine);
+                            tbInbox.AppendText("No ouput" + Environment.NewLine);
+                        }
 
+                    }
 
+                }
 
-
-
-
-
-
-
+                MessageBox.Show("get message is finished");
+            }
+        }  
     }
 }

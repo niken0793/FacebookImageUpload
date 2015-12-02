@@ -505,8 +505,7 @@ namespace FacebookImageUpload
                     {
                         int newCount = Int32.Parse(obj["count"].ToString());
                         if (info.Count < newCount)
-                        {
-                           
+                        {                          
                             info.NewNupdatedTime = long.Parse(updatedTime);
                             info.NewNumber = newCount - info.Count;
                             info.Count = newCount;
@@ -757,7 +756,7 @@ namespace FacebookImageUpload
 
         }
 
-        public void LoadingAlbumList_In()
+        /*public void LoadingAlbumList_In()
         {
             string filename = Path.Combine(FB_Image.RelativeDirectory, FB_Image.AlbumDirectory_In);
             FB_Image.List_AlbumInfo_In = Common.DeSerializeObject<List<AlbumInfo>>(filename);
@@ -799,7 +798,7 @@ namespace FacebookImageUpload
                 FB_Image.List_AlbumInfo_In = new List<AlbumInfo>();
             }
 
-        }
+        }*/
 
         private void cmbSelectTextType_SelectedIndexChanged_Handle(object sender, EventArgs e)
         {

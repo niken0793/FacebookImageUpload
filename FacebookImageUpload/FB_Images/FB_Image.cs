@@ -11,6 +11,7 @@ namespace FacebookImageUpload.FB_Images
 {
     public class FB_Image
     {
+        public static string UserAccessToken = "";
         public static string AccessToken = "CAAVUMKQz7ZB0BAJG21S5gyhrBOpK7qvIZCViGPfbwMYckHWhXy8nPYcI5ZBxQOMZCjz5ieT9IydD6hDiE7sLEn6taU3K7ztbmZCgcHohnLqQw3vZAJPdXs5LjefrOEy4fIxQSPWXMe57n1TBCtmqUiWHdr4JSyq5ujBtQXWYlg5pdZBpQJncIvfU2rvPIkslQZCaZAs9ZAf8CRpQZDZD";
         public static string Album_Test = "1661607290718778";
         public static int Temp = 0;
@@ -36,6 +37,8 @@ namespace FacebookImageUpload.FB_Images
         public static List<string> List_AlbumID_In;
         public static List<AlbumInfo> List_AlbumInfo_In = new List<AlbumInfo>();
         public static ImageList Album_PhotoList_In;
+        public static ImageList Image_Tags_In;
+        public static List<string> Image_TagsID_In;
 
 
         // property
@@ -148,11 +151,7 @@ Height,Width {4} - {5}
                      this.FileName, this.Directory, this.ImageID, this.FileSize, this.Height, this.Width);
                                   
         }
-
-
-
-
-       
+  
 
     }
 }

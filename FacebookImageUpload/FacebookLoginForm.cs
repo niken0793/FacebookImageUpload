@@ -25,6 +25,7 @@ namespace FacebookImageUpload
         public string userAccessTokenExpire = "";
         public string userName = "";
         public string userAvatarPath = "";
+        Form1 mainform = new Form1();
 
         public FacebookLoginForm()
         {
@@ -61,32 +62,9 @@ namespace FacebookImageUpload
                         userAccessToken = oauthResult.AccessToken;
                         userAccessTokenExpire = oauthResult.Expires.ToString();
 
-                        var user = new FacebookClient(userAccessToken);
-                        dynamic me = user.Get("me");
-                        userName = me.name;
-
-                        dynamic res = user.Get("/me?fields=picture");
-                        string json_string = Newtonsoft.Json.JsonConvert.SerializeObject(res);
-                        var json = JObject.Parse(json_string);
-                        string source_url = "";
-
-                        source_url = (string)json["picture"]["data"]["url"];
-
-                        using (WebClient webClient = new WebClient())
-                        {
-                            byte[] data = webClient.DownloadData(source_url);
-
-                            using (MemoryStream mem = new MemoryStream(data))
-                            {
-                                using (var yourImage = Image.FromStream(mem))
-                                {
-                                    userAvatarPath = FB_Image.BaseDirectory + "profilePiture.jpg";
-                                    yourImage.Save(userAvatarPath, ImageFormat.Jpeg);
-                                }
-                            }
-
-                        }
-
+                        List<string> userInfo = mainform.getUserInfo(userAccessToken,"me",FB_Image.BaseDirectory);
+                        userName = userInfo[0];
+                        userAvatarPath = userInfo[1];
                         this.Close();
                     }
                     else

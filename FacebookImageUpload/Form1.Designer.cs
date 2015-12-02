@@ -50,6 +50,14 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabSender = new System.Windows.Forms.TabPage();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.lbUserIdComm = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.lbUserNameComm = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.pBoxUserComm = new System.Windows.Forms.PictureBox();
+            this.btnGetUserList = new System.Windows.Forms.Button();
+            this.listViewUserList = new System.Windows.Forms.ListView();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.lbImageSize = new System.Windows.Forms.Label();
             this.lbImageDirectory = new System.Windows.Forms.Label();
@@ -61,6 +69,10 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btngetAlbumlist = new System.Windows.Forms.Button();
             this.tabReceiver = new System.Windows.Forms.TabPage();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.btnGetImageMessage = new System.Windows.Forms.Button();
+            this.btnGetImageTagged = new System.Windows.Forms.Button();
+            this.listViewTagImage = new System.Windows.Forms.ListView();
             this.tbInbox = new System.Windows.Forms.TextBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.btnGetMessage = new System.Windows.Forms.Button();
@@ -68,6 +80,7 @@
             this.ListViewalbumList_In = new System.Windows.Forms.ListView();
             this.tabSetting = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.btnTester = new System.Windows.Forms.Button();
             this.lbAccessTokenExpire = new System.Windows.Forms.Label();
             this.tbUserAccessToken = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
@@ -99,10 +112,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.pBoxAlbumCover)).BeginInit();
             this.tabControl.SuspendLayout();
             this.tabSender.SuspendLayout();
+            this.groupBox8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pBoxUserComm)).BeginInit();
             this.groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbImage)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.tabReceiver.SuspendLayout();
+            this.groupBox9.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.tabSetting.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -118,7 +134,7 @@
             // 
             this.btnUploadImage.Location = new System.Drawing.Point(6, 228);
             this.btnUploadImage.Name = "btnUploadImage";
-            this.btnUploadImage.Size = new System.Drawing.Size(75, 23);
+            this.btnUploadImage.Size = new System.Drawing.Size(99, 23);
             this.btnUploadImage.TabIndex = 2;
             this.btnUploadImage.Text = "Send Message";
             this.btnUploadImage.UseVisualStyleBackColor = true;
@@ -169,7 +185,7 @@
             // 
             // btnCoverImage
             // 
-            this.btnCoverImage.Location = new System.Drawing.Point(97, 228);
+            this.btnCoverImage.Location = new System.Drawing.Point(116, 228);
             this.btnCoverImage.Name = "btnCoverImage";
             this.btnCoverImage.Size = new System.Drawing.Size(134, 23);
             this.btnCoverImage.TabIndex = 26;
@@ -332,6 +348,7 @@
             // tabSender
             // 
             this.tabSender.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tabSender.Controls.Add(this.groupBox8);
             this.tabSender.Controls.Add(this.groupBox7);
             this.tabSender.Controls.Add(this.groupBox1);
             this.tabSender.Controls.Add(this.groupBox3);
@@ -342,6 +359,86 @@
             this.tabSender.TabIndex = 0;
             this.tabSender.Text = "Sender";
             this.tabSender.UseVisualStyleBackColor = true;
+            // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.lbUserIdComm);
+            this.groupBox8.Controls.Add(this.label14);
+            this.groupBox8.Controls.Add(this.lbUserNameComm);
+            this.groupBox8.Controls.Add(this.label12);
+            this.groupBox8.Controls.Add(this.pBoxUserComm);
+            this.groupBox8.Controls.Add(this.btnGetUserList);
+            this.groupBox8.Controls.Add(this.listViewUserList);
+            this.groupBox8.Location = new System.Drawing.Point(649, 7);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(245, 426);
+            this.groupBox8.TabIndex = 20;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "User List";
+            // 
+            // lbUserIdComm
+            // 
+            this.lbUserIdComm.AutoSize = true;
+            this.lbUserIdComm.Location = new System.Drawing.Point(109, 355);
+            this.lbUserIdComm.Name = "lbUserIdComm";
+            this.lbUserIdComm.Size = new System.Drawing.Size(38, 13);
+            this.lbUserIdComm.TabIndex = 30;
+            this.lbUserIdComm.Text = "UserId";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(62, 356);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(41, 13);
+            this.label14.TabIndex = 29;
+            this.label14.Text = "UserId:";
+            // 
+            // lbUserNameComm
+            // 
+            this.lbUserNameComm.AutoSize = true;
+            this.lbUserNameComm.Location = new System.Drawing.Point(126, 318);
+            this.lbUserNameComm.Name = "lbUserNameComm";
+            this.lbUserNameComm.Size = new System.Drawing.Size(55, 13);
+            this.lbUserNameComm.TabIndex = 28;
+            this.lbUserNameComm.Text = "Username";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(62, 318);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(58, 13);
+            this.label12.TabIndex = 27;
+            this.label12.Text = "Username:";
+            // 
+            // pBoxUserComm
+            // 
+            this.pBoxUserComm.Image = global::FacebookImageUpload.Properties.Resources._default;
+            this.pBoxUserComm.Location = new System.Drawing.Point(6, 318);
+            this.pBoxUserComm.Name = "pBoxUserComm";
+            this.pBoxUserComm.Size = new System.Drawing.Size(50, 50);
+            this.pBoxUserComm.TabIndex = 27;
+            this.pBoxUserComm.TabStop = false;
+            // 
+            // btnGetUserList
+            // 
+            this.btnGetUserList.Location = new System.Drawing.Point(78, 285);
+            this.btnGetUserList.Name = "btnGetUserList";
+            this.btnGetUserList.Size = new System.Drawing.Size(92, 23);
+            this.btnGetUserList.TabIndex = 18;
+            this.btnGetUserList.Text = "Get User List";
+            this.btnGetUserList.UseVisualStyleBackColor = true;
+            this.btnGetUserList.Click += new System.EventHandler(this.btnGetUserList_Click);
+            // 
+            // listViewUserList
+            // 
+            this.listViewUserList.Location = new System.Drawing.Point(5, 19);
+            this.listViewUserList.Name = "listViewUserList";
+            this.listViewUserList.Size = new System.Drawing.Size(233, 248);
+            this.listViewUserList.TabIndex = 18;
+            this.listViewUserList.UseCompatibleStateImageBehavior = false;
+            this.listViewUserList.ItemActivate += new System.EventHandler(this.listViewUserList_ItemActivate);
             // 
             // groupBox7
             // 
@@ -433,7 +530,7 @@
             // 
             // btngetAlbumlist
             // 
-            this.btngetAlbumlist.Location = new System.Drawing.Point(72, 131);
+            this.btngetAlbumlist.Location = new System.Drawing.Point(72, 130);
             this.btngetAlbumlist.Name = "btngetAlbumlist";
             this.btngetAlbumlist.Size = new System.Drawing.Size(92, 23);
             this.btngetAlbumlist.TabIndex = 17;
@@ -443,6 +540,7 @@
             // 
             // tabReceiver
             // 
+            this.tabReceiver.Controls.Add(this.groupBox9);
             this.tabReceiver.Controls.Add(this.tbInbox);
             this.tabReceiver.Controls.Add(this.groupBox4);
             this.tabReceiver.Location = new System.Drawing.Point(4, 22);
@@ -452,6 +550,46 @@
             this.tabReceiver.TabIndex = 1;
             this.tabReceiver.Text = "Receiver";
             this.tabReceiver.UseVisualStyleBackColor = true;
+            // 
+            // groupBox9
+            // 
+            this.groupBox9.Controls.Add(this.btnGetImageMessage);
+            this.groupBox9.Controls.Add(this.btnGetImageTagged);
+            this.groupBox9.Controls.Add(this.listViewTagImage);
+            this.groupBox9.Location = new System.Drawing.Point(377, 134);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(335, 296);
+            this.groupBox9.TabIndex = 21;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Tag Image";
+            // 
+            // btnGetImageMessage
+            // 
+            this.btnGetImageMessage.Location = new System.Drawing.Point(181, 223);
+            this.btnGetImageMessage.Name = "btnGetImageMessage";
+            this.btnGetImageMessage.Size = new System.Drawing.Size(92, 23);
+            this.btnGetImageMessage.TabIndex = 20;
+            this.btnGetImageMessage.Text = "Get Message";
+            this.btnGetImageMessage.UseVisualStyleBackColor = true;
+            this.btnGetImageMessage.Click += new System.EventHandler(this.btnGetImageMessage_Click);
+            // 
+            // btnGetImageTagged
+            // 
+            this.btnGetImageTagged.Location = new System.Drawing.Point(27, 223);
+            this.btnGetImageTagged.Name = "btnGetImageTagged";
+            this.btnGetImageTagged.Size = new System.Drawing.Size(121, 23);
+            this.btnGetImageTagged.TabIndex = 20;
+            this.btnGetImageTagged.Text = "Get Image Tagged";
+            this.btnGetImageTagged.UseVisualStyleBackColor = true;
+            this.btnGetImageTagged.Click += new System.EventHandler(this.btnGetImageTagged_Click);
+            // 
+            // listViewTagImage
+            // 
+            this.listViewTagImage.Location = new System.Drawing.Point(0, 19);
+            this.listViewTagImage.Name = "listViewTagImage";
+            this.listViewTagImage.Size = new System.Drawing.Size(329, 181);
+            this.listViewTagImage.TabIndex = 10;
+            this.listViewTagImage.UseCompatibleStateImageBehavior = false;
             // 
             // tbInbox
             // 
@@ -468,14 +606,14 @@
             this.groupBox4.Controls.Add(this.ListViewalbumList_In);
             this.groupBox4.Location = new System.Drawing.Point(9, 134);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(335, 266);
+            this.groupBox4.Size = new System.Drawing.Size(335, 296);
             this.groupBox4.TabIndex = 1;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Inbox Album";
+            this.groupBox4.Text = "Tag Image";
             // 
             // btnGetMessage
             // 
-            this.btnGetMessage.Location = new System.Drawing.Point(162, 223);
+            this.btnGetMessage.Location = new System.Drawing.Point(166, 223);
             this.btnGetMessage.Name = "btnGetMessage";
             this.btnGetMessage.Size = new System.Drawing.Size(92, 23);
             this.btnGetMessage.TabIndex = 19;
@@ -485,7 +623,7 @@
             // 
             // btnGetAlbumInbox
             // 
-            this.btnGetAlbumInbox.Location = new System.Drawing.Point(29, 223);
+            this.btnGetAlbumInbox.Location = new System.Drawing.Point(53, 223);
             this.btnGetAlbumInbox.Name = "btnGetAlbumInbox";
             this.btnGetAlbumInbox.Size = new System.Drawing.Size(92, 23);
             this.btnGetAlbumInbox.TabIndex = 18;
@@ -516,6 +654,7 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.btnTester);
             this.groupBox6.Controls.Add(this.lbAccessTokenExpire);
             this.groupBox6.Controls.Add(this.tbUserAccessToken);
             this.groupBox6.Controls.Add(this.label11);
@@ -528,6 +667,16 @@
             this.groupBox6.TabIndex = 11;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Facebook Login";
+            // 
+            // btnTester
+            // 
+            this.btnTester.Location = new System.Drawing.Point(147, 48);
+            this.btnTester.Name = "btnTester";
+            this.btnTester.Size = new System.Drawing.Size(88, 23);
+            this.btnTester.TabIndex = 23;
+            this.btnTester.Text = "Join as Tester";
+            this.btnTester.UseVisualStyleBackColor = true;
+            this.btnTester.Click += new System.EventHandler(this.btnTester_Click);
             // 
             // lbAccessTokenExpire
             // 
@@ -795,12 +944,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.pBoxAlbumCover)).EndInit();
             this.tabControl.ResumeLayout(false);
             this.tabSender.ResumeLayout(false);
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox8.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pBoxUserComm)).EndInit();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbImage)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.tabReceiver.ResumeLayout(false);
             this.tabReceiver.PerformLayout();
+            this.groupBox9.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.tabSetting.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
@@ -889,6 +1042,19 @@
         private System.Windows.Forms.Button btnFacebookLogin;
         private System.Windows.Forms.Label lbFacebookUserName;
         private System.Windows.Forms.PictureBox pBoxUserAvatar;
+        private System.Windows.Forms.Button btnTester;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.ListView listViewUserList;
+        private System.Windows.Forms.Button btnGetUserList;
+        private System.Windows.Forms.Label lbUserIdComm;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label lbUserNameComm;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.PictureBox pBoxUserComm;
+        private System.Windows.Forms.Button btnGetImageTagged;
+        private System.Windows.Forms.GroupBox groupBox9;
+        private System.Windows.Forms.ListView listViewTagImage;
+        private System.Windows.Forms.Button btnGetImageMessage;
     }
 }
 
