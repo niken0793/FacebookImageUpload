@@ -154,7 +154,6 @@ namespace FacebookImageUpload
         void facebookLoginForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             btnFacebookLogin.Enabled = false;
-            tbUserAccessToken.Text = facebookLoginForm.userAccessToken;
             FB_Image.UserAccessToken = facebookLoginForm.userAccessToken;
             lbFacebookUserName.Text = facebookLoginForm.userName;
             lbAccessTokenExpire.Text = facebookLoginForm.userAccessTokenExpire;

@@ -712,7 +712,7 @@ namespace FacebookImageUpload
 
         }
 
-        public void LoadingAlbumList()
+        /*public void LoadingAlbumList()
         {
             string filename = Path.Combine(FB_Image.RelativeDirectory,FB_Image.AlbumDirectory);
             FB_Image.List_AlbumInfo = Common.DeSerializeObject<List<AlbumInfo>>(filename);
@@ -754,7 +754,7 @@ namespace FacebookImageUpload
                 FB_Image.List_AlbumInfo = new List<AlbumInfo>();
             }
 
-        }
+        }*/
 
         /*public void LoadingAlbumList_In()
         {
