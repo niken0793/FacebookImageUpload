@@ -264,7 +264,7 @@
             this.tabControl.Location = new System.Drawing.Point(-1, 29);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(1008, 509);
+            this.tabControl.Size = new System.Drawing.Size(675, 509);
             this.tabControl.TabIndex = 11;
             // 
             // tabSender
@@ -276,7 +276,7 @@
             this.tabSender.Location = new System.Drawing.Point(4, 22);
             this.tabSender.Name = "tabSender";
             this.tabSender.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSender.Size = new System.Drawing.Size(1000, 483);
+            this.tabSender.Size = new System.Drawing.Size(667, 483);
             this.tabSender.TabIndex = 0;
             this.tabSender.Text = "Sender";
             this.tabSender.UseVisualStyleBackColor = true;

@@ -33,6 +33,9 @@ namespace FacebookImageUpload
     {
         private CoverImageForm coverImageForm;
         private FacebookLoginForm facebookLoginForm;
+        private bool isLogin = false;
+        public static string AppID = "1499942773583853";
+      
 
         public void openfile_Click_fn(TextBox tb, string filter, bool isPicture=false)
         {
@@ -141,24 +144,45 @@ namespace FacebookImageUpload
             coverImageForm.Show();
             coverImageForm.FormClosed += new FormClosedEventHandler(coverImageForm_FormClosed);
         }
+
         void coverImageForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             tbImagePath.Text = coverImageForm.imageLink;
         }
+
         private void btnFacebookLogin_Click(object sender, EventArgs e)
         {
-            facebookLoginForm = new FacebookLoginForm();
-            facebookLoginForm.Show();
-            facebookLoginForm.FormClosed += new FormClosedEventHandler(facebookLoginForm_FormClosed);
+            string extendPermission = "user_photos,user_posts,user_status,user_likes,user_friends,publish_actions";
+            facebookLoginForm = new FacebookLoginForm(AppID, extendPermission);
+            DialogResult d = facebookLoginForm.ShowDialog();
+            if (d.Equals(DialogResult.OK))
+            {
+                isLogin = true;
+                FacebookOAuthResult r = facebookLoginForm.AuthResult;
+                UpdateLoginControl(r);
+            }
+            else
+            {
+                isLogin = false;
+            }
+            
         }
-        void facebookLoginForm_FormClosed(object sender, FormClosedEventArgs e)
+
+        private void UpdateLoginControl(FacebookOAuthResult r)
         {
-            btnFacebookLogin.Enabled = false;
-            FB_Image.UserAccessToken = facebookLoginForm.userAccessToken;
-            lbFacebookUserName.Text = facebookLoginForm.userName;
-            lbAccessTokenExpire.Text = facebookLoginForm.userAccessTokenExpire;
-            pBoxUserAvatar.ImageLocation = facebookLoginForm.userAvatarPath;
+            if (r != null)
+            {
+                btnFacebookLogin.Enabled = false;
+                FB_Image.UserAccessToken = r.AccessToken;
+                lbAccessTokenExpire.Text = r.Expires.ToString();
+                List<string> s = Common.getUserInfo(FB_Image.UserAccessToken, "me", FB_Image.BaseDirectory);
+
+                pBoxUserAvatar.ImageLocation = s[1];
+                lbFacebookUserName.Text = s[0];
+            }
         }
+
+
 
         public void CheckTester()
         { 
@@ -193,7 +217,7 @@ namespace FacebookImageUpload
             
                 foreach (string user in users.ToArray())
                 {
-                    List<string> info = getUserInfo(FB_Image.UserAccessToken,user, FB_Image.BaseDirectory + "Test_User\\");
+                    List<string> info = Common.getUserInfo(FB_Image.UserAccessToken, user, FB_Image.BaseDirectory + "Test_User\\");
 
                     try
                     {
@@ -230,40 +254,8 @@ namespace FacebookImageUpload
 
         }
 
-        public List<string> getUserInfo(string userAccessToken,string uid,string path)
-        {
-            string userAvatarPath = "";
-            List<string> userInfo = new List<string>();
-            var user = new FacebookClient(userAccessToken);
-            dynamic me = user.Get(uid);
-            string userName = me.name;
-            string userId = me.id;
-                    
-            dynamic res = user.Get(uid+"?fields=picture");
-            string json_string = Newtonsoft.Json.JsonConvert.SerializeObject(res);
-            var json = JObject.Parse(json_string);
-            string source_url = "";
+       
 
-            source_url = (string)json["picture"]["data"]["url"];
-
-            using (WebClient webClient = new WebClient())
-            {
-                byte[] data = webClient.DownloadData(source_url);
-
-                using (MemoryStream mem = new MemoryStream(data))
-                {
-                    using (var yourImage = Image.FromStream(mem))
-                    {
-                        userAvatarPath = path + "profilePiture_" + userId + ".jpg";
-                        yourImage.Save(userAvatarPath, ImageFormat.Jpeg);
-                    }
-                }
-            }
-
-            userInfo.Add(userName);
-            userInfo.Add(userAvatarPath);
-            return userInfo;
-        }
         private void listViewUserList_ItemActivate(object sender, EventArgs e)
         {
             DialogResult dlg = MessageBox.Show("Do you want to use this user to communicate?", "Choose User", MessageBoxButtons.YesNo, MessageBoxIcon.Question);

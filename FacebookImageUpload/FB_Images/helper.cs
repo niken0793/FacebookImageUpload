@@ -27,6 +27,44 @@ namespace FacebookImageUpload.FB_Images
         public static List<string> listFileDelete = new List<string>();
 
 
+
+
+        public static List<string> getUserInfo(string userAccessToken, string uid, string path)
+        {
+            string userAvatarPath = "";
+            List<string> userInfo = new List<string>();
+            var user = new FacebookClient(userAccessToken);
+            dynamic me = user.Get(uid);
+            string userName = me.name;
+            string userId = me.id;
+
+            dynamic res = user.Get(uid + "?fields=picture");
+            string json_string = Newtonsoft.Json.JsonConvert.SerializeObject(res);
+            var json = JObject.Parse(json_string);
+            string source_url = "";
+
+            source_url = (string)json["picture"]["data"]["url"];
+
+            using (WebClient webClient = new WebClient())
+            {
+                byte[] data = webClient.DownloadData(source_url);
+
+                using (MemoryStream mem = new MemoryStream(data))
+                {
+                    using (var yourImage = Image.FromStream(mem))
+                    {
+                        userAvatarPath = path + "profilePiture_" + userId + ".jpg";
+                        yourImage.Save(userAvatarPath, ImageFormat.Jpeg);
+                    }
+                }
+            }
+
+            userInfo.Add(userName);
+            userInfo.Add(userAvatarPath);
+            return userInfo;
+        }
+
+
         public static void ShowProgressBar(string progress,ToolStripProgressBar pb, ToolStripLabel lbPercent,ToolStripLabel lbDoing)
         {
             if (progress != null && progress.Length > 0)
