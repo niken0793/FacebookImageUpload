@@ -152,27 +152,48 @@ namespace FacebookImageUpload
 
         private void btnFacebookLogin_Click(object sender, EventArgs e)
         {
-            string extendPermission = "user_photos,user_posts,user_status,user_likes,user_friends,publish_actions";
-            facebookLoginForm = new FacebookLoginForm(AppID, extendPermission);
-            DialogResult d = facebookLoginForm.ShowDialog();
-            if (d.Equals(DialogResult.OK))
+            if (!isLogin)
             {
-                isLogin = true;
-                FacebookOAuthResult r = facebookLoginForm.AuthResult;
-                UpdateLoginControl(r);
+                string extendPermission = "user_photos,user_posts,user_status,user_likes,user_friends,publish_actions";
+                facebookLoginForm = new FacebookLoginForm(AppID, extendPermission);
+                DialogResult d = facebookLoginForm.ShowDialog();
+                if (d.Equals(DialogResult.OK))
+                {
+                    isLogin = true;
+                    FacebookOAuthResult r = facebookLoginForm.AuthResult;
+                    UpdateLoginControl(r);
+                    btnFacebookLogin.Text = "LogOut";
+                }
+                else
+                {
+                    isLogin = false;
+                }
             }
             else
             {
+                Logout(FB_Image.UserAccessToken);
+                UpdateLoginControl(null);
+                btnFacebookLogin.Text = "Login";
                 isLogin = false;
             }
+                
+           
             
+        }
+
+        private void Logout(string accessToken)
+        {
+            var webBrowser = new WebBrowser();
+            var fb = new FacebookClient();
+            var logouUrl = fb.GetLogoutUrl(new { access_token = accessToken, next = "https://www.facebook.com/connect/login_success.html" });
+            webBrowser.Navigate(logouUrl);
+           
         }
 
         private void UpdateLoginControl(FacebookOAuthResult r)
         {
             if (r != null)
             {
-                btnFacebookLogin.Enabled = false;
                 FB_Image.UserAccessToken = r.AccessToken;
                 lbAccessTokenExpire.Text = r.Expires.ToString();
                 List<string> s = Common.getUserInfo(FB_Image.UserAccessToken, "me", FB_Image.BaseDirectory);
@@ -180,6 +201,14 @@ namespace FacebookImageUpload
                 pBoxUserAvatar.ImageLocation = s[1];
                 lbFacebookUserName.Text = s[0];
             }
+            else
+            {
+                lbAccessTokenExpire.Text = "";
+                lbFacebookUserName.Text = "Username";
+                pBoxUserAvatar.ImageLocation = Path.Combine(Common.ProjectDir,"images/profile.jpg");
+                FB_Image.UserAccessToken = "";
+            }
+            
         }
 
 

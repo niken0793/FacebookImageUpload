@@ -24,6 +24,11 @@ namespace FacebookImageUpload.FB_Images
 {
     public class Common
     {
+
+        public static string ProjectDir= Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+
+
+
         public static List<string> listFileDelete = new List<string>();
 
 

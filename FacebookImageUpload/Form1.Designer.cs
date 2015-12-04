@@ -436,7 +436,7 @@
             this.tabReceiver.Location = new System.Drawing.Point(4, 22);
             this.tabReceiver.Name = "tabReceiver";
             this.tabReceiver.Padding = new System.Windows.Forms.Padding(3);
-            this.tabReceiver.Size = new System.Drawing.Size(1000, 483);
+            this.tabReceiver.Size = new System.Drawing.Size(667, 483);
             this.tabReceiver.TabIndex = 1;
             this.tabReceiver.Text = "Receiver";
             this.tabReceiver.UseVisualStyleBackColor = true;
@@ -578,7 +578,7 @@
             this.tabGoogle.Location = new System.Drawing.Point(4, 22);
             this.tabGoogle.Name = "tabGoogle";
             this.tabGoogle.Padding = new System.Windows.Forms.Padding(3);
-            this.tabGoogle.Size = new System.Drawing.Size(1000, 483);
+            this.tabGoogle.Size = new System.Drawing.Size(667, 483);
             this.tabGoogle.TabIndex = 3;
             this.tabGoogle.Text = "Google Images Search";
             this.tabGoogle.UseVisualStyleBackColor = true;
@@ -668,7 +668,7 @@
             this.tabSetting.Location = new System.Drawing.Point(4, 22);
             this.tabSetting.Name = "tabSetting";
             this.tabSetting.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSetting.Size = new System.Drawing.Size(1000, 483);
+            this.tabSetting.Size = new System.Drawing.Size(667, 483);
             this.tabSetting.TabIndex = 2;
             this.tabSetting.Text = "Setting";
             this.tabSetting.UseVisualStyleBackColor = true;

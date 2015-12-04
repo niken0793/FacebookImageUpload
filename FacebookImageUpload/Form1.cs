@@ -35,6 +35,7 @@ namespace FacebookImageUpload
             inbox = User.inboxUserA;
             outbox = User.inboxUserB;
             r = new Random();
+
         }
 
         FB_Image browseImage = new FB_Image();
