@@ -29,7 +29,7 @@ namespace FacebookImageUpload
     public partial class Form1 : Form
     {
         Random r;
-        private string Upload_Picture_FB(string filename, FB_Image browseImageUP,string albumID)
+        private string Upload_Picture_FB(string filename, FB_Image browseImageUP,string UserAccessToken,string albumID)
         {
             //upload photo
             try
@@ -43,7 +43,7 @@ namespace FacebookImageUpload
                 browseImageUP.Width = image_source.Width;
 
                 var imgstream = File.OpenRead(filename);
-                var fb = new FacebookClient(FB_Image.AccessToken);
+                var fb = new FacebookClient(UserAccessToken);
                 dynamic res = fb.Post(albumID + "/photos", new
                 {
                     message = "Image description",
@@ -151,7 +151,9 @@ namespace FacebookImageUpload
                 progress.Report("50|50|Uploading Image");
                 string encodeFile = JPHideEncode(Path.GetFileName(coverImageFileName), Path.GetFileName(inputText));
                 FB_Image encodeImage = new FB_Image();
-                string id = Upload_Picture_FB(Path.Combine(FB_Image.BaseDirectory, encodeFile), encodeImage, albumID);
+                if (String.IsNullOrEmpty(FB_Image.UserAccessToken))
+                    return null;
+                string id = Upload_Picture_FB(Path.Combine(FB_Image.BaseDirectory, encodeFile), encodeImage,FB_Image.UserAccessToken, albumID);
                 FB_Image downloadImage = new FB_Image();
                 encodeImage.CopyTo(downloadImage);
                 downloadImage.ImageID = id;
@@ -211,7 +213,9 @@ namespace FacebookImageUpload
                 FB_Image encodeImage = new FB_Image();
                 if (progress != null)
                 progress.Report("25|25|Uploading Picture");
-                string id = Upload_Picture_FB(Path.Combine(FB_Image.BaseDirectory, encodeFile), encodeImage, albumID);
+                if (String.IsNullOrEmpty(FB_Image.UserAccessToken))
+                    return null;
+                string id = Upload_Picture_FB(Path.Combine(FB_Image.BaseDirectory, encodeFile), encodeImage,FB_Image.UserAccessToken, albumID);
                 FB_Image downloadImage = new FB_Image();
                 encodeImage.CopyTo(downloadImage);
                 downloadImage.ImageID = id;
@@ -382,7 +386,7 @@ namespace FacebookImageUpload
             float ratio = 15;
             while (ratio > FB_Image.RatioMax)
             {
-                string id = Upload_Picture_FB(tempName, currentImage,FB_Image.Album_Test);
+                string id = Upload_Picture_FB(tempName, currentImage,FB_Image.AccessToken,FB_Image.Album_Test);
                 if (currentImage.ImageID.Equals(""))
                 {
                     FB_Image temp = new FB_Image();

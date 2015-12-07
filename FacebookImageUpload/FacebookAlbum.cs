@@ -19,11 +19,12 @@ namespace FacebookImageUpload
     class FacebookAlbum
     {
         public string _albumid = "";
-        public string createAlbum(string _accessToken, string description = null, string name = null)
+        public string createAlbum(string _accessToken, string name = null,string privacy=null, string description = null)
         {
             dynamic albumPost = new ExpandoObject();  // tạo đối tượng
             albumPost.message = description;  // truyền tham số 
             albumPost.name = name;
+            albumPost.privacy = privacy;
             var fb = new FacebookClient(_accessToken);
             dynamic result = fb.Post("me/albums", albumPost); //request facebook api dạng: /{album-id}?field=message,name
             this._albumid = result.id;

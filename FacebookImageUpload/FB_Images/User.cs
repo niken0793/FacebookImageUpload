@@ -10,5 +10,11 @@ namespace FacebookImageUpload
     {
         public static List<string> inboxUserA = new List<string>{ "1663735367172637" };
         public static List<string> inboxUserB = new List<string> { "1663721180507389" };
+
+        private string name;
+        private string accessToken;
+        private string uid;
+        private string albumTestId;
+
     }
 }

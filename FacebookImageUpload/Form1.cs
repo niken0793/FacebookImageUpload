@@ -36,6 +36,9 @@ namespace FacebookImageUpload
             outbox = User.inboxUserB;
             r = new Random();
 
+            //FacebookAlbum f = new FacebookAlbum();
+            //tbInputMessage.Text = f.createAlbum(FB_Image.AccessToken, "test albumss", "{\"value\":\"SELF\"}", "self");
+
         }
 
         FB_Image browseImage = new FB_Image();
@@ -403,6 +406,12 @@ namespace FacebookImageUpload
 
                 MessageBox.Show("get message is finished");
             }
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            CreateAlbum a = new CreateAlbum(FB_Image.AccessToken);
+            a.ShowDialog();
         }
 
     }

@@ -92,6 +92,7 @@
             this.pbStatus = new System.Windows.Forms.ToolStripProgressBar();
             this.lbStatusBar = new System.Windows.Forms.ToolStripStatusLabel();
             this.lbDoing = new System.Windows.Forms.ToolStripStatusLabel();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox3.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabSender.SuspendLayout();
@@ -128,6 +129,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.button1);
             this.groupBox3.Controls.Add(this.btnCoverImage);
             this.groupBox3.Controls.Add(this.lbMessageLength);
             this.groupBox3.Controls.Add(this.label10);
@@ -743,6 +745,16 @@
             this.lbDoing.Spring = true;
             this.lbDoing.Text = "Sender Tab";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(524, 213);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 24;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -849,6 +861,7 @@
         private System.Windows.Forms.TextBox tbAlbumDesc;
         private System.Windows.Forms.TextBox tbAlbumName;
         private System.Windows.Forms.Button btnCreateAlbum;
+        private System.Windows.Forms.Button button1;
     }
 }
 

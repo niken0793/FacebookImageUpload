@@ -87,7 +87,7 @@ namespace FacebookImageUpload
             string searchEngineId = "002524252275919064823:dlgwbkge9f0";
             GoogleImage googleImage = new GoogleImage();
             string query = tbKeyWord.Text;
-
+            //start number of result return
             Search images = googleImage.googleImageSearch(apiKey, searchEngineId, query, start);
             foreach (var item in images.Items)
             {

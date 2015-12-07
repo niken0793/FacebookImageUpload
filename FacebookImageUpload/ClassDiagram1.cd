@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FacebookImageUpload.CoverImageForm" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>FAAAAAAAACAIAAAAAACAAQACAAAAAIIAAKAAAAAAAAA=</HashCode>
+      <FileName>CoverImageForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FacebookImageUpload.FacebookAlbum" Collapsed="true">
+    <Position X="2.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAAAAAAAAAAAAAAAAAACAAEAAAAAAA=</HashCode>
+      <FileName>FacebookAlbum.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FacebookImageUpload.AlbumInfo" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAgIABAACAAQAAEEEAgABAAAAAQAAAkE=</HashCode>
+      <FileName>FacebookAlbum.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FacebookImageUpload.FacebookLoginForm" Collapsed="true">
+    <Position X="4" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAQAACBAAAABQACAAAACAAAAAgAAAAgAAAAAAAA=</HashCode>
+      <FileName>FacebookLoginForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FacebookImageUpload.Form1" Collapsed="true">
+    <Position X="2.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>fRdCiCxICKgTTRohJBLMogYHAQoAkRDcbXHpIoYUTGM=</HashCode>
+      <FileName>FB_Images\common.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FacebookImageUpload.Crc32" Collapsed="true">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAABBAABCQQBCgACAAAAAAAAAAAAAAAAACgAAAAA=</HashCode>
+      <FileName>FB_Images\Crc32.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FacebookImageUpload.User" Collapsed="true">
+    <Position X="4" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAkAEAAAAAEAAAAAAAAAAAAAAEAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>FB_Images\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FacebookImageUpload.GoogleImage" Collapsed="true">
+    <Position X="4" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GoogleImage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FacebookImageUpload.Program" Collapsed="true">
+    <Position X="5.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FacebookImageUpload.FB_Images.CreateAlbum" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAABAAAACAAAACAAAIAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>FB_Images\CreateAlbum.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FacebookImageUpload.FB_Images.FB_Image">
+    <Position X="8" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>GAAAABAiBMEQABREQACBAEABEYAGAWCAAVCCgAjAIUA=</HashCode>
+      <FileName>FB_Images\FB_Image.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FacebookImageUpload.FB_Images.Common" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAEAAAARAABAABAACAAIAAAIAAhESAAAAAAA=</HashCode>
+      <FileName>FB_Images\helper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FacebookImageUpload.FB_Images.FB_Message" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgCAAAAAgAAAAAAAAAAAAAAEAIEABACBAAAAAAIAAA=</HashCode>
+      <FileName>FB_Images\Message.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FacebookImageUpload.Properties.Resources" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FacebookImageUpload.Properties.Settings" Collapsed="true">
+    <Position X="2.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
