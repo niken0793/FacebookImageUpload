@@ -16,10 +16,13 @@ namespace FacebookImageUpload
     public partial class CreateAlbum : Form
     {
         private string acesstoken;
+        private int NumOfAlbum;
+        public string AlbumID { get; set; }
+        public string AlbumName { get; set; }
         public CreateAlbum()
         {
             InitializeComponent();
-            
+            NumOfAlbum = 0;
         }
         public CreateAlbum(string paramToken):this()
         {
@@ -31,11 +34,16 @@ namespace FacebookImageUpload
                 cmbPrivateAlbum.DataSource = albums;
                 cmbPrivateAlbum.DisplayMember = "Name";
                 cmbPrivateAlbum.ValueMember = "ID";
+                NumOfAlbum = albuminfo.Count;
+               
+
             }
             else
             {
-                MessageBox.Show("You need to login first", "Login requied", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("You need to login first", "Login required", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+
+
 
         }
 
@@ -60,6 +68,57 @@ namespace FacebookImageUpload
 
             return albums;
 
+        }
+
+        public static string CreatePrivateAlbum(string accessToken, string albumName, string privacy = "SELF")
+        {
+            FacebookAlbum f = new FacebookAlbum();
+            string albumID = null;
+            if (!string.IsNullOrEmpty(accessToken) && !string.IsNullOrEmpty(albumName) && !string.IsNullOrEmpty(privacy))
+            {
+                albumID = f.createAlbum(accessToken, albumName, "{\"value\":\"" + privacy + "\"}");
+                return albumID;
+            }
+            else
+            {
+                MessageBox.Show("You need to enter album's name", "Name required", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return null;
+            }
+            
+            
+        }
+    
+
+        private void btnCreatePrivateAlbum_Click(object sender, EventArgs e)
+        {
+            string albumID = CreatePrivateAlbum(this.acesstoken, tbAlbumName.Text);
+            this.AlbumName = tbAlbumName.Text;
+            this.AlbumID = albumID;
+            if (!string.IsNullOrEmpty(albumID))
+            {
+                MessageBox.Show("Your new private albums is successfully created", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                DialogResult = DialogResult.OK;
+            }
+            else
+            {
+                MessageBox.Show("Fail to create new private album", "error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+        }
+
+        private void btnChoosePrivateAlbum_Click(object sender, EventArgs e)
+        {
+            this.AlbumID = cmbPrivateAlbum.SelectedValue.ToString();
+            this.AlbumName = ((PrivateAlbum)cmbPrivateAlbum.SelectedItem).Name;
+            DialogResult = DialogResult.OK;
+        }
+
+        private void CreateAlbum_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (string.IsNullOrEmpty(AlbumID))
+            {
+                DialogResult = DialogResult.No;
+            }
         }
 
 

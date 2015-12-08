@@ -29,6 +29,44 @@ namespace FacebookImageUpload
     public partial class Form1 : Form
     {
         Random r;
+
+        public static UserSetting ActiveUser;
+
+        private void CheckUserSetting()
+        {
+            if (!Properties.Settings.Default["ActiveUser"].ToString().Equals("no"))
+            {
+                UserSetting a = Common.DeSerializeObject<UserSetting>(Path.Combine(FB_Image.RelativeDirectory, "UserSetting/" + Properties.Settings.Default["ActiveUser"]));
+               
+                UpdateLoginControl(a);
+                if (a == null)
+                {
+                    LoginFacebook();
+                }
+
+            }
+            else
+            {
+                LoginFacebook();
+                
+            }
+        }
+
+        private void SaveActiveUserOnDisk(UserSetting active)
+        {
+             if (active != null)
+            {
+                Common.SerializeObject(active,Path.Combine(FB_Image.RelativeDirectory,"UserSetting/"+active.UserID));
+                Properties.Settings.Default["ActiveUser"] = active.UserID;
+                Properties.Settings.Default.Save();
+            }
+        }
+        
+
+
+
+
+
         private string Upload_Picture_FB(string filename, FB_Image browseImageUP,string UserAccessToken,string albumID)
         {
             //upload photo
@@ -827,6 +865,9 @@ namespace FacebookImageUpload
             TextBox t = (TextBox)sender;
             lbMessageLength.Text = t.Text.Length.ToString();
         }
+
+
+
 
    
         public static void Log(Exception message)

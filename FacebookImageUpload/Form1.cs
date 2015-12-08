@@ -17,6 +17,7 @@ using System.Net;
 using System.Drawing.Imaging;
 using System.Diagnostics;
 using FacebookImageUpload.FB_Images;
+
 // project test sync
 //ss
 
@@ -39,6 +40,7 @@ namespace FacebookImageUpload
             //FacebookAlbum f = new FacebookAlbum();
             //tbInputMessage.Text = f.createAlbum(FB_Image.AccessToken, "test albumss", "{\"value\":\"SELF\"}", "self");
 
+            CheckUserSetting();
         }
 
         FB_Image browseImage = new FB_Image();
@@ -410,8 +412,27 @@ namespace FacebookImageUpload
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            CreateAlbum a = new CreateAlbum(FB_Image.AccessToken);
-            a.ShowDialog();
+            CreateAlbum a = new CreateAlbum(ActiveUser.AccessToken);
+            if (a.ShowDialog() == DialogResult.OK)
+            {
+                if (Form1.ActiveUser != null)
+                {
+                    Form1.ActiveUser.PrivateAlbumID = a.AlbumID;
+                    Form1.ActiveUser.PrivateAlbumName = a.AlbumName;
+                    lbPrivateAlbum.Text = a.AlbumName;
+                }
+            }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //if (Form1.ActiveUser != null)
+            //{
+            //    Common.SerializeObject(Form1.ActiveUser,Path.Combine(FB_Image.RelativeDirectory,"UserSetting/"+Form1.ActiveUser.UserID));
+            //    Properties.Settings.Default["ActiveUser"] = Form1.ActiveUser.UserID;
+            //    Properties.Settings.Default.Save();
+            //}
+            SaveActiveUserOnDisk(ActiveUser);
         }
 
     }

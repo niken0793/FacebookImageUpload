@@ -22,5 +22,29 @@ namespace FacebookImageUpload.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("no")]
+        public string ActiveUser {
+            get {
+                return ((string)(this["ActiveUser"]));
+            }
+            set {
+                this["ActiveUser"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("aaa")]
+        public string a {
+            get {
+                return ((string)(this["a"]));
+            }
+            set {
+                this["a"] = value;
+            }
+        }
     }
 }

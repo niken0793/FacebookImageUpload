@@ -66,6 +66,7 @@ namespace FacebookImageUpload.FB_Images
 
             userInfo.Add(userName);
             userInfo.Add(userAvatarPath);
+            userInfo.Add(userId);
             return userInfo;
         }
 
@@ -170,6 +171,7 @@ namespace FacebookImageUpload.FB_Images
         {
             string directory = Path.GetDirectoryName(filename);
             string file = Path.GetFileName(filename);
+            
             if (Directory.Exists(directory))
             {
                 if (!File.Exists(filename))

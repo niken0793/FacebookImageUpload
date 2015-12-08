@@ -19,7 +19,7 @@ namespace FacebookImageUpload
     class FacebookAlbum
     {
         public string _albumid = "";
-        public string createAlbum(string _accessToken, string name = null,string privacy=null, string description = null)
+        public string createAlbum(string _accessToken, string name = null,string privacy=null, string description = "Testing album (private)")
         {
             dynamic albumPost = new ExpandoObject();  // tạo đối tượng
             albumPost.message = description;  // truyền tham số 

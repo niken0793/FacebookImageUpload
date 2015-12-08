@@ -31,6 +31,7 @@
             this.btnUploadImage = new System.Windows.Forms.Button();
             this.tbImagePath = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.btnCoverImage = new System.Windows.Forms.Button();
             this.lbMessageLength = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
@@ -92,7 +93,8 @@
             this.pbStatus = new System.Windows.Forms.ToolStripProgressBar();
             this.lbStatusBar = new System.Windows.Forms.ToolStripStatusLabel();
             this.lbDoing = new System.Windows.Forms.ToolStripStatusLabel();
-            this.button1 = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.lbPrivateAlbum = new System.Windows.Forms.Label();
             this.groupBox3.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabSender.SuspendLayout();
@@ -149,6 +151,16 @@
             this.groupBox3.TabIndex = 10;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Sending";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(524, 213);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 24;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // btnCoverImage
             // 
@@ -285,6 +297,8 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.lbPrivateAlbum);
+            this.groupBox6.Controls.Add(this.label3);
             this.groupBox6.Controls.Add(this.btnTester);
             this.groupBox6.Controls.Add(this.lbAccessTokenExpire);
             this.groupBox6.Controls.Add(this.label11);
@@ -310,7 +324,7 @@
             // lbAccessTokenExpire
             // 
             this.lbAccessTokenExpire.AutoSize = true;
-            this.lbAccessTokenExpire.Location = new System.Drawing.Point(82, 95);
+            this.lbAccessTokenExpire.Location = new System.Drawing.Point(93, 95);
             this.lbAccessTokenExpire.Name = "lbAccessTokenExpire";
             this.lbAccessTokenExpire.Size = new System.Drawing.Size(55, 13);
             this.lbAccessTokenExpire.TabIndex = 11;
@@ -321,9 +335,9 @@
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(6, 95);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(70, 13);
+            this.label11.Size = new System.Drawing.Size(73, 13);
             this.label11.TabIndex = 8;
-            this.label11.Text = "Token Expire";
+            this.label11.Text = "Token Expire:";
             // 
             // btnFacebookLogin
             // 
@@ -745,15 +759,23 @@
             this.lbDoing.Spring = true;
             this.lbDoing.Text = "Sender Tab";
             // 
-            // button1
+            // label3
             // 
-            this.button1.Location = new System.Drawing.Point(524, 213);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 24;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 122);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(78, 13);
+            this.label3.TabIndex = 24;
+            this.label3.Text = "Private Album: ";
+            // 
+            // lbPrivateAlbum
+            // 
+            this.lbPrivateAlbum.AutoSize = true;
+            this.lbPrivateAlbum.Location = new System.Drawing.Point(93, 122);
+            this.lbPrivateAlbum.Name = "lbPrivateAlbum";
+            this.lbPrivateAlbum.Size = new System.Drawing.Size(16, 13);
+            this.lbPrivateAlbum.TabIndex = 25;
+            this.lbPrivateAlbum.Text = "...";
             // 
             // Form1
             // 
@@ -766,6 +788,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Facebook Image Stegano";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.tabControl.ResumeLayout(false);
@@ -862,6 +885,8 @@
         private System.Windows.Forms.TextBox tbAlbumName;
         private System.Windows.Forms.Button btnCreateAlbum;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label lbPrivateAlbum;
+        private System.Windows.Forms.Label label3;
     }
 }
 

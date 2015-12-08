@@ -152,6 +152,13 @@ namespace FacebookImageUpload
 
         private void btnFacebookLogin_Click(object sender, EventArgs e)
         {
+            LoginFacebook();
+           
+            
+        }
+
+        private void LoginFacebook()
+        {
             if (!isLogin)
             {
                 string extendPermission = "user_photos,user_posts,user_status,user_likes,user_friends,publish_actions";
@@ -159,10 +166,39 @@ namespace FacebookImageUpload
                 DialogResult d = facebookLoginForm.ShowDialog();
                 if (d.Equals(DialogResult.OK))
                 {
-                    isLogin = true;
+                    // Login
+
                     FacebookOAuthResult r = facebookLoginForm.AuthResult;
                     UpdateLoginControl(r);
-                    btnFacebookLogin.Text = "LogOut";
+                    bool flag = false;
+                    //Set private album
+                    if (File.Exists(Path.Combine(FB_Image.RelativeDirectory, "UserSetting/" + ActiveUser.UserID)))
+                    {
+                        UserSetting a = Common.DeSerializeObject<UserSetting>(Path.Combine(FB_Image.RelativeDirectory, "UserSetting/" +ActiveUser.UserID));
+                        if (a!= null &&!string.IsNullOrEmpty(a.PrivateAlbumID) && !string.IsNullOrEmpty(a.PrivateAlbumName) )
+                        {
+                            ActiveUser.PrivateAlbumID = a.PrivateAlbumID;
+                            ActiveUser.PrivateAlbumName = a.PrivateAlbumName;
+                            lbPrivateAlbum.Text = a.PrivateAlbumName.ToString();
+                            flag = true;
+                        }
+                    }
+                    if (!flag)
+                    {
+                        CreateAlbum a = new CreateAlbum(ActiveUser.AccessToken);
+                        if (a.ShowDialog() == DialogResult.OK)
+                        {
+                            if (Form1.ActiveUser != null)
+                            {
+                                Form1.ActiveUser.PrivateAlbumID = a.AlbumID;
+                                Form1.ActiveUser.PrivateAlbumName = a.AlbumName;
+                                lbPrivateAlbum.Text = a.AlbumName.ToString() ;
+                            }
+                        }
+                    }
+                    SaveActiveUserOnDisk(ActiveUser);
+
+
                 }
                 else
                 {
@@ -172,13 +208,10 @@ namespace FacebookImageUpload
             else
             {
                 Logout(FB_Image.UserAccessToken);
-                UpdateLoginControl(null);
-                btnFacebookLogin.Text = "Login";
-                isLogin = false;
+                UpdateLoginControl();
+
             }
-                
-           
-            
+
         }
 
         private void Logout(string accessToken)
@@ -187,6 +220,9 @@ namespace FacebookImageUpload
             var fb = new FacebookClient();
             var logouUrl = fb.GetLogoutUrl(new { access_token = accessToken, next = "https://www.facebook.com/connect/login_success.html" });
             webBrowser.Navigate(logouUrl);
+            Properties.Settings.Default["ActiveUser"] = "no";
+            Properties.Settings.Default.Save();
+
            
         }
 
@@ -197,9 +233,14 @@ namespace FacebookImageUpload
                 FB_Image.UserAccessToken = r.AccessToken;
                 lbAccessTokenExpire.Text = r.Expires.ToString();
                 List<string> s = Common.getUserInfo(FB_Image.UserAccessToken, "me", FB_Image.BaseDirectory);
-
                 pBoxUserAvatar.ImageLocation = s[1];
                 lbFacebookUserName.Text = s[0];
+                Form1.ActiveUser = new UserSetting(r.AccessToken, s[0], s[2],r.Expires.ToString(),s[1]);
+                Properties.Settings.Default["ActiveUser"] = s[2];
+                Properties.Settings.Default.Save();
+                btnFacebookLogin.Text = "LogOut";
+                isLogin = true;
+
             }
             else
             {
@@ -207,8 +248,40 @@ namespace FacebookImageUpload
                 lbFacebookUserName.Text = "Username";
                 pBoxUserAvatar.ImageLocation = Path.Combine(Common.ProjectDir,"images/profile.jpg");
                 FB_Image.UserAccessToken = "";
+                Form1.ActiveUser = null;
+                btnFacebookLogin.Text = "Login";
+                lbPrivateAlbum.Text = "...";
+                isLogin = false;
             }
             
+        }
+        private void UpdateLoginControl()
+        {
+            lbAccessTokenExpire.Text = "";
+            lbFacebookUserName.Text = "Username";
+            pBoxUserAvatar.ImageLocation = Path.Combine(Common.ProjectDir, "images/profile.jpg");
+            FB_Image.UserAccessToken = "";
+            Form1.ActiveUser = null;
+            btnFacebookLogin.Text = "Login";
+            isLogin = false;
+            lbPrivateAlbum.Text = "...";
+
+        }
+
+        private void UpdateLoginControl(UserSetting r)
+        {
+            if (r != null)
+            {
+                FB_Image.UserAccessToken = r.AccessToken;
+                lbAccessTokenExpire.Text = r.ExpiredTime;
+                pBoxUserAvatar.ImageLocation = r.ImgPath;
+                lbFacebookUserName.Text = r.UserName;
+                lbPrivateAlbum.Text = r.PrivateAlbumName;
+                isLogin = true;
+                btnFacebookLogin.Text = "LogOut";
+
+            }
+
         }
 
 
