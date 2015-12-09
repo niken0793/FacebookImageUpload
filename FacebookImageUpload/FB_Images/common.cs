@@ -35,6 +35,7 @@ namespace FacebookImageUpload
         private FacebookLoginForm facebookLoginForm;
         private bool isLogin = false;
         public static string AppID = "1499942773583853";
+        public static List<InboxUser> ListInboxUser = new List<InboxUser>();
       
 
         public void openfile_Click_fn(TextBox tb, string filter, bool isPicture=false)
@@ -67,7 +68,7 @@ namespace FacebookImageUpload
                 Log(e);
             }
         }
-        public string Crc32Hash(string filepath)
+        public static string Crc32Hash(string filepath)
         {
             Crc32 crc32 = new Crc32();
             String hash = String.Empty;
@@ -170,35 +171,7 @@ namespace FacebookImageUpload
 
                     FacebookOAuthResult r = facebookLoginForm.AuthResult;
                     UpdateLoginControl(r);
-                    bool flag = false;
-                    //Set private album
-                    if (File.Exists(Path.Combine(FB_Image.RelativeDirectory, "UserSetting/" + ActiveUser.UserID)))
-                    {
-                        UserSetting a = Common.DeSerializeObject<UserSetting>(Path.Combine(FB_Image.RelativeDirectory, "UserSetting/" +ActiveUser.UserID));
-                        if (a!= null &&!string.IsNullOrEmpty(a.PrivateAlbumID) && !string.IsNullOrEmpty(a.PrivateAlbumName) )
-                        {
-                            ActiveUser.PrivateAlbumID = a.PrivateAlbumID;
-                            ActiveUser.PrivateAlbumName = a.PrivateAlbumName;
-                            lbPrivateAlbum.Text = a.PrivateAlbumName.ToString();
-                            flag = true;
-                        }
-                    }
-                    if (!flag)
-                    {
-                        CreateAlbum a = new CreateAlbum(ActiveUser.AccessToken);
-                        if (a.ShowDialog() == DialogResult.OK)
-                        {
-                            if (Form1.ActiveUser != null)
-                            {
-                                Form1.ActiveUser.PrivateAlbumID = a.AlbumID;
-                                Form1.ActiveUser.PrivateAlbumName = a.AlbumName;
-                                lbPrivateAlbum.Text = a.AlbumName.ToString() ;
-                            }
-                        }
-                    }
                     SaveActiveUserOnDisk(ActiveUser);
-
-
                 }
                 else
                 {
@@ -211,6 +184,8 @@ namespace FacebookImageUpload
                 UpdateLoginControl();
 
             }
+
+            
 
         }
 
@@ -235,7 +210,51 @@ namespace FacebookImageUpload
                 List<string> s = Common.getUserInfo(FB_Image.UserAccessToken, "me", FB_Image.BaseDirectory);
                 pBoxUserAvatar.ImageLocation = s[1];
                 lbFacebookUserName.Text = s[0];
-                Form1.ActiveUser = new UserSetting(r.AccessToken, s[0], s[2],r.Expires.ToString(),s[1]);
+                bool flag = false;
+                //Set private album
+                if (File.Exists(Path.Combine(FB_Image.RelativeDirectory, "UserSetting/" +s[2])))
+                {
+                    UserSetting a = Common.DeSerializeObject<UserSetting>(Path.Combine(FB_Image.RelativeDirectory, "UserSetting/" + s[2]));
+                    if (a != null)
+                    {
+                        Form1.ActiveUser = a;
+                    }
+                    else
+                    {
+                        Form1.ActiveUser = new UserSetting(r.AccessToken, s[0], s[2], r.Expires.ToString(), s[1]);
+                        Form1.ActiveUser.CheckTime = Common.GetUnixTimesStamp(DateTime.Now);
+                    }
+                    
+                    if (a != null && !string.IsNullOrEmpty(a.PrivateAlbumID) && !string.IsNullOrEmpty(a.PrivateAlbumName))
+                    {
+                        ActiveUser.PrivateAlbumID = a.PrivateAlbumID;
+                        ActiveUser.PrivateAlbumName = a.PrivateAlbumName;
+                        lbPrivateAlbum.Text = a.PrivateAlbumName.ToString();
+                        flag = true;
+                    }
+
+
+                }
+                else
+                {
+                    Form1.ActiveUser = new UserSetting(r.AccessToken, s[0], s[2], r.Expires.ToString(), s[1]);
+                    Form1.ActiveUser.CheckTime = Common.GetUnixTimesStamp(DateTime.Now);
+                }
+
+                if (!flag)
+                {
+                    CreateAlbum a = new CreateAlbum(ActiveUser.AccessToken);
+                    if (a.ShowDialog() == DialogResult.OK)
+                    {
+                        if (Form1.ActiveUser != null)
+                        {
+                            Form1.ActiveUser.PrivateAlbumID = a.AlbumID;
+                            Form1.ActiveUser.PrivateAlbumName = a.AlbumName;
+                            lbPrivateAlbum.Text = a.AlbumName.ToString();
+                        }
+                    }
+                }
+              
                 Properties.Settings.Default["ActiveUser"] = s[2];
                 Properties.Settings.Default.Save();
                 btnFacebookLogin.Text = "LogOut";
@@ -273,6 +292,7 @@ namespace FacebookImageUpload
             if (r != null)
             {
                 FB_Image.UserAccessToken = r.AccessToken;
+                Form1.ActiveUser = r;
                 lbAccessTokenExpire.Text = r.ExpiredTime;
                 pBoxUserAvatar.ImageLocation = r.ImgPath;
                 lbFacebookUserName.Text = r.UserName;
@@ -321,11 +341,18 @@ namespace FacebookImageUpload
                 {
                     List<string> info = Common.getUserInfo(FB_Image.UserAccessToken, user, FB_Image.BaseDirectory + "Test_User\\");
 
+
                     try
                     {
                         successImage.Images.Add(Image.FromFile(info[1]));
                         successImage.Images.SetKeyName(k, info[0]);
                         k += 1;
+                        InboxUser a = Common.GetInboxByUserID(user, ListInboxUser);
+                        if (a == null)
+                        {
+                            ListInboxUser.Add(new InboxUser(user,info[0]));
+                        }
+
                     }
                     catch (Exception ex)
                     {
@@ -345,7 +372,7 @@ namespace FacebookImageUpload
                     item.ImageIndex = j;
                     this.listViewUserList.Items.Add(item);
                 }
-                btnGetUserList.Enabled = false;
+                
             }
             else 
             {
@@ -457,8 +484,8 @@ namespace FacebookImageUpload
         {
             try
             {
+                //string created = "1449376455";
                 var fb = new FacebookClient(FB_Image.UserAccessToken);
-
                 dynamic res = fb.Get("me/photos?fields=from");
                 string json_string = Newtonsoft.Json.JsonConvert.SerializeObject(res);
                 var json = JObject.Parse(json_string);
@@ -504,6 +531,60 @@ namespace FacebookImageUpload
 
                 FB_Image.Image_Tags_In = successImage;
                 FB_Image.Image_TagsID_In = imagesId;
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+            }
+        }
+        public void GetImageTagged1(IProgress<int> progress,List<InboxUser> inbox)
+        {
+            try
+            {
+                
+                string checkTime = ActiveUser.CheckTime.ToString();
+                // Make Facebook request
+                var fb = new FacebookClient(ActiveUser.AccessToken);
+                dynamic res = fb.Get("me/photos?fields=from,id,created_time,images&date_format=U&since=" + checkTime);
+                //Hanlde response from graph api
+                string json_string = Newtonsoft.Json.JsonConvert.SerializeObject(res);
+                var json = JObject.Parse(json_string);
+                dynamic photos = json["data"];
+                int count = photos.Count;
+
+                string source_url = "";
+                string imagePath = "";
+                int i = 0;
+
+                while (i < count )
+                {
+                    dynamic currentPhoto = photos[i];
+                    string userID = (string)currentPhoto["from"]["id"];
+                    InboxUser userInbox = Common.GetInboxByUserID(userID,inbox);
+                    if (userInbox == null)
+                    {
+                        i++;
+                        continue;
+                    }
+                    dynamic images = currentPhoto["images"];
+                    int countImages = images.Count;
+                    source_url = (string)images[0]["source"];
+                    string imageId = (string)currentPhoto["id"];
+
+                    foreach(dynamic image in images)
+                    {
+                        if (((string)image["width"]).Equals("960"))
+                        {
+                            source_url = (string)image["source"];
+                        }
+                    }
+                    imagePath = FB_Image.BaseDirectory + imageId + ".jpg";
+                    Common.DowloadImageFromLink(source_url, imagePath, ImageFormat.Jpeg);
+                    string content = Common.GetMessageFromImage(imagePath);
+                    userInbox.Messages.Add(new FB_Message(content, new FB_Image(imageId, Path.GetFileName(imagePath), Path.GetDirectoryName(imagePath))));
+                    i++;
+                    
+                }
             }
             catch (Exception ex)
             {

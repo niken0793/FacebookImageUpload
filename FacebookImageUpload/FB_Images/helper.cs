@@ -39,29 +39,37 @@ namespace FacebookImageUpload.FB_Images
             string userAvatarPath = "";
             List<string> userInfo = new List<string>();
             var user = new FacebookClient(userAccessToken);
-            dynamic me = user.Get(uid);
-            string userName = me.name;
-            string userId = me.id;
-
-            dynamic res = user.Get(uid + "?fields=picture");
+            dynamic res = user.Get(uid + "?fields=picture,name");
             string json_string = Newtonsoft.Json.JsonConvert.SerializeObject(res);
             var json = JObject.Parse(json_string);
             string source_url = "";
+            dynamic me = user.Get(uid);
+            string userName = me.name;
+            string userId = me.id;
+            userAvatarPath = path + "profilePiture_" + userId + ".jpg";
 
             source_url = (string)json["picture"]["data"]["url"];
-
-            using (WebClient webClient = new WebClient())
+            if (!File.Exists(userAvatarPath))
             {
-                byte[] data = webClient.DownloadData(source_url);
 
-                using (MemoryStream mem = new MemoryStream(data))
+                //using (WebClient webClient = new WebClient())
+                //{
+                //    byte[] data = webClient.DownloadData(source_url);
+
+                //    using (MemoryStream mem = new MemoryStream(data))
+                //    {
+                //        using (var yourImage = Image.FromStream(mem))
+                //        {
+
+                //            yourImage.Save(userAvatarPath, ImageFormat.Jpeg);
+                //        }
+                //    }
+                //}
+                if (!DowloadImageFromLink(source_url, userAvatarPath, ImageFormat.Jpeg))
                 {
-                    using (var yourImage = Image.FromStream(mem))
-                    {
-                        userAvatarPath = path + "profilePiture_" + userId + ".jpg";
-                        yourImage.Save(userAvatarPath, ImageFormat.Jpeg);
-                    }
+                    userAvatarPath = Path.Combine(Common.ProjectDir, "images/profile.jpg");
                 }
+
             }
 
             userInfo.Add(userName);
@@ -69,6 +77,105 @@ namespace FacebookImageUpload.FB_Images
             userInfo.Add(userId);
             return userInfo;
         }
+
+        public static void AddToDictionary(Dictionary<string, List<FB_Message>> inbox, string userID, FB_Message message)
+        {
+            List<FB_Message> userInbox = inbox[userID];
+            if (userInbox != null)
+            {
+                userInbox.Add(message);
+            }
+            else
+            {
+                userInbox = new List<FB_Message>();
+                userInbox.Add(message);
+                inbox.Add(userID,userInbox);
+            }
+        }
+
+        public static long GetUnixTimesStamp(DateTime time)
+        {
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            return Convert.ToInt64((time - epoch).TotalSeconds);
+        }
+
+        public static long GetCheckTimeFromInbox(List<InboxUser> inboxs)
+        {
+            if (inboxs != null && inboxs.Count>0)
+            {
+                var min = inboxs.Min(r => r.CheckTime);
+                return (long)min;
+            }
+            return 0;
+        }
+
+        public static InboxUser GetInboxByUserID(string userID, List<InboxUser> inboxs)
+        {
+            if (inboxs != null && inboxs.Count > 0)
+            {
+                var i = inboxs.Where(r => r.UserID.Equals(userID));
+                if (i.Count() > 0)
+                {
+                    return i.First();
+                }
+                
+            }
+            return null;
+        }
+
+
+
+        public static bool DowloadImageFromLink(string link, string pathToSave, ImageFormat format )
+        {
+            try
+            {
+
+                using (WebClient webClient = new WebClient())
+                {
+                    byte[] data = webClient.DownloadData(link);
+
+                    using (MemoryStream mem = new MemoryStream(data))
+                    {
+                        using (var yourImage = Image.FromStream(mem))
+                        {
+                            yourImage.Save(pathToSave, format);
+                            return true;
+                        }
+                    }
+                }
+                
+            }
+            catch (Exception e)
+            {
+                Form1.Log(e);
+                return false;
+            }
+        }
+
+        public static string GetMessageFromImage(string imagePath)
+        {
+            string dir = Path.GetDirectoryName(imagePath);
+            string filename = Path.GetFileName(imagePath);
+            string fileNameNO = Path.GetFileNameWithoutExtension(imagePath);
+            string content;
+
+            if (!string.IsNullOrEmpty(dir) && !string.IsNullOrEmpty(filename) && !string.IsNullOrEmpty(fileNameNO))
+            {
+                if(!dir.Equals((FB_Image.BaseDirectory.TrimEnd('\\'))))
+                {
+                    File.Copy(imagePath, Path.Combine(FB_Image.BaseDirectory,filename));
+                }
+                string output = Form1.JPSeekDecode(filename, fileNameNO + ".txt");
+                if (!string.IsNullOrEmpty(output))
+                {
+                    content = File.ReadAllText(Path.Combine(FB_Image.BaseDirectory, output));
+                    return content;
+                }
+            }
+            return "";
+        }
+
+
 
 
         public static void ShowProgressBar(string progress,ToolStripProgressBar pb, ToolStripLabel lbPercent,ToolStripLabel lbDoing)
@@ -94,6 +201,9 @@ namespace FacebookImageUpload.FB_Images
                 }
             }
         }
+
+
+
 
         public static void ResetStatusTrip(ToolStripProgressBar pb, ToolStripLabel lbPercent, ToolStripLabel lbDoing)
         {

@@ -59,6 +59,14 @@ namespace FacebookImageUpload.FB_Images
             set { expiredTime = value; }
         }
 
+        private long  checkTime;
+
+        public long CheckTime
+        {
+            get { return checkTime; }
+            set { checkTime = value; }
+        }
+
         private string imgPath;
 
         public string ImgPath

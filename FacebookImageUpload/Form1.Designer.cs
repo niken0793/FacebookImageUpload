@@ -46,6 +46,8 @@
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabSender = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.lbPrivateAlbum = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.btnTester = new System.Windows.Forms.Button();
             this.lbAccessTokenExpire = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
@@ -85,6 +87,9 @@
             this.btnImageSearch = new System.Windows.Forms.Button();
             this.tbKeyWord = new System.Windows.Forms.TextBox();
             this.tabSetting = new System.Windows.Forms.TabPage();
+            this.tbCheckTime = new System.Windows.Forms.TextBox();
+            this.dtpCheckTime = new System.Windows.Forms.DateTimePicker();
+            this.btnChangeCheckTime = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -93,8 +98,7 @@
             this.pbStatus = new System.Windows.Forms.ToolStripProgressBar();
             this.lbStatusBar = new System.Windows.Forms.ToolStripStatusLabel();
             this.lbDoing = new System.Windows.Forms.ToolStripStatusLabel();
-            this.label3 = new System.Windows.Forms.Label();
-            this.lbPrivateAlbum = new System.Windows.Forms.Label();
+            this.lbLogCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.groupBox3.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabSender.SuspendLayout();
@@ -108,6 +112,7 @@
             this.groupBox9.SuspendLayout();
             this.tabGoogle.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.tabSetting.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -311,6 +316,24 @@
             this.groupBox6.TabIndex = 20;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Facebook Login";
+            // 
+            // lbPrivateAlbum
+            // 
+            this.lbPrivateAlbum.AutoSize = true;
+            this.lbPrivateAlbum.Location = new System.Drawing.Point(93, 122);
+            this.lbPrivateAlbum.Name = "lbPrivateAlbum";
+            this.lbPrivateAlbum.Size = new System.Drawing.Size(16, 13);
+            this.lbPrivateAlbum.TabIndex = 25;
+            this.lbPrivateAlbum.Text = "...";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 122);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(78, 13);
+            this.label3.TabIndex = 24;
+            this.label3.Text = "Private Album: ";
             // 
             // btnTester
             // 
@@ -681,6 +704,9 @@
             // 
             // tabSetting
             // 
+            this.tabSetting.Controls.Add(this.tbCheckTime);
+            this.tabSetting.Controls.Add(this.dtpCheckTime);
+            this.tabSetting.Controls.Add(this.btnChangeCheckTime);
             this.tabSetting.Location = new System.Drawing.Point(4, 22);
             this.tabSetting.Name = "tabSetting";
             this.tabSetting.Padding = new System.Windows.Forms.Padding(3);
@@ -688,6 +714,31 @@
             this.tabSetting.TabIndex = 2;
             this.tabSetting.Text = "Setting";
             this.tabSetting.UseVisualStyleBackColor = true;
+            // 
+            // tbCheckTime
+            // 
+            this.tbCheckTime.Location = new System.Drawing.Point(25, 74);
+            this.tbCheckTime.Name = "tbCheckTime";
+            this.tbCheckTime.Size = new System.Drawing.Size(100, 20);
+            this.tbCheckTime.TabIndex = 2;
+            this.tbCheckTime.Text = "1449584044";
+            // 
+            // dtpCheckTime
+            // 
+            this.dtpCheckTime.Location = new System.Drawing.Point(25, 37);
+            this.dtpCheckTime.Name = "dtpCheckTime";
+            this.dtpCheckTime.Size = new System.Drawing.Size(200, 20);
+            this.dtpCheckTime.TabIndex = 1;
+            // 
+            // btnChangeCheckTime
+            // 
+            this.btnChangeCheckTime.Location = new System.Drawing.Point(25, 116);
+            this.btnChangeCheckTime.Name = "btnChangeCheckTime";
+            this.btnChangeCheckTime.Size = new System.Drawing.Size(75, 23);
+            this.btnChangeCheckTime.TabIndex = 0;
+            this.btnChangeCheckTime.Text = "Change";
+            this.btnChangeCheckTime.UseVisualStyleBackColor = true;
+            this.btnChangeCheckTime.Click += new System.EventHandler(this.btnChangeCheckTime_Click);
             // 
             // menuStrip1
             // 
@@ -725,7 +776,8 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.pbStatus,
             this.lbStatusBar,
-            this.lbDoing});
+            this.lbDoing,
+            this.lbLogCount});
             this.statusStrip1.Location = new System.Drawing.Point(0, 526);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
@@ -755,27 +807,15 @@
             this.lbDoing.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
             this.lbDoing.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.lbDoing.Name = "lbDoing";
-            this.lbDoing.Size = new System.Drawing.Size(387, 19);
+            this.lbDoing.Size = new System.Drawing.Size(360, 19);
             this.lbDoing.Spring = true;
             this.lbDoing.Text = "Sender Tab";
             // 
-            // label3
+            // lbLogCount
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 122);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(78, 13);
-            this.label3.TabIndex = 24;
-            this.label3.Text = "Private Album: ";
-            // 
-            // lbPrivateAlbum
-            // 
-            this.lbPrivateAlbum.AutoSize = true;
-            this.lbPrivateAlbum.Location = new System.Drawing.Point(93, 122);
-            this.lbPrivateAlbum.Name = "lbPrivateAlbum";
-            this.lbPrivateAlbum.Size = new System.Drawing.Size(16, 13);
-            this.lbPrivateAlbum.TabIndex = 25;
-            this.lbPrivateAlbum.Text = "...";
+            this.lbLogCount.Name = "lbLogCount";
+            this.lbLogCount.Size = new System.Drawing.Size(27, 19);
+            this.lbLogCount.Text = "Log";
             // 
             // Form1
             // 
@@ -809,6 +849,8 @@
             this.tabGoogle.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.tabSetting.ResumeLayout(false);
+            this.tabSetting.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
@@ -887,6 +929,10 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label lbPrivateAlbum;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.DateTimePicker dtpCheckTime;
+        private System.Windows.Forms.Button btnChangeCheckTime;
+        private System.Windows.Forms.TextBox tbCheckTime;
+        private System.Windows.Forms.ToolStripStatusLabel lbLogCount;
     }
 }
 

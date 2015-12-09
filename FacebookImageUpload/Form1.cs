@@ -28,9 +28,6 @@ namespace FacebookImageUpload
         public Form1()
         {
             InitializeComponent();
-            //LoadingAlbumList();
-            //LoadingAlbumList_In();
-
             cmbSelectTextType.SelectedIndex = 0;
 
             inbox = User.inboxUserA;
@@ -347,23 +344,40 @@ namespace FacebookImageUpload
             pbStatus.Maximum = 100;
             pbStatus.Step = 1;
             List<string> inboxImage = inbox;
-            this.listViewTagImage.Items.Clear();
+            //this.listViewTagImage.Items.Clear();
             try
             {
                 var progress = new Progress<int>(s => { pbStatus.Value = s; lbStatusBar.Text = s.ToString(); });
-                await Task.Factory.StartNew(() => GetImageTagged(progress), TaskCreationOptions.LongRunning);
+                await Task.Factory.StartNew(() => GetImageTagged1(progress,ListInboxUser), TaskCreationOptions.LongRunning);
 
-                this.listViewTagImage.View = View.LargeIcon;
-                this.listViewTagImage.LargeImageList = FB_Image.Image_Tags_In;
+                //this.listViewTagImage.View = View.LargeIcon;
+                //this.listViewTagImage.LargeImageList = FB_Image.Image_Tags_In;
 
-                for (int j = 0; j < FB_Image.Image_Tags_In.Images.Count; j++)
+                //for (int j = 0; j < FB_Image.Image_Tags_In.Images.Count; j++)
+                //{
+                //    ListViewItem item = new ListViewItem();
+                //    item.Name = FB_Image.Image_TagsID_In[j];
+                //    item.Text = FB_Image.Image_Tags_In.Images.Keys[j].ToString();
+                //    item.ImageIndex = j;
+                //    this.listViewTagImage.Items.Add(item);
+                //}
+                if (ListInboxUser.Count > 0)
                 {
-                    ListViewItem item = new ListViewItem();
-                    item.Name = FB_Image.Image_TagsID_In[j];
-                    item.Text = FB_Image.Image_Tags_In.Images.Keys[j].ToString();
-                    item.ImageIndex = j;
-                    this.listViewTagImage.Items.Add(item);
+                    foreach (InboxUser i in ListInboxUser)
+                    {
+                        if (i.Messages.Count > 0)
+                        {
+                            foreach (FB_Message m in i.Messages)
+                            {
+                                tbInbox.AppendText("Message: "+ m.Content  + Environment.NewLine);
+                                tbInbox.AppendText("Sender: " + i.UserName + Environment.NewLine);
+                            }
+                        }
+                    }
                 }
+                ActiveUser.CheckTime = Common.GetUnixTimesStamp(DateTime.Now);
+                SaveActiveUserOnDisk(ActiveUser);
+
 
             }
             catch (Exception ex)
@@ -412,27 +426,30 @@ namespace FacebookImageUpload
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            CreateAlbum a = new CreateAlbum(ActiveUser.AccessToken);
-            if (a.ShowDialog() == DialogResult.OK)
-            {
-                if (Form1.ActiveUser != null)
-                {
-                    Form1.ActiveUser.PrivateAlbumID = a.AlbumID;
-                    Form1.ActiveUser.PrivateAlbumName = a.AlbumName;
-                    lbPrivateAlbum.Text = a.AlbumName;
-                }
-            }
+
+            //CreateAlbum a = new CreateAlbum(ActiveUser.AccessToken);
+            //if (a.ShowDialog() == DialogResult.OK)
+            //{
+            //    if (Form1.ActiveUser != null)
+            //    {
+            //        Form1.ActiveUser.PrivateAlbumID = a.AlbumID;
+            //        Form1.ActiveUser.PrivateAlbumName = a.AlbumName;
+            //        lbPrivateAlbum.Text = a.AlbumName;
+            //    }
+            //}
+
+            tbInputMessage.AppendText("Check Time" +ActiveUser.CheckTime.ToString() + Environment.NewLine);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //if (Form1.ActiveUser != null)
-            //{
-            //    Common.SerializeObject(Form1.ActiveUser,Path.Combine(FB_Image.RelativeDirectory,"UserSetting/"+Form1.ActiveUser.UserID));
-            //    Properties.Settings.Default["ActiveUser"] = Form1.ActiveUser.UserID;
-            //    Properties.Settings.Default.Save();
-            //}
+
             SaveActiveUserOnDisk(ActiveUser);
+        }
+
+        private void btnChangeCheckTime_Click(object sender, EventArgs e)
+        {
+            ActiveUser.CheckTime =long.Parse(tbCheckTime.Text);
         }
 
     }

@@ -28,7 +28,7 @@ namespace FacebookImageUpload
 
     public partial class Form1 : Form
     {
-        Random r;
+        public static Random r;
 
         public static UserSetting ActiveUser;
 
@@ -50,6 +50,8 @@ namespace FacebookImageUpload
                 LoginFacebook();
                 
             }
+
+
         }
 
         private void SaveActiveUserOnDisk(UserSetting active)
@@ -289,7 +291,7 @@ namespace FacebookImageUpload
             }
         }
 
-        public string JPHideEncode(string filename,string input)
+        public static string JPHideEncode(string filename,string input)
         {
             try
             {
@@ -323,7 +325,7 @@ namespace FacebookImageUpload
             }
         }
 
-        private string InsertCrc32(string input)
+        public static string InsertCrc32(string input)
         {
 
             string input_path = Path.Combine(FB_Image.BaseDirectory, input);
@@ -342,7 +344,9 @@ namespace FacebookImageUpload
             }
         }
 
-        public string JPSeekDecode(string filename,string output)
+
+
+        public  static string JPSeekDecode(string filename,string output)
         {
             try
             {
@@ -378,7 +382,7 @@ namespace FacebookImageUpload
             }
         }
 
-        public string CheckCrc32(string filename)
+        public static string CheckCrc32(string filename)
         {
             string oldpath = Path.Combine(FB_Image.BaseDirectory, filename);
             string newpath = Path.Combine(FB_Image.BaseDirectory, Common.AppenFileName(filename, "_check"));
