@@ -52,19 +52,6 @@ namespace FacebookImageUpload.FB_Images
             if (!File.Exists(userAvatarPath))
             {
 
-                //using (WebClient webClient = new WebClient())
-                //{
-                //    byte[] data = webClient.DownloadData(source_url);
-
-                //    using (MemoryStream mem = new MemoryStream(data))
-                //    {
-                //        using (var yourImage = Image.FromStream(mem))
-                //        {
-
-                //            yourImage.Save(userAvatarPath, ImageFormat.Jpeg);
-                //        }
-                //    }
-                //}
                 if (!DowloadImageFromLink(source_url, userAvatarPath, ImageFormat.Jpeg))
                 {
                     userAvatarPath = Path.Combine(Common.ProjectDir, "images/profile.jpg");
