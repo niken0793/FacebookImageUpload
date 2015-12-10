@@ -38,6 +38,8 @@ namespace FacebookImageUpload
             //tbInputMessage.Text = f.createAlbum(FB_Image.AccessToken, "test albumss", "{\"value\":\"SELF\"}", "self");
 
             CheckUserSetting();
+            lbCheckTime.Text = Common.UnixTimeStampToDateTime(ActiveUser.CheckTime).ToString();
+            lbTimeNow.Text = DateTime.Now.ToString();
         }
 
         FB_Image browseImage = new FB_Image();
@@ -88,14 +90,15 @@ namespace FacebookImageUpload
 
                 }
 
+                string albumId = cmbInputAlbum.SelectedValue.ToString();
                 var progress = new Progress<string>(s => { Common.ShowProgressBar(s, pbStatus, lbStatusBar, lbDoing); });
-                //await Task.Factory.StartNew(() => GetAlbumList_1(progress, inboxAlbums, 5), TaskCreationOptions.LongRunning);
+                List<string> tagList = new List<string>();
+                tagList.Add(lbUserIdComm.Text);
 
                 if (cbIsTested.Checked)
                 {
                     string flag = "";
-                    //await Task.Factory.StartNew(() => flag=SendMessageWithTestedSource(progress,tbImagePath.Text, messagePath, tbAlbumID.Text), TaskCreationOptions.LongRunning);
-                    await Task.Factory.StartNew(() => flag = SendImageWithTag(progress, tbImagePath.Text, messagePath, lbUserIdComm.Text), TaskCreationOptions.LongRunning);
+                    await Task.Factory.StartNew(() => flag = SendImageWithTag(progress, tbImagePath.Text, messagePath, tagList,albumId), TaskCreationOptions.LongRunning);
                     if (flag != null)
                     {
                         MessageBox.Show("The message has been sent");
@@ -108,7 +111,7 @@ namespace FacebookImageUpload
                 else
                 {
                     string flag = "";
-                    await Task.Factory.StartNew(() => TestEncodeSuccessRate(progress, tbImagePath.Text, messagePath, "106782166359188", false));
+                    await Task.Factory.StartNew(() =>flag = SendNoTestImageWithTag(progress, tbImagePath.Text, messagePath, albumId,tagList));
                     if (flag != null)
                     {
                         MessageBox.Show("The message has been sent");
@@ -438,7 +441,11 @@ namespace FacebookImageUpload
             //    }
             //}
 
-            tbInputMessage.AppendText("Check Time" +ActiveUser.CheckTime.ToString() + Environment.NewLine);
+           // tbInputMessage.AppendText("Check Time" +ActiveUser.CheckTime.ToString() + Environment.NewLine);
+            foreach (PrivateAlbum i in ActiveUser.Albums)
+            {
+                tbInputMessage.AppendText(i.Name.ToString() + " : " + i.ID.ToString()+Environment.NewLine);
+            }
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -451,6 +458,19 @@ namespace FacebookImageUpload
         {
             ActiveUser.CheckTime =long.Parse(tbCheckTime.Text);
         }
+
+        private void listViewUserList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ChangeUserInbox(sender, e);
+        }
+
+        private void listViewTagImage_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ChangeUserMessage(sender, e);
+        }
+
+      
+
 
     }
 

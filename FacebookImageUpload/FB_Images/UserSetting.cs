@@ -75,18 +75,27 @@ namespace FacebookImageUpload.FB_Images
             set { imgPath = value; }
         }
 
+        private List<PrivateAlbum> albums;
+
+        public List<PrivateAlbum> Albums
+        {
+            get { return albums; }
+            set { albums = value; }
+        }
+
 
         public UserSetting()
         {
+            albums = new List<PrivateAlbum>();
         }
-        public UserSetting(string pToken, string pUserName, string pUserID)
+        public UserSetting(string pToken, string pUserName, string pUserID):this()
         {
             accessToken = pToken;
             userName = pUserName;
             UserID = pUserID;
         }
 
-        public UserSetting(string pToken, string pUserName, string pUserID, string pETime, string pImage)
+        public UserSetting(string pToken, string pUserName, string pUserID, string pETime, string pImage):this()
         {
             accessToken = pToken;
             userName = pUserName;

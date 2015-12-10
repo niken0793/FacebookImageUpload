@@ -16,25 +16,24 @@ namespace FacebookImageUpload
     public partial class CreateAlbum : Form
     {
         private string acesstoken;
-        private int NumOfAlbum;
         public string AlbumID { get; set; }
         public string AlbumName { get; set; }
         public CreateAlbum()
         {
             InitializeComponent();
-            NumOfAlbum = 0;
+            
         }
         public CreateAlbum(string paramToken):this()
         {
             acesstoken = paramToken;
             if (!string.IsNullOrEmpty(paramToken))
             {
-                Dictionary<string,string> albuminfo = new Dictionary<string,string>();
-                List<PrivateAlbum> albums = GetUserPrivateAlbums(acesstoken);
+                //Dictionary<string,string> albuminfo = new Dictionary<string,string>();
+                List<PrivateAlbum> albums = GetUserAlbumsForComboBox(acesstoken);
                 cmbPrivateAlbum.DataSource = albums;
                 cmbPrivateAlbum.DisplayMember = "Name";
                 cmbPrivateAlbum.ValueMember = "ID";
-                NumOfAlbum = albuminfo.Count;
+               // NumOfAlbum = albuminfo.Count;
                
 
             }
@@ -47,7 +46,7 @@ namespace FacebookImageUpload
 
         }
 
-        public static List<PrivateAlbum> GetUserPrivateAlbums(string accessToken, int limit = 15)
+        public static List<PrivateAlbum> GetUserAlbumsForComboBox(string accessToken,string pricvacy = "custom", int limit = 15)
         {
             List<PrivateAlbum> albums = new List<PrivateAlbum>();
             var fb = new FacebookClient(accessToken);
@@ -57,13 +56,25 @@ namespace FacebookImageUpload
             dynamic json = JObject.Parse(json_string);
             dynamic albumJson = json["data"];
             int count = albumJson.Count;
-            for(int i =0; i<count ; i++)
+            if (pricvacy.Equals("all"))
             {
-                if (albumJson[i]["privacy"] == "custom")
+                albums.Add(new PrivateAlbum("me", "No Albums"));
+            }
+            for (int i = 0; i < count; i++)
+            {
+                if (pricvacy.Equals("all"))
                 {
-                    albums.Add(new PrivateAlbum((string)albumJson[i]["id"],(string)albumJson[i]["name"]));
-
+                    albums.Add(new PrivateAlbum((string)albumJson[i]["id"], (string)albumJson[i]["name"]));
                 }
+                else
+                {
+                    if (albumJson[i]["privacy"]==pricvacy)
+                    {
+                        albums.Add(new PrivateAlbum((string)albumJson[i]["id"], (string)albumJson[i]["name"]));
+
+                    }
+                }
+
             }
 
             return albums;
@@ -129,6 +140,10 @@ namespace FacebookImageUpload
     {
         public string ID {get;set;}
         public string Name {get;set;}
+
+        public PrivateAlbum()
+        {
+        }
 
         public PrivateAlbum(string paramID, string paramName)
         {

@@ -103,17 +103,24 @@ namespace FacebookImageUpload.FB_Images
             get { return countNew; }
             set { countNew = value; }
         }
+        private string profilePath;
+
+        public string ProfilePath
+        {
+            get { return profilePath; }
+            set { profilePath = value; }
+        }
 
         public InboxUser()
         {
             messages = new List<FB_Message>();
         }
 
-        public InboxUser(string paramID, string paramName, long paramCheckTime):this()
+        public InboxUser(string paramID, string paramName, string paramPath):this()
         {
             userID = paramID;
             userName = paramName;
-            checkTime = paramCheckTime;
+            profilePath = paramPath;
         }
 
         public InboxUser(string paramID, string paramName):this()

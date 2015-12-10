@@ -34,22 +34,24 @@ namespace FacebookImageUpload
 
         private void CheckUserSetting()
         {
+
             if (!Properties.Settings.Default["ActiveUser"].ToString().Equals("no"))
             {
-                UserSetting a = Common.DeSerializeObject<UserSetting>(Path.Combine(FB_Image.RelativeDirectory, "UserSetting/" + Properties.Settings.Default["ActiveUser"]));
-               
-                UpdateLoginControl(a);
-                if (a == null)
+                string usrPath = Path.Combine(FB_Image.RelativeDirectory, "UserSetting/" + Properties.Settings.Default["ActiveUser"]);
+                if (File.Exists(usrPath))
                 {
-                    LoginFacebook();
+                    UserSetting a = Common.DeSerializeObject<UserSetting>(Path.Combine(FB_Image.RelativeDirectory, "UserSetting/" + Properties.Settings.Default["ActiveUser"]));
+                    if (a != null)
+                    {
+                        UpdateLoginControl(a);
+                        return;
+                    }
                 }
+               
 
             }
-            else
-            {
-                LoginFacebook();
-                
-            }
+            LoginFacebook();
+            
 
 
         }
@@ -108,7 +110,7 @@ namespace FacebookImageUpload
             try
             {
                 temp++; // biến để đặt tên
-                var fb = new FacebookClient(FB_Image.AccessToken);
+                var fb = new FacebookClient(ActiveUser.AccessToken);
                 dynamic res = fb.Get(browseImageDown.ImageID + "?fields=images");  // query đường dẫn + độ phân giải ảnh
                 string json_string = Newtonsoft.Json.JsonConvert.SerializeObject(res); // parse response sang json
                 dynamic json = JObject.Parse(json_string);
@@ -171,7 +173,8 @@ namespace FacebookImageUpload
             
             try
             {
-
+                if (String.IsNullOrEmpty(ActiveUser.AccessToken))
+                    return null;
                 if (test)
                 {
                     inputText = Path.Combine(FB_Image.BaseDirectory, "test.txt");
@@ -182,6 +185,10 @@ namespace FacebookImageUpload
                 if(progress != null)
                     progress.Report("15|15|Preparing Image");
                 List<FB_Image> listFile = AutoUploadAndDownload(filename, null);
+                if (listFile == null || listFile.Count < 2)
+                {
+                    return null;
+                }
                 FB_Image coverImage = listFile[listFile.Count - 1];
                 string coverImageFileName = coverImage.FileName;
                 string messageFile = Common.CopyFileTo(inputText, FB_Image.BaseDirectory);
@@ -191,9 +198,16 @@ namespace FacebookImageUpload
                 progress.Report("50|50|Uploading Image");
                 string encodeFile = JPHideEncode(Path.GetFileName(coverImageFileName), Path.GetFileName(inputText));
                 FB_Image encodeImage = new FB_Image();
-                if (String.IsNullOrEmpty(FB_Image.UserAccessToken))
+                if (string.IsNullOrEmpty(encodeFile))
+                {
                     return null;
-                string id = Upload_Picture_FB(Path.Combine(FB_Image.BaseDirectory, encodeFile), encodeImage,FB_Image.UserAccessToken, albumID);
+                }
+
+                string id = Upload_Picture_FB(Path.Combine(FB_Image.BaseDirectory, encodeFile), encodeImage,ActiveUser.AccessToken, albumID);
+                if (string.IsNullOrEmpty(id))
+                {
+                    return null;
+                }
                 FB_Image downloadImage = new FB_Image();
                 encodeImage.CopyTo(downloadImage);
                 downloadImage.ImageID = id;
@@ -202,7 +216,7 @@ namespace FacebookImageUpload
                 string tempFileName = Download_Picture_FB(downloadImage);
                 if (tempFileName == null)
                     return null;
- 
+     
 
                 //Decode
                 string outputText = Common.AppenFileName(inputText, "_ouput");
@@ -229,7 +243,7 @@ namespace FacebookImageUpload
                 }
                 else
                 {
-                    var fb = new FacebookClient(FB_Image.AccessToken);
+                    var fb = new FacebookClient(ActiveUser.AccessToken);
                     dynamic res = fb.Delete(downloadImage.ImageID);  // xóa ảnh
                     return null;
                 }
@@ -241,10 +255,89 @@ namespace FacebookImageUpload
             }
         }
 
+        public string SendNoTestImageWithTag(IProgress<string> progress, string filename, string inputText, string albumID,List<string> uids)
+        {
+
+            try
+            {
+                if (String.IsNullOrEmpty(ActiveUser.AccessToken))
+                    return null;
+
+                //Reduce size ratio of picture
+                if (progress != null)
+                    progress.Report("15|15|Preparing Image");
+                List<FB_Image> listFile = AutoUploadAndDownload(filename, null);
+                if (listFile == null || listFile.Count < 2)
+                {
+                    return null;
+                }
+
+                FB_Image coverImage = listFile[listFile.Count - 1];
+                string coverImageFileName = coverImage.FileName;
+                string messageFile = Common.CopyFileTo(inputText, FB_Image.BaseDirectory);
+
+                //Encode
+                if (progress != null)
+                    progress.Report("50|50|Uploading Image");
+                string encodeFile = JPHideEncode(Path.GetFileName(coverImageFileName), Path.GetFileName(inputText));
+                FB_Image encodeImage = new FB_Image();
+                if (string.IsNullOrEmpty(encodeFile))
+                {
+                    return null;
+                }
+                string id = Upload_Picture_Tag(Path.Combine(FB_Image.BaseDirectory, encodeFile), encodeImage,uids ,albumID);
+                if (string.IsNullOrEmpty(id))
+                {
+                    return null;
+                }
+
+                FB_Image downloadImage = new FB_Image();
+                encodeImage.CopyTo(downloadImage);
+                downloadImage.ImageID = id;
+                if (progress != null)
+                    progress.Report("75|75|Checking");
+                string tempFileName = Download_Picture_FB(downloadImage);
+                if (tempFileName == null)
+                    return null;
+
+
+                //Decode
+                string outputText = Common.AppenFileName(inputText, "_ouput");
+                if (outputText == null)
+                    outputText = "output_test.txt";
+                outputText = JPSeekDecode(Path.GetFileName(tempFileName), outputText);
+                if (outputText == null)
+                    return null;
+                outputText = Path.Combine(FB_Image.BaseDirectory, outputText);
+
+                //compare 2 file
+                if (progress != null)
+                    progress.Report("100|100|Finish");
+                if (Common.CompareOutputFile(inputText, outputText, tbInputMessage))
+                {           
+                       return coverImageFileName;
+                }
+                else
+                {
+                    var fb = new FacebookClient(ActiveUser.AccessToken);
+                    dynamic res = fb.Delete(downloadImage.ImageID);  // xóa ảnh
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                Log(e);
+                return null;
+            }
+        }
+
+
         private string SendMessageWithTestedSource(IProgress<string> progress,string filename, string inputText, string albumID)
         {
             try
             {
+                if (String.IsNullOrEmpty(ActiveUser.AccessToken))
+                    return null;
                 string coverImage = Common.CopyFileTo(filename, FB_Image.BaseDirectory);
                 string messageFile = Common.CopyFileTo(inputText, FB_Image.BaseDirectory);
 
@@ -253,9 +346,18 @@ namespace FacebookImageUpload
                 FB_Image encodeImage = new FB_Image();
                 if (progress != null)
                 progress.Report("25|25|Uploading Picture");
-                if (String.IsNullOrEmpty(FB_Image.UserAccessToken))
+                if (string.IsNullOrEmpty(encodeFile))
+                {
                     return null;
-                string id = Upload_Picture_FB(Path.Combine(FB_Image.BaseDirectory, encodeFile), encodeImage,FB_Image.UserAccessToken, albumID);
+                }
+
+                string id = Upload_Picture_FB(Path.Combine(FB_Image.BaseDirectory, encodeFile), encodeImage,ActiveUser.AccessToken, albumID);
+                if (string.IsNullOrEmpty(id))
+                {
+                    return null;
+                }
+
+
                 FB_Image downloadImage = new FB_Image();
                 encodeImage.CopyTo(downloadImage);
                 downloadImage.ImageID = id;
@@ -278,7 +380,7 @@ namespace FacebookImageUpload
                 }
                 else
                 {
-                    var fb = new FacebookClient(FB_Image.AccessToken);
+                    var fb = new FacebookClient(ActiveUser.AccessToken);
                     dynamic res = fb.Delete(downloadImage.ImageID);  // xóa ảnh
                     return null;
                 }
@@ -428,7 +530,7 @@ namespace FacebookImageUpload
             float ratio = 15;
             while (ratio > FB_Image.RatioMax)
             {
-                string id = Upload_Picture_FB(tempName, currentImage,FB_Image.AccessToken,FB_Image.Album_Test);
+                string id = Upload_Picture_FB(tempName, currentImage,ActiveUser.AccessToken,ActiveUser.PrivateAlbumID);
                 if (currentImage.ImageID.Equals(""))
                 {
                     FB_Image temp = new FB_Image();
@@ -476,7 +578,7 @@ namespace FacebookImageUpload
             try
             {
 
-                var fb = new FacebookClient(FB_Image.AccessToken);
+                var fb = new FacebookClient(ActiveUser.AccessToken);
                 dynamic albums = fb.Get("me/albums?fields=count,created_time,updated_time,name,cover_photo,picture&limit=10&date_format=U"); // Get album information
                 string json_string = JsonConvert.SerializeObject(albums); // parse response sang json
                 var json = JObject.Parse(json_string);
@@ -585,7 +687,7 @@ namespace FacebookImageUpload
             try
             {
 
-                var fb = new FacebookClient(FB_Image.AccessToken);
+                var fb = new FacebookClient(ActiveUser.AccessToken);
                 dynamic albums = fb.Get("me/albums?fields=count,created_time,updated_time,name,cover_photo,picture&limit=10&date_format=U)"); // Get album information
                 string json_string = JsonConvert.SerializeObject(albums); // parse response sang json
                 var json = JObject.Parse(json_string);
@@ -666,7 +768,7 @@ namespace FacebookImageUpload
 
                 if (progress != null)
                     progress.Report("15|15|Getting inbox information");
-                var fb = new FacebookClient(FB_Image.AccessToken);
+                var fb = new FacebookClient(ActiveUser.AccessToken);
                 dynamic albums = fb.Get(albumID+"/photos?pretty=1"+limit+since+dateFormat); // Get album information
                 string json_string = JsonConvert.SerializeObject(albums); // parse response sang json
                 var json = JObject.Parse(json_string);
@@ -868,6 +970,66 @@ namespace FacebookImageUpload
         {
             TextBox t = (TextBox)sender;
             lbMessageLength.Text = t.Text.Length.ToString();
+        }
+
+
+        InboxUser currentInbox = null;
+        private void ChangeUserInbox(object sender, EventArgs e)
+        {
+            ListView lvUser = (ListView)sender;
+            if (lvUser.SelectedItems.Count == 1 )
+            {
+                InboxUser inbox = Common.GetInboxByUserID(lvUser.SelectedItems[0].Name, ListInboxUser);
+                UpdateMessageListView(listViewTagImage, inbox);
+                currentInbox = inbox;
+
+            }
+         
+            
+        }
+
+        private void ChangeUserMessage(object sender, EventArgs e)
+        {
+            ListView lvMessage = (ListView)sender;
+            if (lvMessage.SelectedItems.Count ==1 )
+            {
+                if (currentInbox != null)
+                {
+                    int i = lvMessage.SelectedItems[0].Index;
+                    if (i < currentInbox.Messages.Count)
+                    {
+                        tbInbox.Text = currentInbox.Messages[i].Content;
+                    }
+
+                }
+                
+
+            }
+        }
+
+        private void UpdateMessageListView(ListView listview, InboxUser inbox)
+        {
+            listview.Clear();
+            ImageList il = new ImageList();
+            il.TransparentColor = Color.Blue;
+            il.ColorDepth = ColorDepth.Depth32Bit;
+            il.ImageSize = new Size(50, 50);
+            List<FB_Message> messages = inbox.Messages;
+            for (int i = 0; i < messages.Count; i++)
+            {
+                il.Images.Add(Image.FromFile(Path.Combine(messages[i].Image.Directory,messages[i].Image.FileName)));
+                il.Images.SetKeyName(i, "Message_"+i);
+            }
+            listview.View = View.LargeIcon;
+            listview.LargeImageList = il;
+            for (int j = 0; j < messages.Count; j++)
+            {
+                ListViewItem item = new ListViewItem();
+                    item.Text = il.Images.Keys[j].ToString();
+                item.Name = j.ToString();
+                item.ImageIndex = j;
+                listview.Items.Add(item);
+            }
         }
 
 

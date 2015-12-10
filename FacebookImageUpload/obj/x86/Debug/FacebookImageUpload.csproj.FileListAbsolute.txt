@@ -179,5 +179,7 @@ C:\Users\NIKEN\Documents\Visual Studio 2012\Projects\FacebookImageUpload_01_12\F
 C:\Users\NIKEN\Documents\Visual Studio 2012\Projects\FacebookImageUpload_01_12\FacebookImageUpload\bin\Debug\Zlib.Portable.xml
 E:\GitHub\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.CoverImageForm.resources
 E:\GitHub\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.FacebookLoginForm.resources
-E:\GitHub\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.CreateAlbum.resources
-E:\GitHub\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.GUI.Private_album.CreatePrivateAlbum.resources
+C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.CoverImageForm.resources
+C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.FacebookLoginForm.resources
+C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.CreateAlbum.resources
+C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.GUI.Private_album.CreatePrivateAlbum.resources

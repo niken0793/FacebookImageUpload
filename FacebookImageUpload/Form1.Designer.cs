@@ -31,6 +31,8 @@
             this.btnUploadImage = new System.Windows.Forms.Button();
             this.tbImagePath = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.lbTimeNow = new System.Windows.Forms.Label();
+            this.cmbInputAlbum = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
             this.btnCoverImage = new System.Windows.Forms.Button();
             this.lbMessageLength = new System.Windows.Forms.Label();
@@ -46,6 +48,7 @@
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabSender = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.lbCheckTime = new System.Windows.Forms.Label();
             this.lbPrivateAlbum = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.btnTester = new System.Windows.Forms.Button();
@@ -136,6 +139,8 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.lbTimeNow);
+            this.groupBox3.Controls.Add(this.cmbInputAlbum);
             this.groupBox3.Controls.Add(this.button1);
             this.groupBox3.Controls.Add(this.btnCoverImage);
             this.groupBox3.Controls.Add(this.lbMessageLength);
@@ -157,11 +162,29 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Sending";
             // 
+            // lbTimeNow
+            // 
+            this.lbTimeNow.AutoSize = true;
+            this.lbTimeNow.Location = new System.Drawing.Point(451, 97);
+            this.lbTimeNow.Name = "lbTimeNow";
+            this.lbTimeNow.Size = new System.Drawing.Size(35, 13);
+            this.lbTimeNow.TabIndex = 27;
+            this.lbTimeNow.Text = "label4";
+            // 
+            // cmbInputAlbum
+            // 
+            this.cmbInputAlbum.FormattingEnabled = true;
+            this.cmbInputAlbum.Location = new System.Drawing.Point(340, 40);
+            this.cmbInputAlbum.Name = "cmbInputAlbum";
+            this.cmbInputAlbum.Size = new System.Drawing.Size(121, 21);
+            this.cmbInputAlbum.TabIndex = 27;
+            this.cmbInputAlbum.Text = "Choose a album";
+            // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(524, 213);
+            this.button1.Location = new System.Drawing.Point(583, 235);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(46, 23);
             this.button1.TabIndex = 24;
             this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
@@ -302,6 +325,7 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.lbCheckTime);
             this.groupBox6.Controls.Add(this.lbPrivateAlbum);
             this.groupBox6.Controls.Add(this.label3);
             this.groupBox6.Controls.Add(this.btnTester);
@@ -312,10 +336,19 @@
             this.groupBox6.Controls.Add(this.pBoxUserAvatar);
             this.groupBox6.Location = new System.Drawing.Point(392, 7);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(258, 156);
+            this.groupBox6.Size = new System.Drawing.Size(258, 166);
             this.groupBox6.TabIndex = 20;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Facebook Login";
+            // 
+            // lbCheckTime
+            // 
+            this.lbCheckTime.AutoSize = true;
+            this.lbCheckTime.Location = new System.Drawing.Point(6, 146);
+            this.lbCheckTime.Name = "lbCheckTime";
+            this.lbCheckTime.Size = new System.Drawing.Size(35, 13);
+            this.lbCheckTime.TabIndex = 26;
+            this.lbCheckTime.Text = "label4";
             // 
             // lbPrivateAlbum
             // 
@@ -523,6 +556,7 @@
             this.listViewUserList.TabIndex = 18;
             this.listViewUserList.UseCompatibleStateImageBehavior = false;
             this.listViewUserList.ItemActivate += new System.EventHandler(this.listViewUserList_ItemActivate);
+            this.listViewUserList.SelectedIndexChanged += new System.EventHandler(this.listViewUserList_SelectedIndexChanged);
             // 
             // label14
             // 
@@ -599,6 +633,7 @@
             this.listViewTagImage.Size = new System.Drawing.Size(375, 181);
             this.listViewTagImage.TabIndex = 10;
             this.listViewTagImage.UseCompatibleStateImageBehavior = false;
+            this.listViewTagImage.SelectedIndexChanged += new System.EventHandler(this.listViewTagImage_SelectedIndexChanged);
             // 
             // tbInbox
             // 
@@ -778,7 +813,7 @@
             this.lbStatusBar,
             this.lbDoing,
             this.lbLogCount});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 526);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 494);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
             this.statusStrip1.Size = new System.Drawing.Size(674, 24);
@@ -821,7 +856,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(674, 550);
+            this.ClientSize = new System.Drawing.Size(674, 518);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.menuStrip1);
@@ -933,6 +968,9 @@
         private System.Windows.Forms.Button btnChangeCheckTime;
         private System.Windows.Forms.TextBox tbCheckTime;
         private System.Windows.Forms.ToolStripStatusLabel lbLogCount;
+        private System.Windows.Forms.ComboBox cmbInputAlbum;
+        private System.Windows.Forms.Label lbCheckTime;
+        private System.Windows.Forms.Label lbTimeNow;
     }
 }
 

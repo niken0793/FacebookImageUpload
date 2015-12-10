@@ -31,9 +31,27 @@ namespace FacebookImageUpload.FB_Images
 
         public static List<string> listFileDelete = new List<string>();
 
+        public  static string GetInboxText(string name, int count)
+        {
+            string text;
+            if (count > 0)
+            {
+                text = string.Format("{0} - ({1})", name, count);
+            }
+            else
+            {
+                text = name;
+            }
+            return text;
+        }
 
-
-
+        /// <summary>
+        /// Return user information base on user token return Username, Path to profile pic, UserID
+        /// </summary>
+        /// <param name="userAccessToken"></param>
+        /// <param name="uid"></param>
+        /// <param name="path"></param>
+        /// <returns>Username, Path to profile pic, UserID</returns>
         public static List<string> getUserInfo(string userAccessToken, string uid, string path)
         {
             string userAvatarPath = "";
@@ -79,11 +97,18 @@ namespace FacebookImageUpload.FB_Images
                 inbox.Add(userID,userInbox);
             }
         }
+        public static DateTime UnixTimeStampToDateTime(long unixTimeStamp)
+        {
+            // Unix timestamp is seconds past epoch
+            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
+            return dtDateTime;
+        }
 
         public static long GetUnixTimesStamp(DateTime time)
         {
-            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            return Convert.ToInt64((time - epoch).TotalSeconds);
+            Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            return unixTimestamp;
         }
 
         public static long GetCheckTimeFromInbox(List<InboxUser> inboxs)
@@ -116,19 +141,24 @@ namespace FacebookImageUpload.FB_Images
         {
             try
             {
-
-                using (WebClient webClient = new WebClient())
+                if (!File.Exists(pathToSave))
                 {
-                    byte[] data = webClient.DownloadData(link);
 
-                    using (MemoryStream mem = new MemoryStream(data))
+                    using (WebClient webClient = new WebClient())
                     {
-                        using (var yourImage = Image.FromStream(mem))
+                        byte[] data = webClient.DownloadData(link);
+
+                        using (MemoryStream mem = new MemoryStream(data))
                         {
-                            yourImage.Save(pathToSave, format);
-                            return true;
+                            using (var yourImage = Image.FromStream(mem))
+                            {
+                                yourImage.Save(pathToSave, format);
+                                return true;
+                            }
                         }
                     }
+                }else{
+                    return true;
                 }
                 
             }
@@ -327,7 +357,7 @@ namespace FacebookImageUpload.FB_Images
         {
             string t1 = Path.GetDirectoryName(source);
             string t2 = Path.GetFileName(source);
-            if (!t1.Equals(FB_Image.BaseDirectory))
+            if (!t1.Equals(dir.Trim('\\')))
             {
                 File.Copy(source, Path.Combine(dir, t2),true);
                 return Path.Combine(dir, t2);

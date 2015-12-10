@@ -11,7 +11,7 @@ namespace FacebookImageUpload.FB_Images
 {
     public class FB_Image
     {
-        public static string UserAccessToken = "";
+        //public static string UserAccessToken = "";
         public static string AccessToken = "CAAVUMKQz7ZB0BAJG21S5gyhrBOpK7qvIZCViGPfbwMYckHWhXy8nPYcI5ZBxQOMZCjz5ieT9IydD6hDiE7sLEn6taU3K7ztbmZCgcHohnLqQw3vZAJPdXs5LjefrOEy4fIxQSPWXMe57n1TBCtmqUiWHdr4JSyq5ujBtQXWYlg5pdZBpQJncIvfU2rvPIkslQZCaZAs9ZAf8CRpQZDZD";
         public static string Album_Test = "1661607290718778";
         public static int Temp = 0;

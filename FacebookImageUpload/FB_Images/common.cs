@@ -110,7 +110,7 @@ namespace FacebookImageUpload
                                 newImage.Save(new_path, ImageFormat.Jpeg);
                                 Common.listFileDelete.Add(new_path);
                                 string filename = new_path;
-                                string coverImagePath = TestEncodeSuccessRate(null, filename, Path.Combine(FB_Image.RelativeDirectory, "GoogleImage/test_google1.txt"), "1663699240509583", false, true);
+                                string coverImagePath = TestEncodeSuccessRate(null, filename, Path.Combine(FB_Image.RelativeDirectory, "GoogleImage/test_google1.txt"),ActiveUser.PrivateAlbumID, false, true);
                                 if (coverImagePath != null)
                                 {
                                     File.Copy(FB_Image.BaseDirectory + coverImagePath, "SuccessImage/"+query+"_" + gtemp + ".jpg", false);
@@ -138,6 +138,7 @@ namespace FacebookImageUpload
             Common.DeleteFile(Common.listFileDelete);
             start += 10;
         }
+
 
         private void btnCoverImage_Click(object sender, EventArgs e)
         {
@@ -172,6 +173,7 @@ namespace FacebookImageUpload
                     FacebookOAuthResult r = facebookLoginForm.AuthResult;
                     UpdateLoginControl(r);
                     SaveActiveUserOnDisk(ActiveUser);
+
                 }
                 else
                 {
@@ -180,7 +182,7 @@ namespace FacebookImageUpload
             }
             else
             {
-                Logout(FB_Image.UserAccessToken);
+                Logout(ActiveUser.AccessToken);
                 UpdateLoginControl();
 
             }
@@ -205,9 +207,9 @@ namespace FacebookImageUpload
         {
             if (r != null)
             {
-                FB_Image.UserAccessToken = r.AccessToken;
+                
                 lbAccessTokenExpire.Text = r.Expires.ToString();
-                List<string> s = Common.getUserInfo(FB_Image.UserAccessToken, "me", FB_Image.BaseDirectory);
+                List<string> s = Common.getUserInfo(r.AccessToken, "me", FB_Image.BaseDirectory);
                 pBoxUserAvatar.ImageLocation = s[1];
                 lbFacebookUserName.Text = s[0];
                 bool flag = false;
@@ -254,6 +256,15 @@ namespace FacebookImageUpload
                         }
                     }
                 }
+                ActiveUser.AccessToken = r.AccessToken;
+
+                if (ActiveUser.Albums.Count == 0)
+                {
+                    ActiveUser.Albums = CreateAlbum.GetUserAlbumsForComboBox(ActiveUser.AccessToken, "all");
+                }
+                cmbInputAlbum.DataSource = ActiveUser.Albums;
+                cmbInputAlbum.DisplayMember = "Name";
+                cmbInputAlbum.ValueMember = "ID";
               
                 Properties.Settings.Default["ActiveUser"] = s[2];
                 Properties.Settings.Default.Save();
@@ -266,11 +277,11 @@ namespace FacebookImageUpload
                 lbAccessTokenExpire.Text = "";
                 lbFacebookUserName.Text = "Username";
                 pBoxUserAvatar.ImageLocation = Path.Combine(Common.ProjectDir,"images/profile.jpg");
-                FB_Image.UserAccessToken = "";
                 Form1.ActiveUser = null;
                 btnFacebookLogin.Text = "Login";
                 lbPrivateAlbum.Text = "...";
                 isLogin = false;
+                cmbInputAlbum.Items.Clear();
             }
             
         }
@@ -279,7 +290,6 @@ namespace FacebookImageUpload
             lbAccessTokenExpire.Text = "";
             lbFacebookUserName.Text = "Username";
             pBoxUserAvatar.ImageLocation = Path.Combine(Common.ProjectDir, "images/profile.jpg");
-            FB_Image.UserAccessToken = "";
             Form1.ActiveUser = null;
             btnFacebookLogin.Text = "Login";
             isLogin = false;
@@ -291,14 +301,23 @@ namespace FacebookImageUpload
         {
             if (r != null)
             {
-                FB_Image.UserAccessToken = r.AccessToken;
+               
                 Form1.ActiveUser = r;
+                ActiveUser.AccessToken = r.AccessToken;
                 lbAccessTokenExpire.Text = r.ExpiredTime;
                 pBoxUserAvatar.ImageLocation = r.ImgPath;
                 lbFacebookUserName.Text = r.UserName;
                 lbPrivateAlbum.Text = r.PrivateAlbumName;
                 isLogin = true;
                 btnFacebookLogin.Text = "LogOut";
+                if (ActiveUser.Albums.Count == 0)
+                {
+                    ActiveUser.Albums = CreateAlbum.GetUserAlbumsForComboBox(ActiveUser.AccessToken, "all");
+                }
+                cmbInputAlbum.DataSource = ActiveUser.Albums;
+                cmbInputAlbum.DisplayMember = "Name";
+                cmbInputAlbum.ValueMember = "ID";
+
 
             }
 
@@ -317,71 +336,95 @@ namespace FacebookImageUpload
 
         private void btnGetUserList_Click(object sender, EventArgs e)
         {
-            if (FB_Image.UserAccessToken != "")
-            {
-                var fb = new FacebookClient(FB_Image.UserAccessToken);
-                dynamic res = fb.Get("me/friends");
-                string json_string = Newtonsoft.Json.JsonConvert.SerializeObject(res);
-                dynamic json = JObject.Parse(json_string);
-                dynamic data = json["data"];
-                int count = data.Count;
-                int i = 0;
-                List<string> users = new List<string>();
-                while (i < count && data[i] != null)
-                {
-                    users.Add((string)data[i]["id"]);
-                    i++;
-                }
-         
-                // Add User to List view
-                ImageList successImage = new ImageList();
-                int k = 0;
-            
-                foreach (string user in users.ToArray())
-                {
-                    List<string> info = Common.getUserInfo(FB_Image.UserAccessToken, user, FB_Image.BaseDirectory + "Test_User\\");
-
-
-                    try
-                    {
-                        successImage.Images.Add(Image.FromFile(info[1]));
-                        successImage.Images.SetKeyName(k, info[0]);
-                        k += 1;
-                        InboxUser a = Common.GetInboxByUserID(user, ListInboxUser);
-                        if (a == null)
-                        {
-                            ListInboxUser.Add(new InboxUser(user,info[0]));
-                        }
-
-                    }
-                    catch (Exception ex)
-                    {
-                        Log(ex);
-                    }
-                }
-                this.listViewUserList.View = View.LargeIcon;
-                successImage.TransparentColor = Color.Blue;
-                successImage.ColorDepth = ColorDepth.Depth32Bit;
-                successImage.ImageSize = new Size(50, 50);
-                this.listViewUserList.LargeImageList = successImage;
-                for (int j = 0; j < successImage.Images.Count; j++)
-                {
-                    ListViewItem item = new ListViewItem();
-                    item.Text = successImage.Images.Keys[j].ToString();
-                    item.Name = users[j];
-                    item.ImageIndex = j;
-                    this.listViewUserList.Items.Add(item);
-                }
-                
-            }
-            else 
-            {
-                MessageBox.Show("Please Login to Facebook first", "Login unsuccessful", MessageBoxButtons.OK,
-                                       MessageBoxIcon.Error);
-            }
+            GetFriendList();
+            GetImageTagged1(null, ListInboxUser);
+            UpdateFriendListView(this.listViewUserList, ListInboxUser, true);
             
 
         }
+
+        private void UpdateFriendListView(ListView listview ,List<InboxUser> user, bool showNewMessage = false)
+        {
+            listview.Clear();
+            ImageList il = new ImageList();
+            il.TransparentColor = Color.Blue;
+            il.ColorDepth = ColorDepth.Depth32Bit;
+            il.ImageSize = new Size(50, 50);
+            for (int i = 0; i < user.Count; i++)
+            {
+                il.Images.Add(Image.FromFile(user[i].ProfilePath));
+                il.Images.SetKeyName(i,user[0].UserName);
+            }
+            listview.View = View.LargeIcon;
+            listview.LargeImageList = il;
+            for(int j=0;j<user.Count;j++)
+            {
+                ListViewItem item = new ListViewItem();
+                if (showNewMessage)
+                {
+                    item.Text = GetInboxText(il.Images.Keys[j].ToString(),user[j].CountNew);
+                }
+                else{
+                    item.Text = il.Images.Keys[j].ToString();
+                }
+
+                item.Name = user[j].UserID;
+                item.ImageIndex = j;
+                listview.Items.Add(item);
+            }
+
+        }
+
+        private void GetFriendList()
+        {
+            try
+            {
+                if (ActiveUser.AccessToken != "")
+                {
+                    var fb = new FacebookClient(ActiveUser.AccessToken);
+                    dynamic res = fb.Get("me/friends");
+                    string json_string = Newtonsoft.Json.JsonConvert.SerializeObject(res);
+                    dynamic json = JObject.Parse(json_string);
+                    dynamic data = json["data"];
+                    int count = data.Count;
+                    int i = 0;
+                    List<string> users = new List<string>();
+                    while (i < count && data[i] != null)
+                    {
+                        users.Add((string)data[i]["id"]);
+                        i++;
+                    }
+
+                    foreach (string user in users.ToArray())
+                    {
+                        List<string> info = Common.getUserInfo(ActiveUser.AccessToken, user, FB_Image.BaseDirectory + "Test_User\\");
+
+                        InboxUser a = Common.GetInboxByUserID(user, ListInboxUser);
+                        if (a == null && info!=null && info.Count==3)
+                        {
+                            ListInboxUser.Add(new InboxUser(user, info[0],info[1]));
+                        }
+
+
+                    }
+
+                }
+                else
+                {
+                    MessageBox.Show("Please Login to Facebook first", "Login unsuccessful", MessageBoxButtons.OK,
+                                           MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception e)
+            {
+                Log(e);
+            }
+
+            
+        }
+
+
+
 
        
 
@@ -397,7 +440,15 @@ namespace FacebookImageUpload
             }
         }
 
-        private string Upload_Picture_Tag(string filename, FB_Image browseImageUP, string uid)
+        /// <summary>
+        /// Uploading image to facebook and tag friends
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <param name="browseImageUP"></param>
+        /// <param name="uids"></param>
+        /// <param name="albumID"></param>
+        /// <returns></returns>
+        private string Upload_Picture_Tag(string filename, FB_Image browseImageUP, List<string> uids,string albumID=null)
         {
             //upload photo
             try
@@ -411,8 +462,23 @@ namespace FacebookImageUpload
                 browseImageUP.Width = image_source.Width;
 
                 var imgstream = File.OpenRead(filename);
-                var fb = new FacebookClient(FB_Image.UserAccessToken);
-                dynamic res = fb.Post("me/photos", new
+                var fb = new FacebookClient(ActiveUser.AccessToken);
+                string id = string.IsNullOrEmpty(albumID)?"me":albumID;
+
+                string paramTag = "";
+                if (uids != null && uids.Count > 0)
+                {
+                    paramTag = "[";
+                    foreach (string s in uids)
+                    {
+                        paramTag += "{\"tag_uid\":\"" + s + "\",\"x\":0,\"y\":0}";
+                    }
+                    paramTag += "]";
+                }
+                
+               
+
+                dynamic res = fb.Post(id+"/photos", new
                 {
                     message = "Image description",
                     file = new FacebookMediaStream
@@ -420,7 +486,7 @@ namespace FacebookImageUpload
                         ContentType = "image/jpeg",
                         FileName = browseImageUP.FileName,
                     }.SetValue(imgstream),
-                    tags = "[{\"tag_uid\":\""+uid+"\",\"x\":0,\"y\":0}]"
+                    tags = paramTag
                 });
                 return res.id;
 
@@ -432,7 +498,7 @@ namespace FacebookImageUpload
             }
         }
 
-        private string SendImageWithTag(IProgress<string> progress, string filename, string inputText, string uid)
+        private string SendImageWithTag(IProgress<string> progress, string filename, string inputText, List<string> uids, string albumID=null)
         {
             try
             {
@@ -444,7 +510,7 @@ namespace FacebookImageUpload
                 FB_Image encodeImage = new FB_Image();
                 if (progress != null)
                     progress.Report("25|25|Uploading Picture");
-                string id = Upload_Picture_Tag(Path.Combine(FB_Image.BaseDirectory, encodeFile), encodeImage, uid);
+                string id = Upload_Picture_Tag(Path.Combine(FB_Image.BaseDirectory, encodeFile), encodeImage, uids,albumID);
                 FB_Image downloadImage = new FB_Image();
                 encodeImage.CopyTo(downloadImage);
                 downloadImage.ImageID = id;
@@ -467,7 +533,7 @@ namespace FacebookImageUpload
                 }
                 else
                 {
-                    var fb = new FacebookClient(FB_Image.AccessToken);
+                    var fb = new FacebookClient(ActiveUser.AccessToken);
                     dynamic res = fb.Delete(downloadImage.ImageID);  // xóa ảnh
                     return null;
                 }
@@ -485,7 +551,7 @@ namespace FacebookImageUpload
             try
             {
                 //string created = "1449376455";
-                var fb = new FacebookClient(FB_Image.UserAccessToken);
+                var fb = new FacebookClient(ActiveUser.AccessToken);
                 dynamic res = fb.Get("me/photos?fields=from");
                 string json_string = Newtonsoft.Json.JsonConvert.SerializeObject(res);
                 var json = JObject.Parse(json_string);
@@ -537,6 +603,7 @@ namespace FacebookImageUpload
                 Log(ex);
             }
         }
+
         public void GetImageTagged1(IProgress<int> progress,List<InboxUser> inbox)
         {
             try
@@ -582,6 +649,7 @@ namespace FacebookImageUpload
                     Common.DowloadImageFromLink(source_url, imagePath, ImageFormat.Jpeg);
                     string content = Common.GetMessageFromImage(imagePath);
                     userInbox.Messages.Add(new FB_Message(content, new FB_Image(imageId, Path.GetFileName(imagePath), Path.GetDirectoryName(imagePath))));
+                    userInbox.CountNew++;
                     i++;
                     
                 }
