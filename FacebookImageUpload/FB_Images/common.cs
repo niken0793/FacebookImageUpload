@@ -35,6 +35,7 @@ namespace FacebookImageUpload
         private FacebookLoginForm facebookLoginForm;
         private bool isLogin = false;
         public static string AppID = "1499942773583853";
+        public static string AppToken = "1499942773583853|B5U1JXWJmlqtweGmZAPBPYlmDG4";
         public static List<InboxUser> ListInboxUser = new List<InboxUser>();
       
 
@@ -154,9 +155,7 @@ namespace FacebookImageUpload
 
         private void btnFacebookLogin_Click(object sender, EventArgs e)
         {
-            LoginFacebook();
-           
-            
+            LoginFacebook();         
         }
 
         private void LoginFacebook()
@@ -324,16 +323,6 @@ namespace FacebookImageUpload
         }
 
 
-
-        public void CheckTester()
-        { 
-            
-        }
-        private void btnTester_Click(object sender, EventArgs e)
-        { 
-            
-        }
-
         private void btnGetUserList_Click(object sender, EventArgs e)
         {
             GetFriendList();
@@ -422,11 +411,6 @@ namespace FacebookImageUpload
 
             
         }
-
-
-
-
-       
 
         private void listViewUserList_ItemActivate(object sender, EventArgs e)
         {
@@ -684,6 +668,41 @@ namespace FacebookImageUpload
 
             return ListMessages;
 
+        }
+        public bool CheckTester()
+        {
+            var app = new FacebookClient(Form1.AppToken);
+            dynamic res = app.Get(Form1.AppID + "/roles");
+            string json_string = Newtonsoft.Json.JsonConvert.SerializeObject(res);
+            var json = JObject.Parse(json_string);
+            dynamic roles = json["data"];
+            int count = roles.Count;
+            int i = 0;
+            while (i < count )
+            {
+                dynamic currentUser = roles[i];
+                string userID = (string)currentUser["user"];
+                if(userID == ActiveUser.UserID)
+                {
+                    return true;
+                }
+                i++;
+            }
+
+            return false;
+        }
+        private void btnTester_Click(object sender, EventArgs e)
+        {
+            dynamic userRole = new ExpandoObject();
+            userRole.user = ActiveUser.UserID;
+            userRole.role = "testers";
+            var app = new FacebookClient(FB_Image.AccessToken);
+            dynamic res = app.Post(Form1.AppID + "/roles", userRole);
+            if (res.success == true) {
+                MessageBox.Show("Join as tester successfully", "Tester", MessageBoxButtons.OK,
+                                           MessageBoxIcon.Information);
+                btnTester.Enabled = false;
+            }
         }
     }
 

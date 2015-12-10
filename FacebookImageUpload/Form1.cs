@@ -40,6 +40,14 @@ namespace FacebookImageUpload
             CheckUserSetting();
             lbCheckTime.Text = Common.UnixTimeStampToDateTime(ActiveUser.CheckTime).ToString();
             lbTimeNow.Text = DateTime.Now.ToString();
+            if (CheckTester())
+            {
+                btnTester.Enabled = false;
+            }
+            else 
+            {
+                btnTester.Enabled = true;
+            }
         }
 
         FB_Image browseImage = new FB_Image();
@@ -468,9 +476,6 @@ namespace FacebookImageUpload
         {
             ChangeUserMessage(sender, e);
         }
-
-      
-
 
     }
 

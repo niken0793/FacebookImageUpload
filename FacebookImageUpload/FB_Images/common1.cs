@@ -51,9 +51,6 @@ namespace FacebookImageUpload
 
             }
             LoginFacebook();
-            
-
-
         }
 
         private void SaveActiveUserOnDisk(UserSetting active)

@@ -102,6 +102,7 @@
             this.lbStatusBar = new System.Windows.Forms.ToolStripStatusLabel();
             this.lbDoing = new System.Windows.Forms.ToolStripStatusLabel();
             this.lbLogCount = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lbFacebookUserId = new System.Windows.Forms.Label();
             this.groupBox3.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabSender.SuspendLayout();
@@ -325,6 +326,7 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.lbFacebookUserId);
             this.groupBox6.Controls.Add(this.lbCheckTime);
             this.groupBox6.Controls.Add(this.lbPrivateAlbum);
             this.groupBox6.Controls.Add(this.label3);
@@ -370,12 +372,13 @@
             // 
             // btnTester
             // 
-            this.btnTester.Location = new System.Drawing.Point(147, 48);
+            this.btnTester.Location = new System.Drawing.Point(151, 63);
             this.btnTester.Name = "btnTester";
             this.btnTester.Size = new System.Drawing.Size(88, 23);
             this.btnTester.TabIndex = 23;
             this.btnTester.Text = "Join as Tester";
             this.btnTester.UseVisualStyleBackColor = true;
+            this.btnTester.Click += new System.EventHandler(this.btnTester_Click);
             // 
             // lbAccessTokenExpire
             // 
@@ -397,7 +400,7 @@
             // 
             // btnFacebookLogin
             // 
-            this.btnFacebookLogin.Location = new System.Drawing.Point(79, 48);
+            this.btnFacebookLogin.Location = new System.Drawing.Point(77, 63);
             this.btnFacebookLogin.Name = "btnFacebookLogin";
             this.btnFacebookLogin.Size = new System.Drawing.Size(52, 23);
             this.btnFacebookLogin.TabIndex = 21;
@@ -563,9 +566,9 @@
             this.label14.AutoSize = true;
             this.label14.Location = new System.Drawing.Point(73, 73);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(35, 13);
+            this.label14.Size = new System.Drawing.Size(43, 13);
             this.label14.TabIndex = 29;
-            this.label14.Text = "userid";
+            this.label14.Text = "User ID";
             // 
             // pBoxUserComm
             // 
@@ -852,6 +855,15 @@
             this.lbLogCount.Size = new System.Drawing.Size(27, 19);
             this.lbLogCount.Text = "Log";
             // 
+            // lbFacebookUserId
+            // 
+            this.lbFacebookUserId.AutoSize = true;
+            this.lbFacebookUserId.Location = new System.Drawing.Point(76, 42);
+            this.lbFacebookUserId.Name = "lbFacebookUserId";
+            this.lbFacebookUserId.Size = new System.Drawing.Size(43, 13);
+            this.lbFacebookUserId.TabIndex = 27;
+            this.lbFacebookUserId.Text = "User ID";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -971,6 +983,7 @@
         private System.Windows.Forms.ComboBox cmbInputAlbum;
         private System.Windows.Forms.Label lbCheckTime;
         private System.Windows.Forms.Label lbTimeNow;
+        private System.Windows.Forms.Label lbFacebookUserId;
     }
 }
 
