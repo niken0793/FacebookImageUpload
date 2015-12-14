@@ -144,18 +144,38 @@ namespace FacebookImageUpload
         private void btnCoverImage_Click(object sender, EventArgs e)
         {
             coverImageForm = new CoverImageForm();
-            coverImageForm.Show();
-            coverImageForm.FormClosed += new FormClosedEventHandler(coverImageForm_FormClosed);
+            if ( coverImageForm.ShowDialog() == DialogResult.Yes)
+            {
+                if (!string.IsNullOrEmpty(coverImageForm.imageLink))
+                {
+                    tbImagePath.Text = coverImageForm.imageLink;
+                    pbImage.ImageLocation = coverImageForm.imageLink;
+                    lbImageName.Text = Path.GetFileName(coverImageForm.imageLink);
+                    lbImageDirectory.Text = Path.GetDirectoryName(coverImageForm.imageLink);
+                    lbImageSize.Text = Common.BytesToString(new FileInfo(coverImageForm.imageLink).Length);
+                }
+            }
+            //coverImageForm.FormClosed += new FormClosedEventHandler(coverImageForm_FormClosed);
         }
 
-        void coverImageForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            tbImagePath.Text = coverImageForm.imageLink;
-        }
+        //void coverImageForm_FormClosed(object sender, FormClosedEventArgs e)
+        //{
+        //    if (!string.IsNullOrEmpty(coverImageForm.imageLink))
+        //    {
+        //        tbImagePath.Text = coverImageForm.imageLink;
+        //        pbImage.ImageLocation = coverImageForm.imageLink;
+        //        lbImageName.Text = Path.GetFileName(coverImageForm.imageLink);
+        //        lbImageDirectory.Text = Path.GetDirectoryName(coverImageForm.imageLink);
+        //        lbImageSize.Text = Common.BytesToString(new FileInfo(coverImageForm.imageLink).Length);
+        //    }
+
+        //}
 
         private void btnFacebookLogin_Click(object sender, EventArgs e)
         {
-            LoginFacebook();         
+            LoginFacebook();
+           
+            
         }
 
         private void LoginFacebook()
@@ -323,12 +343,23 @@ namespace FacebookImageUpload
         }
 
 
+
+        //public void CheckTester()
+        //{ 
+            
+        //}
+        //private void btnTester_Click(object sender, EventArgs e)
+        //{ 
+            
+        //}
+
         private void btnGetUserList_Click(object sender, EventArgs e)
         {
-            GetFriendList();
-            GetImageTagged1(null, ListInboxUser);
-            UpdateFriendListView(this.listViewUserList, ListInboxUser, true);
-            
+            //GetFriendList(null);
+            //GetImageTagged1(null, ListInboxUser);
+            //UpdateFriendListView(this.listViewUserList, ListInboxUser, true);
+            //UpdateFriendListView(listViewFriends, ListInboxUser);
+            LoadBasicInformation();
 
         }
 
@@ -342,7 +373,7 @@ namespace FacebookImageUpload
             for (int i = 0; i < user.Count; i++)
             {
                 il.Images.Add(Image.FromFile(user[i].ProfilePath));
-                il.Images.SetKeyName(i,user[0].UserName);
+                il.Images.SetKeyName(i,user[i].UserName);
             }
             listview.View = View.LargeIcon;
             listview.LargeImageList = il;
@@ -360,11 +391,12 @@ namespace FacebookImageUpload
                 item.Name = user[j].UserID;
                 item.ImageIndex = j;
                 listview.Items.Add(item);
+                
             }
 
         }
 
-        private void GetFriendList()
+        private void GetFriendList(IProgress<int> progress)
         {
             try
             {
@@ -392,6 +424,10 @@ namespace FacebookImageUpload
                         if (a == null && info!=null && info.Count==3)
                         {
                             ListInboxUser.Add(new InboxUser(user, info[0],info[1]));
+                            if (progress != null)
+                            {
+                                progress.Report(0);
+                            }
                         }
 
 
@@ -411,6 +447,11 @@ namespace FacebookImageUpload
 
             
         }
+
+
+
+
+       
 
         private void listViewUserList_ItemActivate(object sender, EventArgs e)
         {
@@ -590,6 +631,7 @@ namespace FacebookImageUpload
 
         public void GetImageTagged1(IProgress<int> progress,List<InboxUser> inbox)
         {
+
             try
             {
                 
@@ -605,16 +647,18 @@ namespace FacebookImageUpload
 
                 string source_url = "";
                 string imagePath = "";
-                int i = 0;
+                int i = count-1;
 
-                while (i < count )
+                while (i >= 0 )
                 {
                     dynamic currentPhoto = photos[i];
                     string userID = (string)currentPhoto["from"]["id"];
+                    long createdTime = long.Parse((string)currentPhoto["created_time"]);
+                    bool isSent = false;
                     InboxUser userInbox = Common.GetInboxByUserID(userID,inbox);
                     if (userInbox == null)
                     {
-                        i++;
+                        i--;
                         continue;
                     }
                     dynamic images = currentPhoto["images"];
@@ -627,16 +671,23 @@ namespace FacebookImageUpload
                         if (((string)image["width"]).Equals("960"))
                         {
                             source_url = (string)image["source"];
+                            break;
                         }
                     }
                     imagePath = FB_Image.BaseDirectory + imageId + ".jpg";
                     Common.DowloadImageFromLink(source_url, imagePath, ImageFormat.Jpeg);
                     string content = Common.GetMessageFromImage(imagePath);
-                    userInbox.Messages.Add(new FB_Message(content, new FB_Image(imageId, Path.GetFileName(imagePath), Path.GetDirectoryName(imagePath))));
+                    userInbox.Messages.Add(new FB_Message(content, new FB_Image(imageId, Path.GetFileName(imagePath), Path.GetDirectoryName(imagePath)),createdTime,isSent));
                     userInbox.CountNew++;
-                    i++;
+                    i--;
+                    if (progress != null)
+                    {
+                        progress.Report(1);
+                    }
                     
                 }
+                ActiveUser.CheckTime = Common.GetUnixTimesStamp(DateTime.Now);
+
             }
             catch (Exception ex)
             {

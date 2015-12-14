@@ -24,9 +24,9 @@ namespace FacebookImageUpload.FB_Images
             set { crc = value; }
         }
 
-        private string createdDate;
+        private long createdDate;
 
-        public string CreatedDate
+        public long CreatedDate
         {
             get { return createdDate; }
             set { createdDate = value; }
@@ -40,7 +40,13 @@ namespace FacebookImageUpload.FB_Images
             set { isRead = value; }
         }
 
+        private bool isSent;
 
+        public bool IsSent
+        {
+            get { return isSent; }
+            set { isSent = value; }
+        }
 
         private FB_Image image;
 
@@ -53,7 +59,6 @@ namespace FacebookImageUpload.FB_Images
 
         public FB_Message()
         {
-            isRead = false;
         }
 
 
@@ -61,6 +66,12 @@ namespace FacebookImageUpload.FB_Images
         {
             content = paramContent;
             image = paramImage;
+        }
+        public FB_Message(string paramContent, FB_Image paramImage, long paramCreatedDate, bool paramSent)
+            : this(paramContent, paramImage)
+        {
+            createdDate = paramCreatedDate;
+            isSent = paramSent;
         }
 
     }

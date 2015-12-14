@@ -39,7 +39,8 @@ namespace FacebookImageUpload
 
             CheckUserSetting();
             lbCheckTime.Text = Common.UnixTimeStampToDateTime(ActiveUser.CheckTime).ToString();
-            lbTimeNow.Text = DateTime.Now.ToString();
+            //lbTimeNow.Text = DateTime.Now.ToString();
+			LoadBasicInformation();
             if (CheckTester())
             {
                 btnTester.Enabled = false;
@@ -83,7 +84,7 @@ namespace FacebookImageUpload
 
         private async void uploadImage_Click(object sender, EventArgs e)
         {
-            if(lbUserIdComm.Text!="userid")
+            if(lbFriendID.Text!="...")
             {
                 string messagePath = "";
                 if (cmbSelectTextType.SelectedIndex == cmbSelectTextType.Items.IndexOf("From File"))
@@ -101,7 +102,7 @@ namespace FacebookImageUpload
                 string albumId = cmbInputAlbum.SelectedValue.ToString();
                 var progress = new Progress<string>(s => { Common.ShowProgressBar(s, pbStatus, lbStatusBar, lbDoing); });
                 List<string> tagList = new List<string>();
-                tagList.Add(lbUserIdComm.Text);
+                tagList.Add(lbFriendID.Text);
 
                 if (cbIsTested.Checked)
                 {
@@ -386,7 +387,7 @@ namespace FacebookImageUpload
                         }
                     }
                 }
-                ActiveUser.CheckTime = Common.GetUnixTimesStamp(DateTime.Now);
+                //ActiveUser.CheckTime = Common.GetUnixTimesStamp(DateTime.Now);
                 SaveActiveUserOnDisk(ActiveUser);
 
 
@@ -450,21 +451,24 @@ namespace FacebookImageUpload
             //}
 
            // tbInputMessage.AppendText("Check Time" +ActiveUser.CheckTime.ToString() + Environment.NewLine);
-            foreach (PrivateAlbum i in ActiveUser.Albums)
-            {
-                tbInputMessage.AppendText(i.Name.ToString() + " : " + i.ID.ToString()+Environment.NewLine);
-            }
+            //foreach (PrivateAlbum i in ActiveUser.Albums)
+            //{
+            //    tbInputMessage.AppendText(i.Name.ToString() + " : " + i.ID.ToString()+Environment.NewLine);
+            //}
+            listViewFriends.Visible = !listViewFriends.Visible;
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
 
             SaveActiveUserOnDisk(ActiveUser);
+            SaveInboxOnDisk(ListInboxUser);
         }
 
         private void btnChangeCheckTime_Click(object sender, EventArgs e)
         {
             ActiveUser.CheckTime =long.Parse(tbCheckTime.Text);
+            
         }
 
         private void listViewUserList_SelectedIndexChanged(object sender, EventArgs e)
@@ -476,6 +480,37 @@ namespace FacebookImageUpload
         {
             ChangeUserMessage(sender, e);
         }
+
+        private void dtpCheckTime_ValueChanged(object sender, EventArgs e)
+        {
+            tbCheckTime.Text = Common.GetUnixTimesStamp(dtpCheckTime.Value).ToString();
+        }
+
+        //private void btnTester_Click(object sender, EventArgs e)
+        //{
+        //    //tbInputMessage.Text = ActiveUser.CheckTime.ToString();
+        //    lbCheckTime.Text = Common.UnixTimeStampToDateTime(ActiveUser.CheckTime).ToString();
+        //}
+
+
+        private void listViewFriends_ItemActivate(object sender, EventArgs e)
+        {
+            DialogResult dlg = MessageBox.Show("Do you want to use this user to communicate?", "Choose User", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dlg == DialogResult.Yes)
+            {
+                ListViewItem item = ((ListView)sender).SelectedItems[0];
+                lbFriendName.Text = item.Text;
+                lbFriendID.Text = item.Name;
+                pbFriend.ImageLocation = FB_Image.BaseDirectory + "Test_User\\profilePiture_" + item.Name + ".jpg";
+            }
+        }
+
+
+
+
+
+      
+
 
     }
 

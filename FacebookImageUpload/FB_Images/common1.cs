@@ -51,6 +51,9 @@ namespace FacebookImageUpload
 
             }
             LoginFacebook();
+            
+
+
         }
 
         private void SaveActiveUserOnDisk(UserSetting active)
@@ -62,8 +65,43 @@ namespace FacebookImageUpload
                 Properties.Settings.Default.Save();
             }
         }
-        
+        private void SaveInboxOnDisk(List<InboxUser> inbox)
+        {
+            if (inbox != null)
+            {
+                string savePath = Path.Combine(FB_Image.RelativeDirectory,"UserSetting/inbox");
+                Common.PreparePath(savePath);
+                Common.SerializeObject(inbox, savePath);
+            }
+        }
 
+        private async void LoadBasicInformation()
+        {
+
+            var progress = new Progress<int>(s =>
+            {
+                if (s == 0)
+                {
+                    UpdateFriendListView(this.listViewUserList, ListInboxUser, true);
+                    UpdateFriendListView(listViewFriends, ListInboxUser);
+                }
+                else if (s == 1)
+                {
+                    UpdateFriendListView(this.listViewUserList, ListInboxUser, true);
+                }
+                UpdateFriendListView(this.listViewUserList, ListInboxUser, true);
+                UpdateFriendListView(listViewFriends, ListInboxUser);
+            });
+            await Task.Factory.StartNew(() => { 
+                GetFriendList(progress);
+                GetImageTagged1(progress, ListInboxUser);
+
+            }, TaskCreationOptions.LongRunning);
+            //await Task.Factory.StartNew(() => flag = SendImageWithTag(progress, tbImagePath.Text, messagePath, tagList, albumId), TaskCreationOptions.LongRunning);
+            //UpdateFriendListView(this.listViewUserList, ListInboxUser, true);
+            //UpdateFriendListView(listViewFriends, ListInboxUser);
+           // MessageBox.Show("ok");
+        }
 
 
 
@@ -443,8 +481,6 @@ namespace FacebookImageUpload
             }
         }
 
-
-
         public  static string JPSeekDecode(string filename,string output)
         {
             try
@@ -815,12 +851,7 @@ namespace FacebookImageUpload
                                         }
 
                                     }
-
-
                                 }
-
-
-
                             }
 
                         }
@@ -979,6 +1010,10 @@ namespace FacebookImageUpload
                 InboxUser inbox = Common.GetInboxByUserID(lvUser.SelectedItems[0].Name, ListInboxUser);
                 UpdateMessageListView(listViewTagImage, inbox);
                 currentInbox = inbox;
+                ListViewItem item = ((ListView)sender).SelectedItems[0];
+                lbUserNameComm.Text = item.Text;
+                lbUserIdComm.Text = item.Name;
+                pBoxUserComm.ImageLocation = FB_Image.BaseDirectory + "Test_User\\profilePiture_" + item.Name + ".jpg";
 
             }
          
@@ -1026,6 +1061,10 @@ namespace FacebookImageUpload
                 item.Name = j.ToString();
                 item.ImageIndex = j;
                 listview.Items.Add(item);
+            }
+            if (listview.Items.Count > 0)
+            {
+                listview.Items[listview.Items.Count - 1].EnsureVisible();
             }
         }
 

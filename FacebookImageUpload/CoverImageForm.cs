@@ -81,8 +81,8 @@ namespace FacebookImageUpload
             if (dlg == DialogResult.Yes)
             {
                 ListViewItem item = ((ListView)sender).SelectedItems[0];
-                imageLink = "SuccessImage/" + item.Text;
-                this.Close();
+                imageLink = Path.Combine(FB_Image.RelativeDirectory,"SuccessImage/" + item.Text);
+                this.DialogResult = DialogResult.Yes;
             }
         }
 

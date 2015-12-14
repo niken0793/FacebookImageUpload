@@ -107,8 +107,8 @@ namespace FacebookImageUpload.FB_Images
 
         public static long GetUnixTimesStamp(DateTime time)
         {
-            Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-            return unixTimestamp;
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            return Convert.ToInt64((time.ToUniversalTime() - epoch).TotalSeconds);
         }
 
         public static long GetCheckTimeFromInbox(List<InboxUser> inboxs)
@@ -152,6 +152,7 @@ namespace FacebookImageUpload.FB_Images
                         {
                             using (var yourImage = Image.FromStream(mem))
                             {
+                                Common.PrepareDirectory(pathToSave);
                                 yourImage.Save(pathToSave, format);
                                 return true;
                             }
@@ -314,6 +315,17 @@ namespace FacebookImageUpload.FB_Images
             }
 
         }
+        public static void PrepareDirectory(string filename)
+        {
+            string directory = Path.GetDirectoryName(filename);
+            string file = Path.GetFileName(filename);
+
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+        }
+
 
         public static bool CompareOutputFile(string path_file_in, string path_file_out, TextBox tb)
         {

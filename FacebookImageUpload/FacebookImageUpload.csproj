@@ -229,7 +229,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="images\Add_Friend-512.png" />
     <Content Include="images\default.jpg" />
+    <Content Include="images\gallery-icon.jpg" />
+    <Content Include="images\icon-profile.png" />
     <Content Include="images\profile.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
