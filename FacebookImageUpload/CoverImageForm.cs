@@ -24,6 +24,7 @@ namespace FacebookImageUpload
     public partial class CoverImageForm : Form
     {
         public string imageLink = "";
+        public List<string> images = new List<string>();
 
         public CoverImageForm()
         {
@@ -37,24 +38,27 @@ namespace FacebookImageUpload
             if (pattern == "")
             {
                 pattern = ".*jpg";
-                files = Directory.GetFiles(@"SuccessImage")
+                files = Directory.GetFiles(@"ela")
                .Where(path => Regex.Match(path, pattern).Success);
             }
             else
             {
-                files = Directory.GetFiles(@"SuccessImage")
+                files = Directory.GetFiles(@"ela")
                .Where(path => Regex.Match(path, pattern).Success);
             }
             this.listViewSuccessImage.Clear();
             ImageList successImage = new ImageList();
             int i = 0;
+            images.Clear();
             foreach (string file in files)
             {
                 try
                 {
+                    images.Add(file);
                     successImage.Images.Add(Image.FromFile(file));
                     successImage.Images.SetKeyName(i, Path.GetFileName(file));
                     i += 1;
+
                 }
                 catch
                 {

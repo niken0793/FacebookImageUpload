@@ -5,6 +5,8 @@ using System.Text;
 using System.Reflection;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
+using System.Diagnostics;
+using System.IO;
 
 
 namespace FacebookImageUpload.FB_Images
@@ -23,7 +25,7 @@ namespace FacebookImageUpload.FB_Images
       
         public static string DefaultAlbumID = "";
         public static int ImageSize = 960;
-        public static float RatioMax = 1.25F;
+        public static float RatioMax = 1.005F;
         public static float RatioMin = 0.9F;
 
         // Outbox Album Info

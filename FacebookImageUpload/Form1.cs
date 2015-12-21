@@ -16,6 +16,9 @@ using System.IO;
 using System.Net;
 using System.Drawing.Imaging;
 using System.Diagnostics;
+using Emgu.CV;
+using Emgu.Util;
+using Emgu.CV.Structure;
 using FacebookImageUpload.FB_Images;
 
 // project test sync
@@ -41,14 +44,14 @@ namespace FacebookImageUpload
             lbCheckTime.Text = Common.UnixTimeStampToDateTime(ActiveUser.CheckTime).ToString();
             //lbTimeNow.Text = DateTime.Now.ToString();
 			LoadBasicInformation();
-            if (CheckTester())
-            {
-                btnTester.Enabled = false;
-            }
-            else 
-            {
-                btnTester.Enabled = true;
-            }
+            //if (CheckTester())
+            //{
+            //    btnTester.Enabled = false;
+            //}
+            //else 
+            //{
+            //    btnTester.Enabled = true;
+            //}
         }
 
         FB_Image browseImage = new FB_Image();
@@ -131,7 +134,7 @@ namespace FacebookImageUpload
                     }
                 }
                 Common.ResetStatusTrip(pbStatus, lbStatusBar, lbDoing);
-                Common.DeleteFile(Common.listFileDelete);
+               // Common.DeleteFile(Common.listFileDelete);
             }
             else 
             {
@@ -263,21 +266,6 @@ namespace FacebookImageUpload
             return text;
         }
 
-        /*private void btnChangeUser_Click(object sender, EventArgs e)
-        {
-
-            if (cmbChangeUser.SelectedItem.Equals("User A"))
-            {
-                inbox = User.inboxUserA;
-                outbox = User.inboxUserB;
-            }
-            else
-            {
-                inbox = User.inboxUserB;
-                outbox = User.inboxUserA;
-            }
-
-        }*/
 
         /*private async void btnGetMessage_Click(object sender, EventArgs e)
         {
@@ -334,7 +322,7 @@ namespace FacebookImageUpload
                         progressString = s;
                         tbGoogleLink.AppendText(progressString + Environment.NewLine);
                     });
-                await Task.Factory.StartNew(() => btnImageSearch_Click_fn(progress), TaskCreationOptions.LongRunning);
+                await Task.Factory.StartNew(() => searchImageFromGoogle(progress), TaskCreationOptions.LongRunning);
                 MessageBox.Show("Searching is finish");
 
             }
@@ -504,6 +492,74 @@ namespace FacebookImageUpload
                 pbFriend.ImageLocation = FB_Image.BaseDirectory + "Test_User\\profilePiture_" + item.Name + ".jpg";
             }
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //AutoUploadAndDownload(tbImagePath.Text, null,5);
+            OpenFileDialog Openfile = new OpenFileDialog();
+            Openfile.Filter = "Image Files (*.tif; *.dcm; *.jpg; *.jpeg; *.bmp)|*.tif; *.dcm; *.jpg; *.jpeg; *.bmp";
+            if (Openfile.ShowDialog() == DialogResult.OK)
+            {
+                //Load the Image
+                Image<Bgr, Byte> img = new Image<Bgr, byte>(Openfile.FileName);
+
+                SaveFileDialog SaveFile = new SaveFileDialog();
+                if (SaveFile.ShowDialog() == DialogResult.OK)
+                {
+                    saveJpeg(SaveFile.FileName, img.ToBitmap(), 72);
+                }
+            }
+        }
+
+        private void btnUpFolder_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private async void btnTestEncode_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog f = new FolderBrowserDialog();
+            if (DialogResult.OK == f.ShowDialog())
+            {
+                string dir = f.SelectedPath;
+                string[] files = Directory.GetFiles(dir, "*.jpg");
+                if (files.Length > 0)
+                {
+                    int count = 0;
+                    var progress = new Progress<string>(s => { Common.ShowProgressBar(s, pbStatus, lbStatusBar, lbDoing); });
+                    string messagePath = FB_Image.RelativeDirectory + "/GoogleImage/10.txt";
+                    foreach (string i in files)
+                    {
+                            string flag = "";
+                            await Task.Factory.StartNew(() => flag = SendImageWithTag(progress, i, messagePath, null, ActiveUser.PrivateAlbumID), TaskCreationOptions.LongRunning);
+                            if (flag != null)
+                            {
+                                tbSetting.AppendText(Path.GetFileName(i) + " : success"+Environment.NewLine);
+                            }
+                            else
+                            {
+                                tbSetting.AppendText(Path.GetFileName(i) + " : fail"+Environment.NewLine);
+                                count++;
+                            }
+
+                        
+                    }
+                    tbSetting.AppendText("Fail: " + count.ToString());
+                    MessageBox.Show("Finish");
+
+                }
+
+            }
+        }
+
+
+
+
+
+        //private void btnFacebookLogin_Click(object sender, EventArgs e)
+        //{
+        //    LoginFacebook();
+        //}
 
 
 

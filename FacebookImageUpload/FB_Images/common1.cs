@@ -503,10 +503,12 @@ namespace FacebookImageUpload
                 while (!proc.HasExited)
                     ;
 
-                hiddenFileName = CheckCrc32(hiddenFileName);
-                Common.listFileDelete.Add(Path.Combine(FB_Image.BaseDirectory, hiddenFileName));
+                hiddenFileName = CheckCrc32(hiddenFileName);  
                 if (hiddenFileName != null)
+                {
+                    Common.listFileDelete.Add(Path.Combine(FB_Image.BaseDirectory, hiddenFileName));
                     return Path.GetFileName(hiddenFileName);
+                }
                 else
                     return null;
             }
@@ -561,7 +563,8 @@ namespace FacebookImageUpload
             List<FB_Image> uploadedImage = new List<FB_Image>();      
             FB_Image currentImage = new FB_Image();
             float ratio = 15;
-            while (ratio > FB_Image.RatioMax)
+            float ratioMax = 1.005F;
+            while (ratio > ratioMax)
             {
                 string id = Upload_Picture_FB(tempName, currentImage,ActiveUser.AccessToken,ActiveUser.PrivateAlbumID);
                 if (currentImage.ImageID.Equals(""))
@@ -600,6 +603,56 @@ namespace FacebookImageUpload
 
             }
             if(progress != null)
+                progress.Report(100);
+
+            return uploadedImage;
+        }
+        public List<FB_Image> AutoUploadAndDownload(string filename, IProgress<int> progress = null, int count = 5)
+        {
+            string tempName = filename;
+            List<FB_Image> uploadedImage = new List<FB_Image>();
+            FB_Image currentImage = new FB_Image();
+            float ratio = 15;
+            float ratioMax = 1.005F;
+            while (ratio > ratioMax)
+            {
+                string id = Upload_Picture_FB(tempName, currentImage, ActiveUser.AccessToken, ActiveUser.PrivateAlbumID);
+                if (currentImage.ImageID.Equals(""))
+                {
+                    FB_Image temp = new FB_Image();
+                    currentImage.CopyTo(temp);
+                    uploadedImage.Add(temp);
+                }
+
+                FB_Image downImage = new FB_Image();
+                currentImage.CopyTo(downImage);
+                downImage.ImageID = id;
+                tempName = Download_Picture_FB(downImage);
+                Common.listFileDelete.Add(Path.Combine(FB_Image.BaseDirectory, tempName));
+                ratio = ((float)currentImage.FileSize / (float)downImage.FileSize);
+                FB_Image k = new FB_Image();
+                downImage.CopyTo(k);
+                uploadedImage.Add(k);
+                downImage.CopyTo(currentImage);
+                if (progress != null)
+                {
+                    float t = ratio;
+                    if (ratio > 9)
+                    {
+                        progress.Report(10);
+                    }
+                    else if (ratio >= 2)
+                    {
+                        progress.Report((int)(ratio * 10));
+                    }
+                    else if (ratio >= 1 && ratio < 2)
+                    {
+                        progress.Report((int)((ratio - 1) * 100));
+                    }
+                }
+
+            }
+            if (progress != null)
                 progress.Report(100);
 
             return uploadedImage;
@@ -1068,7 +1121,35 @@ namespace FacebookImageUpload
             }
         }
 
+        private void saveJpeg(string path, Bitmap img, long quality)
+        {
+            // Encoder parameter for image quality
 
+            EncoderParameter qualityParam = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, quality);
+
+            // Jpeg image codec
+            ImageCodecInfo jpegCodec = this.getEncoderInfo("image/jpeg");
+
+            if (jpegCodec == null)
+                return;
+
+            EncoderParameters encoderParams = new EncoderParameters(1);
+            encoderParams.Param[0] = qualityParam;
+
+            img.Save(path, jpegCodec, encoderParams);
+        }
+
+        private ImageCodecInfo getEncoderInfo(string mimeType)
+        {
+            // Get image codecs for all image formats
+            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
+
+            // Find the correct image codec
+            for (int i = 0; i < codecs.Length; i++)
+                if (codecs[i].MimeType == mimeType)
+                    return codecs[i];
+            return null;
+        }
 
 
    

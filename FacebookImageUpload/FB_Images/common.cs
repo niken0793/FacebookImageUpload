@@ -81,7 +81,7 @@ namespace FacebookImageUpload
 
         uint start = 1;
         int gtemp = 0;
-        int tcount = 1;
+        
 
         public void btnImageSearch_Click_fn(IProgress<string> progress)
         {
@@ -90,71 +90,145 @@ namespace FacebookImageUpload
             GoogleImage googleImage = new GoogleImage();
             string query = tbKeyWord.Text;
             //start number of result return
-            Search images = googleImage.googleImageSearch(apiKey, searchEngineId, query, start);
-            foreach (var item in images.Items)
+            int count = 0;
+            while (count < 20)
             {
-                try
+                Search images = googleImage.googleImageSearch(apiKey, searchEngineId, query, start);
+                foreach (var item in images.Items)
                 {
-                    //tbGoogleLink.Text += item.Link + "\n";
-                    progress.Report(item.Link);
-
-                    using (WebClient webClient = new WebClient())
+                    try
                     {
-                        byte[] data = webClient.DownloadData(item.Link);
+                        //tbGoogleLink.Text += item.Link + "\n";
+                        progress.Report(item.Link);
 
-                        using (MemoryStream mem = new MemoryStream(data))
+                        using (WebClient webClient = new WebClient())
                         {
-                            using (var yourImage = Image.FromStream(mem))
+                            byte[] data = webClient.DownloadData(item.Link);
+
+                            using (MemoryStream mem = new MemoryStream(data))
                             {
-                                string new_path = FB_Image.BaseDirectory + query +"_" + gtemp + ".jpg";
-                                var newImage = googleImage.ScaleImage(yourImage, 960, 720);
-                                newImage.Save(new_path, ImageFormat.Jpeg);
-                                Common.listFileDelete.Add(new_path);
-                                string filename = new_path;
-                                string coverImagePath = TestEncodeSuccessRate(null, filename, Path.Combine(FB_Image.RelativeDirectory, "GoogleImage/test_google1.txt"),ActiveUser.PrivateAlbumID, false, true);
-                                if (coverImagePath != null)
+                                using (var yourImage = Image.FromStream(mem))
                                 {
-                                    File.Copy(FB_Image.BaseDirectory + coverImagePath, "SuccessImage/"+query+"_" + gtemp + ".jpg", false);
+                                    string new_path = FB_Image.BaseDirectory + query + "_" + gtemp + ".jpg";
+                                    var newImage = googleImage.ScaleImage(yourImage, 960, 720);
+                                    newImage.Save(new_path, ImageFormat.Jpeg);
+                                    Common.listFileDelete.Add(new_path);
+                                    string filename = new_path;
+                                    string coverImagePath = TestEncodeSuccessRate(null, filename, Path.Combine(FB_Image.RelativeDirectory, "GoogleImage/10.txt"), ActiveUser.PrivateAlbumID, false, true);
+                                    if (coverImagePath != null)
+                                    {
+                                        File.Copy(FB_Image.BaseDirectory + coverImagePath, "SuccessImage/" + query + "_" + gtemp + ".jpg", false);
+                                        count++;
+                                        progress.Report("success"+Environment.NewLine);
+                                    }
+                                    else
+                                    {
+                                        progress.Report("Fail"+Environment.NewLine);
+                                    }
+
                                 }
-                              
                             }
+
                         }
 
+
                     }
-
+                    catch (Exception e)
+                    {
+                        Log(e);
+                    }
+                    gtemp += 1;
 
                 }
-                catch (Exception e)
-                {
-                    Log(e);
-                }
-                gtemp += 1;
-                if (tcount >= 3)
-                {
-                    break;
-                }
-
-                tcount++;
+                //Common.DeleteFile(Common.listFileDelete);
+                start += 10;
             }
-            Common.DeleteFile(Common.listFileDelete);
-            start += 10;
         }
 
+        public void searchImageFromGoogle(IProgress<string> progress)
+        {
+            string apiKey = "AIzaSyCKOq5EJwqwfQzmdfCW0VE-IX9fFMIZEUM";
+            string searchEngineId = "002524252275919064823:dlgwbkge9f0";
+            GoogleImage googleImage = new GoogleImage();
+            string query = tbKeyWord.Text;
+            //start number of result return
+            int count = 0;
+            while (count < 10)
+            {
+                Search images = googleImage.googleImageSearch(apiKey, searchEngineId, query, start);
+                foreach (var item in images.Items)
+                {
+                    try
+                    {
+                        //tbGoogleLink.Text += item.Link + "\n";
+                        progress.Report(item.Link);
 
-        private void btnCoverImage_Click(object sender, EventArgs e)
+                        using (WebClient webClient = new WebClient())
+                        {
+                            byte[] data = webClient.DownloadData(item.Link);
+
+                            using (MemoryStream mem = new MemoryStream(data))
+                            {
+                                using (var yourImage = Image.FromStream(mem))
+                                {
+                                    string new_path = Path.Combine(FB_Image.RelativeDirectory, "SuccessImage/" + query + "_" + gtemp + ".jpg");
+                                    var newImage = googleImage.ScaleImage(yourImage, 960, 720);
+                                    newImage.Save(new_path, ImageFormat.Jpeg);
+
+                                }
+                            }
+
+                        }
+
+
+                    }
+                    catch (Exception e)
+                    {
+                        Log(e);
+                    }
+                    gtemp += 1;
+
+                }
+                Common.DeleteFile(Common.listFileDelete);
+                start += 10;
+            }
+        }
+
+        private async void btnCoverImage_Click(object sender, EventArgs e)
         {
             coverImageForm = new CoverImageForm();
-            if ( coverImageForm.ShowDialog() == DialogResult.Yes)
+            //if (coverImageForm.ShowDialog() == DialogResult.Yes)
+            //{
+            //    if (!string.IsNullOrEmpty(coverImageForm.imageLink))
+            //    {
+            //        tbImagePath.Text = coverImageForm.imageLink;
+            //        pbImage.ImageLocation = coverImageForm.imageLink;
+            //        lbImageName.Text = Path.GetFileName(coverImageForm.imageLink);
+            //        lbImageDirectory.Text = Path.GetDirectoryName(coverImageForm.imageLink);
+            //        lbImageSize.Text = Common.BytesToString(new FileInfo(coverImageForm.imageLink).Length);
+            //    }
+            //}
+
+            List<string> images = coverImageForm.images;
+            var progress = new Progress<string>(s => { Common.ShowProgressBar(s, pbStatus, lbStatusBar, lbDoing); });
+            int k = 0;
+            string t = "200.txt";
+            foreach (string s in images)
             {
-                if (!string.IsNullOrEmpty(coverImageForm.imageLink))
+                string flag = "";
+                await Task.Factory.StartNew(() => flag = SendNoTestImageWithTag(progress, s, Path.Combine(FB_Image.RelativeDirectory, "GoogleImage/" + t), ActiveUser.PrivateAlbumID,null), TaskCreationOptions.LongRunning);
+                if (flag != null)
                 {
-                    tbImagePath.Text = coverImageForm.imageLink;
-                    pbImage.ImageLocation = coverImageForm.imageLink;
-                    lbImageName.Text = Path.GetFileName(coverImageForm.imageLink);
-                    lbImageDirectory.Text = Path.GetDirectoryName(coverImageForm.imageLink);
-                    lbImageSize.Text = Common.BytesToString(new FileInfo(coverImageForm.imageLink).Length);
+                    tbInputMessage.AppendText(Path.GetFileName(s) + " success" + Environment.NewLine);
+                    k++;
+                }
+                else
+                {
+                    tbInputMessage.AppendText(Path.GetFileName(s) + " fail" + Environment.NewLine);
                 }
             }
+            tbInputMessage.AppendText(" k is :" + k.ToString());
+
             //coverImageForm.FormClosed += new FormClosedEventHandler(coverImageForm_FormClosed);
         }
 
@@ -174,8 +248,7 @@ namespace FacebookImageUpload
         private void btnFacebookLogin_Click(object sender, EventArgs e)
         {
             LoginFacebook();
-           
-            
+
         }
 
         private void LoginFacebook()
@@ -535,6 +608,8 @@ namespace FacebookImageUpload
                 FB_Image encodeImage = new FB_Image();
                 if (progress != null)
                     progress.Report("25|25|Uploading Picture");
+                if (encodeFile == null)
+                    return null;
                 string id = Upload_Picture_Tag(Path.Combine(FB_Image.BaseDirectory, encodeFile), encodeImage, uids,albumID);
                 FB_Image downloadImage = new FB_Image();
                 encodeImage.CopyTo(downloadImage);
@@ -547,6 +622,8 @@ namespace FacebookImageUpload
                 if (outputText == null)
                     outputText = "output_test.txt";
                 outputText = JPSeekDecode(Path.GetFileName(tempFileName), outputText);
+                if (outputText == null)
+                    return null;
                 outputText = Path.Combine(FB_Image.BaseDirectory, outputText);
 
                 //compare 2 file

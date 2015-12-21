@@ -31,6 +31,9 @@ namespace FacebookImageUpload.FB_Images
 
         public static List<string> listFileDelete = new List<string>();
 
+
+
+
         public  static string GetInboxText(string name, int count)
         {
             string text;
