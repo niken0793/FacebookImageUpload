@@ -141,6 +141,80 @@
     <Compile Include="CoverImageForm.Designer.cs">
       <DependentUpon>CoverImageForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DCT\BitmapDestination.cs" />
+    <Compile Include="DCT\BitStream.cs" />
+    <Compile Include="DCT\Classic\DensityUnit.cs" />
+    <Compile Include="DCT\Classic\Internal\bitread_perm_state.cs" />
+    <Compile Include="DCT\Classic\Internal\bitread_working_state.cs" />
+    <Compile Include="DCT\Classic\Internal\ComponentBuffer.cs" />
+    <Compile Include="DCT\Classic\Internal\d_derived_tbl.cs" />
+    <Compile Include="DCT\Classic\Internal\huff_entropy_decoder.cs" />
+    <Compile Include="DCT\Classic\Internal\huff_entropy_encoder.cs" />
+    <Compile Include="DCT\Classic\Internal\JpegUtils.cs" />
+    <Compile Include="DCT\Classic\Internal\jpeg_color_converter.cs" />
+    <Compile Include="DCT\Classic\Internal\jpeg_color_deconverter.cs" />
+    <Compile Include="DCT\Classic\Internal\jpeg_color_quantizer.cs" />
+    <Compile Include="DCT\Classic\Internal\jpeg_comp_master.cs" />
+    <Compile Include="DCT\Classic\Internal\jpeg_c_coef_controller.cs" />
+    <Compile Include="DCT\Classic\Internal\jpeg_c_main_controller.cs" />
+    <Compile Include="DCT\Classic\Internal\jpeg_c_prep_controller.cs" />
+    <Compile Include="DCT\Classic\Internal\jpeg_decomp_master.cs" />
+    <Compile Include="DCT\Classic\Internal\jpeg_downsampler.cs" />
+    <Compile Include="DCT\Classic\Internal\jpeg_d_coef_controller.cs" />
+    <Compile Include="DCT\Classic\Internal\jpeg_d_main_controller.cs" />
+    <Compile Include="DCT\Classic\Internal\jpeg_d_post_controller.cs" />
+    <Compile Include="DCT\Classic\Internal\jpeg_entropy_decoder.cs" />
+    <Compile Include="DCT\Classic\Internal\jpeg_entropy_encoder.cs" />
+    <Compile Include="DCT\Classic\Internal\jpeg_forward_dct.cs" />
+    <Compile Include="DCT\Classic\Internal\jpeg_input_controller.cs" />
+    <Compile Include="DCT\Classic\Internal\jpeg_inverse_dct.cs" />
+    <Compile Include="DCT\Classic\Internal\jpeg_marker_reader.cs" />
+    <Compile Include="DCT\Classic\Internal\jpeg_marker_writer.cs" />
+    <Compile Include="DCT\Classic\Internal\jpeg_scan_info.cs" />
+    <Compile Include="DCT\Classic\Internal\jpeg_upsampler.cs" />
+    <Compile Include="DCT\Classic\Internal\J_BUF_MODE.cs" />
+    <Compile Include="DCT\Classic\Internal\my_1pass_cquantizer.cs" />
+    <Compile Include="DCT\Classic\Internal\my_2pass_cquantizer.cs" />
+    <Compile Include="DCT\Classic\Internal\my_c_coef_controller.cs" />
+    <Compile Include="DCT\Classic\Internal\my_destination_mgr.cs" />
+    <Compile Include="DCT\Classic\Internal\my_merged_upsampler.cs" />
+    <Compile Include="DCT\Classic\Internal\my_source_mgr.cs" />
+    <Compile Include="DCT\Classic\Internal\my_trans_c_coef_controller.cs" />
+    <Compile Include="DCT\Classic\Internal\my_upsampler.cs" />
+    <Compile Include="DCT\Classic\Internal\phuff_entropy_decoder.cs" />
+    <Compile Include="DCT\Classic\Internal\phuff_entropy_encoder.cs" />
+    <Compile Include="DCT\Classic\JBLOCK.cs" />
+    <Compile Include="DCT\Classic\JHUFF_TBL.cs" />
+    <Compile Include="DCT\Classic\JpegConstants.cs" />
+    <Compile Include="DCT\Classic\jpeg_common_struct.cs" />
+    <Compile Include="DCT\Classic\jpeg_component_info.cs" />
+    <Compile Include="DCT\Classic\jpeg_compress_struct.cs" />
+    <Compile Include="DCT\Classic\jpeg_decompress_struct.cs" />
+    <Compile Include="DCT\Classic\jpeg_destination_mgr.cs" />
+    <Compile Include="DCT\Classic\jpeg_error_mgr.cs" />
+    <Compile Include="DCT\Classic\JPEG_MARKER.cs" />
+    <Compile Include="DCT\Classic\jpeg_marker_struct.cs" />
+    <Compile Include="DCT\Classic\jpeg_progress_mgr.cs" />
+    <Compile Include="DCT\Classic\jpeg_source_mgr.cs" />
+    <Compile Include="DCT\Classic\JQUANT_TBL.cs" />
+    <Compile Include="DCT\Classic\jvirt_array.cs" />
+    <Compile Include="DCT\Classic\J_COLOR_SPACE.cs" />
+    <Compile Include="DCT\Classic\J_DCT_METHOD.cs" />
+    <Compile Include="DCT\Classic\J_DITHER_MODE.cs" />
+    <Compile Include="DCT\Classic\J_MESSAGE_CODE.cs" />
+    <Compile Include="DCT\Classic\ReadResult.cs" />
+    <Compile Include="DCT\CompressionParameters.cs" />
+    <Compile Include="DCT\DecompressionParameters.cs" />
+    <Compile Include="DCT\DecompressorToJpegImage.cs" />
+    <Compile Include="DCT\Enumerations.cs" />
+    <Compile Include="DCT\IDecompressDestination.cs" />
+    <Compile Include="DCT\IRawImage.cs" />
+    <Compile Include="DCT\Jpeg.cs" />
+    <Compile Include="DCT\JpegImage.cs" />
+    <Compile Include="DCT\RawImage.cs" />
+    <Compile Include="DCT\Sample.cs" />
+    <Compile Include="DCT\SampleRow.cs" />
+    <Compile Include="DCT\Utils.cs" />
     <Compile Include="FacebookAlbum.cs" />
     <Compile Include="FacebookLoginForm.cs">
       <SubType>Form</SubType>
@@ -163,6 +237,7 @@
     </Compile>
     <Compile Include="FB_Images\helper.cs" />
     <Compile Include="FB_Images\Message.cs" />
+    <Compile Include="FB_Images\ProccessImage.cs" />
     <Compile Include="FB_Images\User.cs" />
     <Compile Include="FB_Images\UserSetting.cs" />
     <Compile Include="Form1.cs">
@@ -241,6 +316,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="FB_Images\OldCode.txt" />
     <Content Include="images\Add_Friend-512.png" />
     <Content Include="images\default.jpg" />
     <Content Include="images\gallery-icon.jpg" />

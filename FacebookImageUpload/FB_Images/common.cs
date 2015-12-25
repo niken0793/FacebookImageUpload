@@ -85,8 +85,10 @@ namespace FacebookImageUpload
 
         public void btnImageSearch_Click_fn(IProgress<string> progress)
         {
-            string apiKey = "AIzaSyCKOq5EJwqwfQzmdfCW0VE-IX9fFMIZEUM";
-            string searchEngineId = "002524252275919064823:dlgwbkge9f0";
+            //string apiKey = "AIzaSyCKOq5EJwqwfQzmdfCW0VE-IX9fFMIZEUM";
+            //string searchEngineId = "002524252275919064823:dlgwbkge9f0";
+            string apiKey = "AIzaSyCOQh0JLePZur6o26W1lwI5mpj5pa3M5oA";
+            string searchEngineId = "001783529186805515716:jqccojujq9c";
             GoogleImage googleImage = new GoogleImage();
             string query = tbKeyWord.Text;
             //start number of result return
@@ -130,8 +132,6 @@ namespace FacebookImageUpload
                             }
 
                         }
-
-
                     }
                     catch (Exception e)
                     {
@@ -140,15 +140,17 @@ namespace FacebookImageUpload
                     gtemp += 1;
 
                 }
-                //Common.DeleteFile(Common.listFileDelete);
+                Common.DeleteFile(Common.listFileDelete);
                 start += 10;
             }
         }
 
         public void searchImageFromGoogle(IProgress<string> progress)
         {
-            string apiKey = "AIzaSyCKOq5EJwqwfQzmdfCW0VE-IX9fFMIZEUM";
-            string searchEngineId = "002524252275919064823:dlgwbkge9f0";
+            //string apiKey = "AIzaSyCKOq5EJwqwfQzmdfCW0VE-IX9fFMIZEUM";
+            //string searchEngineId = "002524252275919064823:dlgwbkge9f0";
+            string apiKey = "AIzaSyCOQh0JLePZur6o26W1lwI5mpj5pa3M5oA";
+            string searchEngineId = "001783529186805515716:jqccojujq9c";
             GoogleImage googleImage = new GoogleImage();
             string query = tbKeyWord.Text;
             //start number of result return
@@ -194,56 +196,24 @@ namespace FacebookImageUpload
             }
         }
 
-        private async void btnCoverImage_Click(object sender, EventArgs e)
+        private  void btnCoverImage_Click(object sender, EventArgs e)
         {
             coverImageForm = new CoverImageForm();
-            //if (coverImageForm.ShowDialog() == DialogResult.Yes)
-            //{
-            //    if (!string.IsNullOrEmpty(coverImageForm.imageLink))
-            //    {
-            //        tbImagePath.Text = coverImageForm.imageLink;
-            //        pbImage.ImageLocation = coverImageForm.imageLink;
-            //        lbImageName.Text = Path.GetFileName(coverImageForm.imageLink);
-            //        lbImageDirectory.Text = Path.GetDirectoryName(coverImageForm.imageLink);
-            //        lbImageSize.Text = Common.BytesToString(new FileInfo(coverImageForm.imageLink).Length);
-            //    }
-            //}
-
-            List<string> images = coverImageForm.images;
-            var progress = new Progress<string>(s => { Common.ShowProgressBar(s, pbStatus, lbStatusBar, lbDoing); });
-            int k = 0;
-            string t = "200.txt";
-            foreach (string s in images)
+            if (coverImageForm.ShowDialog() == DialogResult.Yes)
             {
-                string flag = "";
-                await Task.Factory.StartNew(() => flag = SendNoTestImageWithTag(progress, s, Path.Combine(FB_Image.RelativeDirectory, "GoogleImage/" + t), ActiveUser.PrivateAlbumID,null), TaskCreationOptions.LongRunning);
-                if (flag != null)
+                if (!string.IsNullOrEmpty(coverImageForm.imageLink))
                 {
-                    tbInputMessage.AppendText(Path.GetFileName(s) + " success" + Environment.NewLine);
-                    k++;
-                }
-                else
-                {
-                    tbInputMessage.AppendText(Path.GetFileName(s) + " fail" + Environment.NewLine);
+                    tbImagePath.Text = coverImageForm.imageLink;
+                    pbImage.ImageLocation = coverImageForm.imageLink;
+                    lbImageName.Text = Path.GetFileName(coverImageForm.imageLink);
+                    lbImageDirectory.Text = Path.GetDirectoryName(coverImageForm.imageLink);
+                    lbImageSize.Text = Common.BytesToString(new FileInfo(coverImageForm.imageLink).Length);
                 }
             }
-            tbInputMessage.AppendText(" k is :" + k.ToString());
-
-            //coverImageForm.FormClosed += new FormClosedEventHandler(coverImageForm_FormClosed);
+            
         }
 
-        //void coverImageForm_FormClosed(object sender, FormClosedEventArgs e)
-        //{
-        //    if (!string.IsNullOrEmpty(coverImageForm.imageLink))
-        //    {
-        //        tbImagePath.Text = coverImageForm.imageLink;
-        //        pbImage.ImageLocation = coverImageForm.imageLink;
-        //        lbImageName.Text = Path.GetFileName(coverImageForm.imageLink);
-        //        lbImageDirectory.Text = Path.GetDirectoryName(coverImageForm.imageLink);
-        //        lbImageSize.Text = Common.BytesToString(new FileInfo(coverImageForm.imageLink).Length);
-        //    }
 
-        //}
 
         private void btnFacebookLogin_Click(object sender, EventArgs e)
         {
@@ -417,14 +387,6 @@ namespace FacebookImageUpload
 
 
 
-        //public void CheckTester()
-        //{ 
-            
-        //}
-        //private void btnTester_Click(object sender, EventArgs e)
-        //{ 
-            
-        //}
 
         private void btnGetUserList_Click(object sender, EventArgs e)
         {
@@ -520,12 +482,6 @@ namespace FacebookImageUpload
 
             
         }
-
-
-
-
-       
-
         private void listViewUserList_ItemActivate(object sender, EventArgs e)
         {
             DialogResult dlg = MessageBox.Show("Do you want to use this user to communicate?", "Choose User", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -648,64 +604,6 @@ namespace FacebookImageUpload
             }
         }
 
-        public void GetImageTagged(IProgress<int> progress)
-        {
-            try
-            {
-                //string created = "1449376455";
-                var fb = new FacebookClient(ActiveUser.AccessToken);
-                dynamic res = fb.Get("me/photos?fields=from");
-                string json_string = Newtonsoft.Json.JsonConvert.SerializeObject(res);
-                var json = JObject.Parse(json_string);
-                dynamic photos = json["data"];
-                int count = photos.Count;
-                string source_url = "";
-                string json_string_image = "";
-                string imagePath = "";
-                List<string> imagesId = new List<string>(); 
-                int i = 0;
-                ImageList successImage = new ImageList();
-
-                while (i < count && photos[i] != null)
-                {
-                    if ((string)photos[i]["from"]["id"] == lbUserIdComm.Text)
-                    {
-                        string imageId = (string)photos[i]["id"];
-                        dynamic images = fb.Get(imageId+"?fields=images");
-                        json_string_image = Newtonsoft.Json.JsonConvert.SerializeObject(images);
-                        var json_image = JObject.Parse(json_string_image);
-
-                        source_url = (string)json_image["images"][0]["source"];
-
-                        using (WebClient webClient = new WebClient())
-                        {
-                            byte[] data = webClient.DownloadData(source_url);
-
-                            using (MemoryStream mem = new MemoryStream(data))
-                            {
-                                using (var yourImage = Image.FromStream(mem))
-                                {
-                                    imagePath = FB_Image.BaseDirectory + imageId + ".jpg";
-                                    yourImage.Save(imagePath, ImageFormat.Jpeg);
-                                }
-                            }
-                        }
-                        successImage.Images.Add(Image.FromFile(imagePath));
-                        successImage.Images.SetKeyName(i, imageId);
-                        imagesId.Add(imageId);
-                    }
-                    break;
-                }
-
-                FB_Image.Image_Tags_In = successImage;
-                FB_Image.Image_TagsID_In = imagesId;
-            }
-            catch (Exception ex)
-            {
-                Log(ex);
-            }
-        }
-
         public void GetImageTagged1(IProgress<int> progress,List<InboxUser> inbox)
         {
 
@@ -772,31 +670,7 @@ namespace FacebookImageUpload
             }
         }
 
-        private List<FB_Message> GetNewMessageFromImage(IProgress<string> progress,string imageID)
-        {
-            List<FB_Message> ListMessages = new List<FB_Message>();
-            FB_Message message = new FB_Message();
-            FB_Image messageImage = new FB_Image();
-            messageImage.FileName = imageID + ".jpg";
-            messageImage.Directory = FB_Image.BaseDirectory + imageID + ".jpg";
-            messageImage.ImageID = imageID;
 
-            message.Image = messageImage;
-            if (message.Image.FileName != "")
-            {
-                string output = JPSeekDecode(message.Image.FileName, Path.GetFileNameWithoutExtension(message.Image.FileName) + ".txt");
-                if (output != null && output != "")
-                {
-                    // check CRC
-                    message.Content = File.ReadAllText(Path.Combine(FB_Image.BaseDirectory, output));
-                }
-
-            }
-            ListMessages.Add(message);
-
-            return ListMessages;
-
-        }
         public bool CheckTester()
         {
             var app = new FacebookClient(Form1.AppToken);

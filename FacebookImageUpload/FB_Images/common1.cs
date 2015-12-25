@@ -52,8 +52,6 @@ namespace FacebookImageUpload
             }
             LoginFacebook();
             
-
-
         }
 
         private void SaveActiveUserOnDisk(UserSetting active)
@@ -105,6 +103,69 @@ namespace FacebookImageUpload
 
 
 
+
+       public static string UploadFB(string fullPath, string token, string albumID)
+        {
+            var imgstream = File.OpenRead(fullPath);
+            var fb = new FacebookClient(ActiveUser.AccessToken);
+            if (String.IsNullOrEmpty(albumID))
+            {
+                albumID = "me";
+            }
+            dynamic res = fb.Post(albumID + "/photos", new
+            {
+                message = "Image description",
+                file = new FacebookMediaStream
+                {
+                    ContentType = "image/jpeg",
+                    FileName = fullPath,
+                }.SetValue(imgstream)
+            });
+            return res.id;
+        }
+
+       public static bool DownloadFB(string photoID, string token, string newPath,bool overWrite=false)
+        {
+            try
+            {
+                var fb = new FacebookClient(ActiveUser.AccessToken);
+                dynamic res = fb.Get(photoID+ "?fields=images");  // query đường dẫn + độ phân giải ảnh
+                string json_string = Newtonsoft.Json.JsonConvert.SerializeObject(res); // parse response sang json
+                dynamic json = JObject.Parse(json_string);
+                dynamic imagesJson = json["images"];
+                int count = imagesJson.Count;
+                int i = 0;
+                string source_url = "";
+
+                /* lấy độ phân giải trùng với độ phân giải của ảnh đã up */
+                while (i < count && imagesJson[i] != null)
+                {
+                    int image_height = Int32.Parse((string)imagesJson[i]["height"]);
+                    int image_width = Int32.Parse((string)imagesJson[i]["width"]);
+                    if (image_height == FB_Image.ImageSize || image_width == FB_Image.ImageSize)
+                    {
+                        source_url = imagesJson[i]["source"];
+                        break;
+                    }
+                    i++;
+
+                }
+                if (i >= count)
+                {
+                    source_url = imagesJson[0]["source"];
+                }
+                if (Common.DowloadImageFromLink(source_url, newPath, ImageFormat.Jpeg,overWrite))
+                    return true;
+                return false;
+
+
+            }
+            catch (Exception e)
+            {
+                Log(e);
+                return false;
+            }
+        }
 
         private string Upload_Picture_FB(string filename, FB_Image browseImageUP,string UserAccessToken,string albumID)
         {
@@ -658,376 +719,6 @@ namespace FacebookImageUpload
             return uploadedImage;
         }
 
-
-        public void GetAlbumList_1(IProgress<int> progress, List<string> inboxAlbums = null, int limit = 5)
-        {
-            try
-            {
-
-                var fb = new FacebookClient(ActiveUser.AccessToken);
-                dynamic albums = fb.Get("me/albums?fields=count,created_time,updated_time,name,cover_photo,picture&limit=10&date_format=U"); // Get album information
-                string json_string = JsonConvert.SerializeObject(albums); // parse response sang json
-                var json = JObject.Parse(json_string);
-                int i = 0;
-                ImageList photoList = new ImageList(); // ImageList
-                photoList.TransparentColor = Color.Blue;
-                photoList.ColorDepth = ColorDepth.Depth32Bit;
-                photoList.ImageSize = new Size(50, 50);
-                dynamic a_albums = json["data"];
-                int count = a_albums.Count;
-                List<string> list_albumID = new List<string>();
-
-                foreach (var obj in json["data"])
-                {
-                    string albumName = (string)obj["name"];
-                    string albumID = (string )obj["id"];
-                    string createdTime = (string)obj["created_time"];
-                    string updatedTime = (string)obj["updated_time"];
-                    createdTime= createdTime.TrimEnd(')');
-                    updatedTime= updatedTime.TrimEnd(')');
-                    
-                    string img_url ="";
-                    if (inboxAlbums != null)        // chỉ kiểm tra các album đã quy định trước
-                    {
-                        var match = inboxAlbums.Where(x => x.Equals(albumID));
-                        if (match.Count()==0)
-                            continue;
-                    }
-
-                    var match1 = FB_Image.List_AlbumInfo_In.Where(x => x.Id.Equals(albumID)); // album đã có thông tin hay chưa
-                    AlbumInfo info = null;
-                    if (match1.Count() == 1)
-                    {
-                        info = match1.First();
-                    }
-             
-                    /* download ảnh */
-                    using (WebClient webClient = new WebClient())
-                    {
-                        byte[] data = webClient.DownloadData((string)obj["picture"]["data"]["url"]);
-
-                        using (MemoryStream mem = new MemoryStream(data))
-                        {
-                            using (var yourImage = Image.FromStream(mem))
-                            {
-                                img_url = FB_Image.BaseDirectory + obj["id"].ToString()+(r.Next()).ToString() + ".jpg";
-                                yourImage.Save(img_url, ImageFormat.Jpeg);
-                               
-                                photoList.Images.Add(Image.FromFile(img_url));
-                                photoList.Images.SetKeyName(i, albumName);
-                            }
-                        }
-
-                    }
-
-
-                    // Xử lý thông tin albums
-                    if (info == null)
-                    {
-                        FB_Image.List_AlbumInfo_In.Add(
-                            new AlbumInfo(
-                                obj["id"].ToString(),
-                                albumName,
-                                img_url,
-                                Int32.Parse(obj["count"].ToString()),
-                                long.Parse(createdTime),
-                                long.Parse(updatedTime),
-                                Int32.Parse(obj["count"].ToString())
-                                ));
-                    }
-                    else
-                    {
-                        int newCount = Int32.Parse(obj["count"].ToString());
-                        if (info.Count < newCount)
-                        {                          
-                            info.NewNupdatedTime = long.Parse(updatedTime);
-                            info.NewNumber = newCount - info.Count;
-                            info.Count = newCount;
-                        }
-                        else
-                        {
-                            info.NewNupdatedTime = long.Parse(updatedTime);
-                            info.NewNumber = 0;
-                        }
-                    }
-                    list_albumID.Add(obj["id"].ToString());
-                    progress.Report((i * 100 / count));
-                    i++;
-
-
-                }
-
-                FB_Image.Album_PhotoList_In = photoList;
-                FB_Image.List_AlbumID_In = list_albumID;
-
-                progress.Report(100);
-            }
-            catch (Exception ex)
-            {
-                Log(ex);
-            }
-        }
-
-        public void GetAlbumList_Outbox(IProgress<int> progress, List<string> listAlbums = null, int limit = 5)
-        {
-            try
-            {
-
-                var fb = new FacebookClient(ActiveUser.AccessToken);
-                dynamic albums = fb.Get("me/albums?fields=count,created_time,updated_time,name,cover_photo,picture&limit=10&date_format=U)"); // Get album information
-                string json_string = JsonConvert.SerializeObject(albums); // parse response sang json
-                var json = JObject.Parse(json_string);
-                int i = 0;
-                ImageList photoList = new ImageList(); // ImageList
-                photoList.TransparentColor = Color.Blue;
-                photoList.ColorDepth = ColorDepth.Depth32Bit;
-                photoList.ImageSize = new Size(50, 50);
-                dynamic a_albums = json["data"];
-                int count = a_albums.Count;
-                List<string> list_albumID = new List<string>();
-                FB_Image.List_AlbumInfo = new List<AlbumInfo>();
-
-                foreach (var obj in json["data"])
-                {
-                    string albumName = (string)obj["name"];
-                    string albumID = (string)obj["id"];
-                    if (listAlbums != null)        // chỉ kiểm tra các album đã quy định trước
-                    {
-                        var match = listAlbums.Where(x => x.Equals(albumID));
-                        if (match.Count() == 0)
-                            continue;
-                    }
-                    string img_url = "";
-
-                    /* download ảnh */
-                    using (WebClient webClient = new WebClient())
-                    {
-                        byte[] data = webClient.DownloadData((string)obj["picture"]["data"]["url"]);
-
-                        using (MemoryStream mem = new MemoryStream(data))
-                        {
-                            using (var yourImage = Image.FromStream(mem))
-                            {
-                                img_url = FB_Image.BaseDirectory + obj["id"].ToString()+(r.Next()).ToString() + ".jpg";
-                                yourImage.Save(img_url, ImageFormat.Jpeg);
-                                
-                                photoList.Images.Add(Image.FromFile(img_url));
-                                photoList.Images.SetKeyName(i, albumName);
-                            }
-                        }
-
-                    }
-
-
-                    // Xử lý thông tin albums
-                        FB_Image.List_AlbumInfo.Add(
-                            new AlbumInfo(
-                                obj["id"].ToString(),
-                                albumName,
-                                img_url
-                                ));
-                        list_albumID.Add(obj["id"].ToString());
-                    progress.Report((i * 100 / count));
-                    i++;
-                }
-
-                FB_Image.Album_PhotoList = photoList;
-                FB_Image.List_AlbumID = list_albumID;
-
-                progress.Report(100);
-            }
-            catch (Exception ex)
-            {
-                Log(ex);
-            }
-        }
-
-        private List<FB_Message> GetNewMessageFromAlbum(IProgress<string> progress,string albumID)
-        {
-            AlbumInfo album = Common.GetAlbumInfoByID(FB_Image.List_AlbumInfo_In, albumID);
-            if (album.NewNumber > 0)
-            {
-                string limit = "&limit=" + album.NewNumber;
-                string since = "&since=" + album.UpdatedTime;
-                string dateFormat = "&date_format=U";
-                List<FB_Message> ListMessages = new List<FB_Message>();
-
-                if (progress != null)
-                    progress.Report("15|15|Getting inbox information");
-                var fb = new FacebookClient(ActiveUser.AccessToken);
-                dynamic albums = fb.Get(albumID+"/photos?pretty=1"+limit+since+dateFormat); // Get album information
-                string json_string = JsonConvert.SerializeObject(albums); // parse response sang json
-                var json = JObject.Parse(json_string);
-                dynamic photos = json["data"];
-                int count = photos.Count;
-                int p = 70 / count;
-                int i = 1;
-                if (progress != null)
-                    progress.Report("30|30|Getting messages");
-                if (count > 0)
-                {
-                    foreach (var obj in photos)
-                    {
-
-                        FB_Message message = new FB_Message();
-                        FB_Image messageImage = new FB_Image();
-                        dynamic images = obj["images"];
-                        int images_count = images.Count;
-                        if (images_count > 0)
-                        {
-                            if (progress != null)
-                                progress.Report((i*p).ToString()+"|"+(i*p).ToString()+"|Getting messages");
-                            i++;
-                            foreach (var m in obj["images"])
-                            {
-                                if (((string)m["width"]).Equals("960"))
-                                {
-                                    string img_path;
-
-                                    /* download ảnh */
-                                    using (WebClient webClient = new WebClient())
-                                    {
-                                        byte[] data = webClient.DownloadData((string)m["source"]);
-
-                                        using (MemoryStream mem = new MemoryStream(data))
-                                        {
-                                            using (var yourImage = Image.FromStream(mem))
-                                            {
-                                                img_path = FB_Image.BaseDirectory + obj["id"].ToString() + ".jpg";
-                                                yourImage.Save(img_path, ImageFormat.Jpeg);
-                                                messageImage.FileName = Path.GetFileName(img_path);
-                                                messageImage.Directory = Path.GetDirectoryName(img_path);
-                                                messageImage.ImageID = obj["id"].ToString();
-                                                break;
-
-                                            }
-                                        }
-
-                                    }
-                                }
-                            }
-
-                        }
-
-                        message.Image = messageImage;
-                        if (message.Image.FileName != "")
-                        {
-                            string output = JPSeekDecode(message.Image.FileName, Path.GetFileNameWithoutExtension(message.Image.FileName) + ".txt");
-                            if (output != null && output != "")
-                            {
-                                // check CRC
-                                message.Content = File.ReadAllText(Path.Combine(FB_Image.BaseDirectory,output));
-                            }
-                            
-                        }
-                        ListMessages.Add(message);
-                    }
-                    if (progress != null)
-                        progress.Report("100|100|Finish");
-                    album.UpdatedTime = album.NewNupdatedTime;
-                    album.NewNumber = 0;
-                    return ListMessages;
-
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            else
-            {
-                return null;
-            }
-
-        }
-
-        /*public void LoadingAlbumList()
-        {
-            string filename = Path.Combine(FB_Image.RelativeDirectory,FB_Image.AlbumDirectory);
-            FB_Image.List_AlbumInfo = Common.DeSerializeObject<List<AlbumInfo>>(filename);
-            if (FB_Image.List_AlbumInfo != null && FB_Image.List_AlbumInfo.Count > 0)
-            {
-                FB_Image.List_AlbumID = new List<string>();
-                FB_Image.Album_PhotoList = new ImageList();
-                FB_Image.Album_PhotoList.TransparentColor = Color.Blue;
-                FB_Image.Album_PhotoList.ColorDepth = ColorDepth.Depth32Bit;
-                FB_Image.Album_PhotoList.ImageSize = new Size(50, 50);
-                for (int i = 0; i < FB_Image.List_AlbumInfo.Count; i++)
-                {
-                    AlbumInfo e = FB_Image.List_AlbumInfo[i];
-                    FB_Image.List_AlbumID.Add(e.Id);
-                    if(File.Exists(e.Path))
-                        FB_Image.Album_PhotoList.Images.Add(Image.FromFile(e.Path));
-                    else
-                        FB_Image.Album_PhotoList.Images.Add(Image.FromFile(FB_Image.DefaultImage));
-                    FB_Image.Album_PhotoList.Images.SetKeyName(i, e.Name);
-
-                }
-                this.ListViewalbumList.View = View.LargeIcon;
-                this.ListViewalbumList.LargeImageList = FB_Image.Album_PhotoList;
-
-                for (int j = 0; j < FB_Image.Album_PhotoList.Images.Count; j++)
-                {
-                    ListViewItem item = new ListViewItem();
-                    item.Text = FB_Image.Album_PhotoList.Images.Keys[j].ToString();
-                    item.Name = FB_Image.List_AlbumID[j];
-                    item.ImageIndex = j;
-                    this.ListViewalbumList.Items.Add(item);
-                }
-
-
-
-            }
-            else
-            {
-                FB_Image.List_AlbumInfo = new List<AlbumInfo>();
-            }
-
-        }*/
-
-        /*public void LoadingAlbumList_In()
-        {
-            string filename = Path.Combine(FB_Image.RelativeDirectory, FB_Image.AlbumDirectory_In);
-            FB_Image.List_AlbumInfo_In = Common.DeSerializeObject<List<AlbumInfo>>(filename);
-            if (FB_Image.List_AlbumInfo_In != null && FB_Image.List_AlbumInfo_In.Count > 0)
-            {
-                FB_Image.List_AlbumID_In = new List<string>();
-                FB_Image.Album_PhotoList_In = new ImageList();
-                FB_Image.Album_PhotoList_In.TransparentColor = Color.Blue;
-                FB_Image.Album_PhotoList_In.ColorDepth = ColorDepth.Depth32Bit;
-                FB_Image.Album_PhotoList_In.ImageSize = new Size(50, 50);
-                for (int i = 0; i < FB_Image.List_AlbumInfo_In.Count; i++)
-                {
-                    AlbumInfo e = FB_Image.List_AlbumInfo_In[i];
-                    FB_Image.List_AlbumID_In.Add(e.Id);
-                    if (File.Exists(e.Path))
-                        FB_Image.Album_PhotoList_In.Images.Add(Image.FromFile(e.Path));
-                    else
-                        FB_Image.Album_PhotoList_In.Images.Add(Image.FromFile(FB_Image.DefaultImage));
-                    FB_Image.Album_PhotoList_In.Images.SetKeyName(i, e.Name);
-
-                }
-                this.ListViewalbumList_In.View = View.LargeIcon;
-                this.ListViewalbumList_In.LargeImageList = FB_Image.Album_PhotoList_In;
-
-                for (int j = 0; j < FB_Image.Album_PhotoList_In.Images.Count; j++)
-                {
-                    ListViewItem item = new ListViewItem();
-                    item.Text = FB_Image.Album_PhotoList_In.Images.Keys[j].ToString();
-                    item.Name = FB_Image.List_AlbumID_In[j];
-                    item.ImageIndex = j;
-                    this.ListViewalbumList_In.Items.Add(item);
-                }
-
-
-
-            }
-            else
-            {
-                FB_Image.List_AlbumInfo_In = new List<AlbumInfo>();
-            }
-
-        }*/
 
         private void cmbSelectTextType_SelectedIndexChanged_Handle(object sender, EventArgs e)
         {

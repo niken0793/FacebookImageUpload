@@ -138,13 +138,31 @@ namespace FacebookImageUpload.FB_Images
             return null;
         }
 
+        public static  string AppendFileName(string fullPath, string suffix)
+        {
+            string s = "";
+            string dir = Path.GetDirectoryName(fullPath);
+            string filename = Path.GetFileNameWithoutExtension(fullPath);
+            string exten = Path.GetExtension(fullPath);
+            string[] a = filename.Split('_');
+            if (a.Length >= 2)
+            {
+                s = Path.Combine(dir, a[0] + "_" + a[1] + "_" + suffix + exten);
+            }
+            else
+            {
+                s = Path.Combine(dir, a[0] + "_" + suffix + exten);
+            }
 
 
-        public static bool DowloadImageFromLink(string link, string pathToSave, ImageFormat format )
+            return s;
+        }
+
+        public static bool DowloadImageFromLink(string link, string pathToSave, ImageFormat format,bool overWrite=false )
         {
             try
             {
-                if (!File.Exists(pathToSave))
+                if (!File.Exists(pathToSave) || overWrite)
                 {
 
                     using (WebClient webClient = new WebClient())
@@ -339,7 +357,7 @@ namespace FacebookImageUpload.FB_Images
                 if (tb != null)
                 {
                 }
-                File.Delete(path_file_out);
+               
                 if (s_in.Equals(s_out))
                 {
                     return true;
@@ -348,6 +366,14 @@ namespace FacebookImageUpload.FB_Images
                 {
                     return false;
                 }
+                //if (s_out.Length > 0)
+                //{
+                //    return true;
+                //}
+                //else
+                //{
+                //    return false;
+                //}
 
 
             }

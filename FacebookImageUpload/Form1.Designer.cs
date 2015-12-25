@@ -54,7 +54,6 @@
             this.label1111 = new System.Windows.Forms.Label();
             this.lbFriendName = new System.Windows.Forms.Label();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.button2 = new System.Windows.Forms.Button();
             this.lbCheckTime = new System.Windows.Forms.Label();
             this.lbImageSize = new System.Windows.Forms.Label();
             this.lbImageDirectory = new System.Windows.Forms.Label();
@@ -73,8 +72,6 @@
             this.label12 = new System.Windows.Forms.Label();
             this.lbUserNameComm = new System.Windows.Forms.Label();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
-            this.btnGetImageMessage = new System.Windows.Forms.Button();
-            this.btnGetImageTagged = new System.Windows.Forms.Button();
             this.listViewTagImage = new System.Windows.Forms.ListView();
             this.tbInbox = new System.Windows.Forms.TextBox();
             this.tabGoogle = new System.Windows.Forms.TabPage();
@@ -88,14 +85,19 @@
             this.btnImageSearch = new System.Windows.Forms.Button();
             this.tbKeyWord = new System.Windows.Forms.TextBox();
             this.tabSetting = new System.Windows.Forms.TabPage();
+            this.btnDiff = new System.Windows.Forms.Button();
+            this.btnClear = new System.Windows.Forms.Button();
+            this.btnAutoTest = new System.Windows.Forms.Button();
             this.tbSetting = new System.Windows.Forms.TextBox();
             this.btnTestEncode = new System.Windows.Forms.Button();
             this.btnUpFolder = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.tbDiffStatus = new System.Windows.Forms.TextBox();
             this.btnChangeCheckTime = new System.Windows.Forms.Button();
             this.tbCheckTime = new System.Windows.Forms.TextBox();
             this.dtpCheckTime = new System.Windows.Forms.DateTimePicker();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.btnShowPrivateAlbum = new System.Windows.Forms.Button();
             this.lbPrivateAlbum = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.btnTester = new System.Windows.Forms.Button();
@@ -401,7 +403,6 @@
             // 
             // groupBox7
             // 
-            this.groupBox7.Controls.Add(this.button2);
             this.groupBox7.Controls.Add(this.lbCheckTime);
             this.groupBox7.Controls.Add(this.lbImageSize);
             this.groupBox7.Controls.Add(this.lbImageDirectory);
@@ -416,16 +417,6 @@
             this.groupBox7.TabIndex = 19;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Image Information";
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(250, 117);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 27;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // lbCheckTime
             // 
@@ -594,8 +585,6 @@
             // 
             // groupBox9
             // 
-            this.groupBox9.Controls.Add(this.btnGetImageMessage);
-            this.groupBox9.Controls.Add(this.btnGetImageTagged);
             this.groupBox9.Controls.Add(this.listViewTagImage);
             this.groupBox9.Location = new System.Drawing.Point(9, 137);
             this.groupBox9.Name = "groupBox9";
@@ -603,28 +592,6 @@
             this.groupBox9.TabIndex = 21;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "Tag Image";
-            // 
-            // btnGetImageMessage
-            // 
-            this.btnGetImageMessage.Location = new System.Drawing.Point(209, 223);
-            this.btnGetImageMessage.Name = "btnGetImageMessage";
-            this.btnGetImageMessage.Size = new System.Drawing.Size(92, 23);
-            this.btnGetImageMessage.TabIndex = 20;
-            this.btnGetImageMessage.Text = "Get Message";
-            this.btnGetImageMessage.UseVisualStyleBackColor = true;
-            this.btnGetImageMessage.Visible = false;
-            this.btnGetImageMessage.Click += new System.EventHandler(this.btnGetImageMessage_Click);
-            // 
-            // btnGetImageTagged
-            // 
-            this.btnGetImageTagged.Location = new System.Drawing.Point(54, 223);
-            this.btnGetImageTagged.Name = "btnGetImageTagged";
-            this.btnGetImageTagged.Size = new System.Drawing.Size(121, 23);
-            this.btnGetImageTagged.TabIndex = 20;
-            this.btnGetImageTagged.Text = "Get Image Tagged";
-            this.btnGetImageTagged.UseVisualStyleBackColor = true;
-            this.btnGetImageTagged.Visible = false;
-            this.btnGetImageTagged.Click += new System.EventHandler(this.btnGetImageTagged_Click);
             // 
             // listViewTagImage
             // 
@@ -739,6 +706,9 @@
             // 
             // tabSetting
             // 
+            this.tabSetting.Controls.Add(this.btnDiff);
+            this.tabSetting.Controls.Add(this.btnClear);
+            this.tabSetting.Controls.Add(this.btnAutoTest);
             this.tabSetting.Controls.Add(this.tbSetting);
             this.tabSetting.Controls.Add(this.btnTestEncode);
             this.tabSetting.Controls.Add(this.btnUpFolder);
@@ -751,6 +721,36 @@
             this.tabSetting.TabIndex = 2;
             this.tabSetting.Text = "Setting";
             this.tabSetting.UseVisualStyleBackColor = true;
+            // 
+            // btnDiff
+            // 
+            this.btnDiff.Location = new System.Drawing.Point(28, 380);
+            this.btnDiff.Name = "btnDiff";
+            this.btnDiff.Size = new System.Drawing.Size(106, 23);
+            this.btnDiff.TabIndex = 29;
+            this.btnDiff.Text = "Diff coef";
+            this.btnDiff.UseVisualStyleBackColor = true;
+            this.btnDiff.Click += new System.EventHandler(this.btnDiff_Click);
+            // 
+            // btnClear
+            // 
+            this.btnClear.Location = new System.Drawing.Point(207, 399);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(61, 23);
+            this.btnClear.TabIndex = 28;
+            this.btnClear.Text = "Clear";
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            // 
+            // btnAutoTest
+            // 
+            this.btnAutoTest.Location = new System.Drawing.Point(28, 329);
+            this.btnAutoTest.Name = "btnAutoTest";
+            this.btnAutoTest.Size = new System.Drawing.Size(106, 23);
+            this.btnAutoTest.TabIndex = 26;
+            this.btnAutoTest.Text = "Auto Test";
+            this.btnAutoTest.UseVisualStyleBackColor = true;
+            this.btnAutoTest.Click += new System.EventHandler(this.btnAutoTest_Click);
             // 
             // tbSetting
             // 
@@ -783,6 +783,7 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.tbDiffStatus);
             this.groupBox4.Controls.Add(this.btnChangeCheckTime);
             this.groupBox4.Controls.Add(this.tbCheckTime);
             this.groupBox4.Controls.Add(this.dtpCheckTime);
@@ -792,6 +793,14 @@
             this.groupBox4.TabIndex = 22;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Check Time";
+            // 
+            // tbDiffStatus
+            // 
+            this.tbDiffStatus.Location = new System.Drawing.Point(102, 92);
+            this.tbDiffStatus.Multiline = true;
+            this.tbDiffStatus.Name = "tbDiffStatus";
+            this.tbDiffStatus.Size = new System.Drawing.Size(209, 55);
+            this.tbDiffStatus.TabIndex = 3;
             // 
             // btnChangeCheckTime
             // 
@@ -821,6 +830,7 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.btnShowPrivateAlbum);
             this.groupBox6.Controls.Add(this.lbPrivateAlbum);
             this.groupBox6.Controls.Add(this.label3);
             this.groupBox6.Controls.Add(this.btnTester);
@@ -835,6 +845,16 @@
             this.groupBox6.TabIndex = 21;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Facebook Login";
+            // 
+            // btnShowPrivateAlbum
+            // 
+            this.btnShowPrivateAlbum.Location = new System.Drawing.Point(174, 137);
+            this.btnShowPrivateAlbum.Name = "btnShowPrivateAlbum";
+            this.btnShowPrivateAlbum.Size = new System.Drawing.Size(61, 23);
+            this.btnShowPrivateAlbum.TabIndex = 27;
+            this.btnShowPrivateAlbum.Text = "Album";
+            this.btnShowPrivateAlbum.UseVisualStyleBackColor = true;
+            this.btnShowPrivateAlbum.Click += new System.EventHandler(this.btnShowPrivateAlbum_Click);
             // 
             // lbPrivateAlbum
             // 
@@ -1074,10 +1094,8 @@
         private System.Windows.Forms.ToolStripStatusLabel lbStatusBar;
         private System.Windows.Forms.ToolStripStatusLabel lbDoing;
         private System.Windows.Forms.Button btnCoverImage;
-        private System.Windows.Forms.Button btnGetImageTagged;
         private System.Windows.Forms.GroupBox groupBox9;
         private System.Windows.Forms.ListView listViewTagImage;
-        private System.Windows.Forms.Button btnGetImageMessage;
         private System.Windows.Forms.Button fdOpenfile;
         private System.Windows.Forms.GroupBox groupBox8;
         private System.Windows.Forms.Label lbUserIdComm;
@@ -1117,10 +1135,14 @@
         private System.Windows.Forms.Label label1111;
         private System.Windows.Forms.Label lbFriendName;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button btnUpFolder;
         private System.Windows.Forms.TextBox tbSetting;
         private System.Windows.Forms.Button btnTestEncode;
+        private System.Windows.Forms.Button btnAutoTest;
+        private System.Windows.Forms.Button btnShowPrivateAlbum;
+        private System.Windows.Forms.Button btnClear;
+        private System.Windows.Forms.Button btnDiff;
+        private System.Windows.Forms.TextBox tbDiffStatus;
     }
 }
 

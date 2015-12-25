@@ -183,5 +183,12 @@ C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookI
 C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.FacebookLoginForm.resources
 C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.CreateAlbum.resources
 C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.GUI.Private_album.CreatePrivateAlbum.resources
-E:\GitHub\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.CreateAlbum.resources
-E:\GitHub\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.GUI.Private_album.CreatePrivateAlbum.resources
+C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\Emgu.CV.dll
+C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\Emgu.CV.UI.dll
+C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\Emgu.Util.dll
+C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\ZedGraph.dll
+C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\Emgu.CV.xml
+C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\Emgu.CV.UI.xml
+C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\Emgu.Util.xml
+C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\opencv_core220.dll
+C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\opencv_imgproc220.dll
