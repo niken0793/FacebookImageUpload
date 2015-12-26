@@ -29,7 +29,7 @@ namespace FacebookImageUpload.FB_Images
 
 
 
-        public static List<string> listFileDelete = new List<string>();
+        public static List<string> ListFileDelete = new List<string>();
 
 
 
@@ -280,6 +280,16 @@ namespace FacebookImageUpload.FB_Images
                 File.Delete(path);
             }
         }
+
+
+        public static void AddToDeleleList(params string[] files)
+        {
+            if (files.Length > 0)
+            {
+                ListFileDelete.AddRange(files);
+            }
+        }
+
         public static void DeleteFile(List<string> pathes)
         {
             try
@@ -398,14 +408,33 @@ namespace FacebookImageUpload.FB_Images
         {
             string t1 = Path.GetDirectoryName(source);
             string t2 = Path.GetFileName(source);
+            string asciiFileName = ConvertVN(t2);
+            string newFullPath = Path.Combine(dir,asciiFileName);
             if (!t1.Equals(dir.Trim('\\')))
             {
-                File.Copy(source, Path.Combine(dir, t2),true);
-                return Path.Combine(dir, t2);
+                File.Copy(source,newFullPath,true);
             }else{
-                return source;
+                if (File.Exists(newFullPath))
+                    File.Delete(newFullPath);
+                File.Move(source, newFullPath);
             }
+            return newFullPath;
         }
+
+        public static string ConvertVN(string chucodau)
+        {
+            const string FindText = "áàảãạâấầẩẫậăắằẳẵặđéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵÁÀẢÃẠÂẤẦẨẪẬĂẮẰẲẴẶĐÉÈẺẼẸÊẾỀỂỄỆÍÌỈĨỊÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÚÙỦŨỤƯỨỪỬỮỰÝỲỶỸỴ";
+            const string ReplText = "aaaaaaaaaaaaaaaaadeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuuyyyyyAAAAAAAAAAAAAAAAADEEEEEEEEEEEIIIIIOOOOOOOOOOOOOOOOOUUUUUUUUUUUYYYYY";
+            int index = -1;
+            char[] arrChar = FindText.ToCharArray();
+            while ((index = chucodau.IndexOfAny(arrChar)) != -1)
+            {
+                int index2 = FindText.IndexOf(chucodau[index]);
+                chucodau = chucodau.Replace(chucodau[index], ReplText[index2]);
+            }
+            return chucodau;
+        } 
+
 
         public static string AppenFileName(string fileName, string suffix)
         {

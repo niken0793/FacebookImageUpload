@@ -92,7 +92,6 @@
             this.btnTestEncode = new System.Windows.Forms.Button();
             this.btnUpFolder = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.tbDiffStatus = new System.Windows.Forms.TextBox();
             this.btnChangeCheckTime = new System.Windows.Forms.Button();
             this.tbCheckTime = new System.Windows.Forms.TextBox();
             this.dtpCheckTime = new System.Windows.Forms.DateTimePicker();
@@ -783,7 +782,6 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.tbDiffStatus);
             this.groupBox4.Controls.Add(this.btnChangeCheckTime);
             this.groupBox4.Controls.Add(this.tbCheckTime);
             this.groupBox4.Controls.Add(this.dtpCheckTime);
@@ -793,14 +791,6 @@
             this.groupBox4.TabIndex = 22;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Check Time";
-            // 
-            // tbDiffStatus
-            // 
-            this.tbDiffStatus.Location = new System.Drawing.Point(102, 92);
-            this.tbDiffStatus.Multiline = true;
-            this.tbDiffStatus.Name = "tbDiffStatus";
-            this.tbDiffStatus.Size = new System.Drawing.Size(209, 55);
-            this.tbDiffStatus.TabIndex = 3;
             // 
             // btnChangeCheckTime
             // 
@@ -1142,7 +1132,6 @@
         private System.Windows.Forms.Button btnShowPrivateAlbum;
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Button btnDiff;
-        private System.Windows.Forms.TextBox tbDiffStatus;
     }
 }
 

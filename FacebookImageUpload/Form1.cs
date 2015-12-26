@@ -124,6 +124,22 @@ namespace FacebookImageUpload
 
         }
 
+        private void btnCoverImage_Click(object sender, EventArgs e)
+        {
+            coverImageForm = new CoverImageForm();
+            if (coverImageForm.ShowDialog() == DialogResult.Yes)
+            {
+                if (!string.IsNullOrEmpty(coverImageForm.imageLink))
+                {
+                    tbImagePath.Text = coverImageForm.imageLink;
+                    pbImage.ImageLocation = coverImageForm.imageLink;
+                    lbImageName.Text = Path.GetFileName(coverImageForm.imageLink);
+                    lbImageDirectory.Text = Path.GetDirectoryName(coverImageForm.imageLink);
+                    lbImageSize.Text = Common.BytesToString(new FileInfo(coverImageForm.imageLink).Length);
+                }
+            }
+
+        }
 
 
         private void cmbSelectTextType_SelectedIndexChanged(object sender, EventArgs e)
@@ -197,6 +213,27 @@ namespace FacebookImageUpload
             tbCheckTime.Text = Common.GetUnixTimesStamp(dtpCheckTime.Value).ToString();
         }
 
+        private void btnFacebookLogin_Click(object sender, EventArgs e)
+        {
+            LoginFacebook();
+
+        }
+        private void btnGetUserList_Click(object sender, EventArgs e)
+        {
+            LoadBasicInformation();
+
+        }
+        private void listViewUserList_ItemActivate(object sender, EventArgs e)
+        {
+            DialogResult dlg = MessageBox.Show("Do you want to use this user to communicate?", "Choose User", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dlg == DialogResult.Yes)
+            {
+                ListViewItem item = ((ListView)sender).SelectedItems[0];
+                lbUserNameComm.Text = item.Text;
+                lbUserIdComm.Text = item.Name;
+                pBoxUserComm.ImageLocation = FB_Image.BaseDirectory + "Test_User\\profilePiture_" + item.Name + ".jpg";
+            }
+        }
         #endregion 
 
 

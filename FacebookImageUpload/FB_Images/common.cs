@@ -114,9 +114,9 @@ namespace FacebookImageUpload
                                     string new_path = FB_Image.BaseDirectory + query + "_" + gtemp + ".jpg";
                                     var newImage = googleImage.ScaleImage(yourImage, 960, 720);
                                     newImage.Save(new_path, ImageFormat.Jpeg);
-                                    Common.listFileDelete.Add(new_path);
+                                    Common.ListFileDelete.Add(new_path);
                                     string filename = new_path;
-                                    string coverImagePath = TestEncodeSuccessRate(null, filename, Path.Combine(FB_Image.RelativeDirectory, "GoogleImage/10.txt"), ActiveUser.PrivateAlbumID, false, true);
+                                    string coverImagePath = TestEncode(null, filename, Path.Combine(FB_Image.RelativeDirectory, "GoogleImage/10.txt"), ActiveUser.PrivateAlbumID, true);
                                     if (coverImagePath != null)
                                     {
                                         File.Copy(FB_Image.BaseDirectory + coverImagePath, "SuccessImage/" + query + "_" + gtemp + ".jpg", false);
@@ -140,7 +140,7 @@ namespace FacebookImageUpload
                     gtemp += 1;
 
                 }
-                Common.DeleteFile(Common.listFileDelete);
+                Common.DeleteFile(Common.ListFileDelete);
                 start += 10;
             }
         }
@@ -191,35 +191,16 @@ namespace FacebookImageUpload
                     gtemp += 1;
 
                 }
-                Common.DeleteFile(Common.listFileDelete);
+                Common.DeleteFile(Common.ListFileDelete);
                 start += 10;
             }
         }
 
-        private  void btnCoverImage_Click(object sender, EventArgs e)
-        {
-            coverImageForm = new CoverImageForm();
-            if (coverImageForm.ShowDialog() == DialogResult.Yes)
-            {
-                if (!string.IsNullOrEmpty(coverImageForm.imageLink))
-                {
-                    tbImagePath.Text = coverImageForm.imageLink;
-                    pbImage.ImageLocation = coverImageForm.imageLink;
-                    lbImageName.Text = Path.GetFileName(coverImageForm.imageLink);
-                    lbImageDirectory.Text = Path.GetDirectoryName(coverImageForm.imageLink);
-                    lbImageSize.Text = Common.BytesToString(new FileInfo(coverImageForm.imageLink).Length);
-                }
-            }
-            
-        }
 
 
 
-        private void btnFacebookLogin_Click(object sender, EventArgs e)
-        {
-            LoginFacebook();
 
-        }
+
 
         private void LoginFacebook()
         {
@@ -356,6 +337,10 @@ namespace FacebookImageUpload
             btnFacebookLogin.Text = "Login";
             isLogin = false;
             lbPrivateAlbum.Text = "...";
+            currentInbox = null;
+            listViewFriends.Clear();
+            listViewTagImage.Clear();
+            listViewUserList.Clear();
 
         }
 
@@ -388,15 +373,7 @@ namespace FacebookImageUpload
 
 
 
-        private void btnGetUserList_Click(object sender, EventArgs e)
-        {
-            //GetFriendList(null);
-            //GetImageTagged1(null, ListInboxUser);
-            //UpdateFriendListView(this.listViewUserList, ListInboxUser, true);
-            //UpdateFriendListView(listViewFriends, ListInboxUser);
-            LoadBasicInformation();
 
-        }
 
         private void UpdateFriendListView(ListView listview ,List<InboxUser> user, bool showNewMessage = false)
         {
@@ -482,17 +459,7 @@ namespace FacebookImageUpload
 
             
         }
-        private void listViewUserList_ItemActivate(object sender, EventArgs e)
-        {
-            DialogResult dlg = MessageBox.Show("Do you want to use this user to communicate?", "Choose User", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (dlg == DialogResult.Yes)
-            {
-                ListViewItem item = ((ListView)sender).SelectedItems[0];
-                lbUserNameComm.Text = item.Text;
-                lbUserIdComm.Text = item.Name;
-                pBoxUserComm.ImageLocation = FB_Image.BaseDirectory + "Test_User\\profilePiture_" + item.Name + ".jpg";
-            }
-        }
+
 
         /// <summary>
         /// Uploading image to facebook and tag friends
@@ -502,19 +469,11 @@ namespace FacebookImageUpload
         /// <param name="uids"></param>
         /// <param name="albumID"></param>
         /// <returns></returns>
-        private string Upload_Picture_Tag(string filename, FB_Image browseImageUP, List<string> uids,string albumID=null)
+        private string Upload_Picture_Tag(string filename, List<string> uids,string albumID=null)
         {
             //upload photo
             try
             {
-                browseImageUP.FileName = Path.GetFileName(filename); // lấy file name
-                browseImageUP.Directory = Path.GetDirectoryName(filename); // get path
-                browseImageUP.FileNameWithOutExtension = Path.GetFileNameWithoutExtension(filename); // lấy file name ko có phần mở rộng .jpg
-                browseImageUP.FileSize = new FileInfo(filename).Length; // lấy file size
-                var image_source = Image.FromFile(filename);
-                browseImageUP.Height = image_source.Height;
-                browseImageUP.Width = image_source.Width;
-
                 var imgstream = File.OpenRead(filename);
                 var fb = new FacebookClient(ActiveUser.AccessToken);
                 string id = string.IsNullOrEmpty(albumID)?"me":albumID;
@@ -530,15 +489,13 @@ namespace FacebookImageUpload
                     paramTag += "]";
                 }
                 
-               
-
                 dynamic res = fb.Post(id+"/photos", new
                 {
                     message = "Image description",
                     file = new FacebookMediaStream
                     {
                         ContentType = "image/jpeg",
-                        FileName = browseImageUP.FileName,
+                        FileName = filename,
                     }.SetValue(imgstream),
                     tags = paramTag
                 });
@@ -561,23 +518,21 @@ namespace FacebookImageUpload
 
                 //Encode
                 string encodeFile = JPHideEncode(Path.GetFileName(coverImage), Path.GetFileName(messageFile));
-                FB_Image encodeImage = new FB_Image();
                 if (progress != null)
                     progress.Report("25|25|Uploading Picture");
                 if (encodeFile == null)
                     return null;
-                string id = Upload_Picture_Tag(Path.Combine(FB_Image.BaseDirectory, encodeFile), encodeImage, uids,albumID);
-                FB_Image downloadImage = new FB_Image();
-                encodeImage.CopyTo(downloadImage);
-                downloadImage.ImageID = id;
+                string id = Upload_Picture_Tag(Path.Combine(FB_Image.BaseDirectory, encodeFile), uids,albumID);
                 if (progress != null)
                     progress.Report("50|50|Checking ...");
-                string tempFileName = Download_Picture_FB(downloadImage);
+                string downloadFile = Common.AppendFileName(Path.Combine(FB_Image.BaseDirectory, encodeFile), "_download");
+                if (!DownloadFB(id, ActiveUser.AccessToken, downloadFile, false))
+                    return null;
                 //Decode
                 string outputText = Common.AppenFileName(inputText, "_ouput");
                 if (outputText == null)
                     outputText = "output_test.txt";
-                outputText = JPSeekDecode(Path.GetFileName(tempFileName), outputText);
+                outputText = JPSeekDecode(Path.GetFileName(downloadFile), outputText);
                 if (outputText == null)
                     return null;
                 outputText = Path.Combine(FB_Image.BaseDirectory, outputText);
@@ -587,12 +542,12 @@ namespace FacebookImageUpload
                     progress.Report("100|100|Finish");
                 if (Common.CompareOutputFile(inputText, outputText, tbInputMessage))
                 {
-                    return downloadImage.ImageID;
+                    return id;
                 }
                 else
                 {
                     var fb = new FacebookClient(ActiveUser.AccessToken);
-                    dynamic res = fb.Delete(downloadImage.ImageID);  // xóa ảnh
+                    dynamic res = fb.Delete(id);  // xóa ảnh
                     return null;
                 }
 

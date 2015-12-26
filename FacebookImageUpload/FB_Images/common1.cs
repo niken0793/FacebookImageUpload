@@ -167,170 +167,73 @@ namespace FacebookImageUpload
             }
         }
 
-        private string Upload_Picture_FB(string filename, FB_Image browseImageUP,string UserAccessToken,string albumID)
-        {
-            //upload photo
-            try
-            {
-                browseImageUP.FileName = Path.GetFileName(filename); // lấy file name
-                browseImageUP.Directory = Path.GetDirectoryName(filename); // get path
-                browseImageUP.FileNameWithOutExtension = Path.GetFileNameWithoutExtension(filename); // lấy file name ko có phần mở rộng .jpg
-                browseImageUP.FileSize = new FileInfo(filename).Length; // lấy file size
-                var image_source = Image.FromFile(filename);
-                browseImageUP.Height = image_source.Height;
-                browseImageUP.Width = image_source.Width;
 
-                var imgstream = File.OpenRead(filename);
-                var fb = new FacebookClient(UserAccessToken);
-                dynamic res = fb.Post(albumID + "/photos", new
-                {
-                    message = "Image description",
-                    file = new FacebookMediaStream
-                    {
-                        ContentType = "image/jpeg",
-                        FileName = browseImageUP.FileName,
-                    }.SetValue(imgstream)
-                });
-               return res.id;
-               
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                return null;
-            }   
+
+        public string ProcessUserImage(string fullPath)
+        {
+            string minimalFile = ProcessImage.ReSaveFileToMinimal(fullPath, null);
+            minimalFile = ProcessImage.FixFailImage(minimalFile);
+            return minimalFile;
+        }
+        public string ProcessUserImage(string fullPath,string token, string albumID)
+        {
+            string minimalFile = ProcessImage.ReSaveFileToMinimal(fullPath, null,token,albumID);
+            minimalFile = ProcessImage.FixFailImage(minimalFile);
+            return minimalFile;
         }
 
-        private string Download_Picture_FB(FB_Image browseImageDown)
+
+
+        public string TestEncode(IProgress<string> progress,string filename,string inputText,string albumID,bool googleSearch = false)
         {
-            try
-            {
-                temp++; // biến để đặt tên
-                var fb = new FacebookClient(ActiveUser.AccessToken);
-                dynamic res = fb.Get(browseImageDown.ImageID + "?fields=images");  // query đường dẫn + độ phân giải ảnh
-                string json_string = Newtonsoft.Json.JsonConvert.SerializeObject(res); // parse response sang json
-                dynamic json = JObject.Parse(json_string);
-                dynamic imagesJson = json["images"];
-                int count = imagesJson.Count;
-                int i = 0;
-                string source_url = "";
-
-                /* lấy độ phân giải trùng với độ phân giải của ảnh đã up */
-                while (i < count && imagesJson[i] != null)
-                {
-                    int image_height = Int32.Parse((string)imagesJson[i]["height"]);
-                    int image_width = Int32.Parse((string)imagesJson[i]["width"]);
-                    if (image_height == FB_Image.ImageSize || image_width == FB_Image.ImageSize)
-                    {
-                        source_url = imagesJson[i]["source"];
-                        break;
-                    }
-                    i++;
-
-                }
-                if (i >= count)
-                {
-                    source_url = imagesJson[0]["source"];
-                }
-
-                /*------*/
-                /* download ảnh */
-                using (WebClient webClient = new WebClient())
-                {
-                    byte[] data = webClient.DownloadData(source_url);
-
-                    using (MemoryStream mem = new MemoryStream(data))
-                    {
-                        using (var yourImage = Image.FromStream(mem))
-                        {
-                            string new_path = FB_Image.BaseDirectory + browseImageDown.FileNameWithOutExtension + "_" + temp + ".jpg";
-                            yourImage.Save(new_path, ImageFormat.Jpeg);
-                            browseImageDown.FileSize = new FileInfo(FB_Image.BaseDirectory + browseImageDown.FileNameWithOutExtension + "_" + temp + ".jpg").Length;
-                            string filename = new_path;
-                            browseImageDown.FileName = Path.GetFileName(new_path);
-                            browseImageDown.Directory = Path.GetDirectoryName(new_path);
-                            return filename;
-                            
-
-                        }
-                    }
-
-                }
-             
-            }
-            catch (Exception e)
-            {
-                Log(e);
-                return null;
-            }
-        }
-        public string TestEncodeSuccessRate(IProgress<string> progress,string filename,string inputText,string albumID,bool test = true,bool googleSearch = false)
-        {
-            
             try
             {
                 if (String.IsNullOrEmpty(ActiveUser.AccessToken))
                     return null;
-                if (test)
-                {
-                    inputText = Path.Combine(FB_Image.BaseDirectory, "test.txt");
-                    albumID = FB_Image.Album_Test;
-                }
 
                 //Reduce size ratio of picture
-                if(progress != null)
+                if (progress != null)
                     progress.Report("15|15|Preparing Image");
-                List<FB_Image> listFile = AutoUploadAndDownload(filename, null);
-                if (listFile == null || listFile.Count < 2)
-                {
-                    return null;
-                }
-                FB_Image coverImage = listFile[listFile.Count - 1];
-                string coverImageFileName = coverImage.FileName;
+                string coverImageFileName = ProcessUserImage(filename);
                 string messageFile = Common.CopyFileTo(inputText, FB_Image.BaseDirectory);
 
                 //Encode
                 if (progress != null)
-                progress.Report("50|50|Uploading Image");
+                    progress.Report("50|50|Uploading Image");
                 string encodeFile = JPHideEncode(Path.GetFileName(coverImageFileName), Path.GetFileName(inputText));
-                FB_Image encodeImage = new FB_Image();
                 if (string.IsNullOrEmpty(encodeFile))
                 {
                     return null;
                 }
-
-                string id = Upload_Picture_FB(Path.Combine(FB_Image.BaseDirectory, encodeFile), encodeImage,ActiveUser.AccessToken, albumID);
+                string id = Upload_Picture_Tag(Path.Combine(FB_Image.BaseDirectory, encodeFile), null, albumID);
                 if (string.IsNullOrEmpty(id))
                 {
                     return null;
                 }
-                FB_Image downloadImage = new FB_Image();
-                encodeImage.CopyTo(downloadImage);
-                downloadImage.ImageID = id;
-                if (progress != null)
-                progress.Report("75|75|Checking");
-                string tempFileName = Download_Picture_FB(downloadImage);
-                if (tempFileName == null)
+                string downloadFile = Common.AppendFileName(Path.Combine(FB_Image.BaseDirectory, encodeFile), "_download");
+                if (!DownloadFB(id, ActiveUser.AccessToken, downloadFile, false))
                     return null;
-     
+                if (progress != null)
+                    progress.Report("75|75|Checking");
 
                 //Decode
                 string outputText = Common.AppenFileName(inputText, "_ouput");
                 if (outputText == null)
                     outputText = "output_test.txt";
-                outputText = JPSeekDecode(Path.GetFileName(tempFileName), outputText);
+                outputText = JPSeekDecode(Path.GetFileName(downloadFile), outputText);
                 if (outputText == null)
                     return null;
                 outputText = Path.Combine(FB_Image.BaseDirectory, outputText);
 
                 //compare 2 file
                 if (progress != null)
-                progress.Report("100|100|Finish");
+                    progress.Report("100|100|Finish");
                 if (Common.CompareOutputFile(inputText, outputText, tbInputMessage))
                 {
+
                     if (!googleSearch)
                     {
-                        return downloadImage.ImageID;
+                        return id;
                     }
                     else
                     {
@@ -339,10 +242,9 @@ namespace FacebookImageUpload
                 }
                 else
                 {
-                    var fb = new FacebookClient(ActiveUser.AccessToken);
-                    dynamic res = fb.Delete(downloadImage.ImageID);  // xóa ảnh
                     return null;
                 }
+                
             }
             catch (Exception e)
             {
@@ -362,38 +264,27 @@ namespace FacebookImageUpload
                 //Reduce size ratio of picture
                 if (progress != null)
                     progress.Report("15|15|Preparing Image");
-                List<FB_Image> listFile = AutoUploadAndDownload(filename, null);
-                if (listFile == null || listFile.Count < 2)
-                {
-                    return null;
-                }
-
-                FB_Image coverImage = listFile[listFile.Count - 1];
-                string coverImageFileName = coverImage.FileName;
+                string coverImageFileName = Common.CopyFileTo(filename, FB_Image.BaseDirectory);
+                coverImageFileName = ProcessUserImage(coverImageFileName);
                 string messageFile = Common.CopyFileTo(inputText, FB_Image.BaseDirectory);
 
                 //Encode
                 if (progress != null)
                     progress.Report("50|50|Uploading Image");
                 string encodeFile = JPHideEncode(Path.GetFileName(coverImageFileName), Path.GetFileName(inputText));
-                FB_Image encodeImage = new FB_Image();
                 if (string.IsNullOrEmpty(encodeFile))
                 {
                     return null;
                 }
-                string id = Upload_Picture_Tag(Path.Combine(FB_Image.BaseDirectory, encodeFile), encodeImage,uids ,albumID);
+                string id = Upload_Picture_Tag(Path.Combine(FB_Image.BaseDirectory, encodeFile),uids ,albumID);
                 if (string.IsNullOrEmpty(id))
                 {
                     return null;
                 }
-
-                FB_Image downloadImage = new FB_Image();
-                encodeImage.CopyTo(downloadImage);
-                downloadImage.ImageID = id;
                 if (progress != null)
                     progress.Report("75|75|Checking");
-                string tempFileName = Download_Picture_FB(downloadImage);
-                if (tempFileName == null)
+                string downloadFile = Common.AppendFileName(Path.Combine(FB_Image.BaseDirectory, encodeFile), "_download");
+                if (!DownloadFB(id, ActiveUser.AccessToken, downloadFile, false))
                     return null;
 
 
@@ -401,7 +292,7 @@ namespace FacebookImageUpload
                 string outputText = Common.AppenFileName(inputText, "_ouput");
                 if (outputText == null)
                     outputText = "output_test.txt";
-                outputText = JPSeekDecode(Path.GetFileName(tempFileName), outputText);
+                outputText = JPSeekDecode(Path.GetFileName(downloadFile), outputText);
                 if (outputText == null)
                     return null;
                 outputText = Path.Combine(FB_Image.BaseDirectory, outputText);
@@ -416,7 +307,7 @@ namespace FacebookImageUpload
                 else
                 {
                     var fb = new FacebookClient(ActiveUser.AccessToken);
-                    dynamic res = fb.Delete(downloadImage.ImageID);  // xóa ảnh
+                    dynamic res = fb.Delete(id);  // xóa ảnh
                     return null;
                 }
             }
@@ -428,66 +319,7 @@ namespace FacebookImageUpload
         }
 
 
-        private string SendMessageWithTestedSource(IProgress<string> progress,string filename, string inputText, string albumID)
-        {
-            try
-            {
-                if (String.IsNullOrEmpty(ActiveUser.AccessToken))
-                    return null;
-                string coverImage = Common.CopyFileTo(filename, FB_Image.BaseDirectory);
-                string messageFile = Common.CopyFileTo(inputText, FB_Image.BaseDirectory);
 
-                //Encode
-                string encodeFile = JPHideEncode(Path.GetFileName(coverImage), Path.GetFileName(messageFile));
-                FB_Image encodeImage = new FB_Image();
-                if (progress != null)
-                progress.Report("25|25|Uploading Picture");
-                if (string.IsNullOrEmpty(encodeFile))
-                {
-                    return null;
-                }
-
-                string id = Upload_Picture_FB(Path.Combine(FB_Image.BaseDirectory, encodeFile), encodeImage,ActiveUser.AccessToken, albumID);
-                if (string.IsNullOrEmpty(id))
-                {
-                    return null;
-                }
-
-
-                FB_Image downloadImage = new FB_Image();
-                encodeImage.CopyTo(downloadImage);
-                downloadImage.ImageID = id;
-                if (progress != null)
-                progress.Report("50|50|Checking ...");
-                string tempFileName = Download_Picture_FB(downloadImage);
-                //Decode
-                string outputText = Common.AppenFileName(inputText, "_ouput");
-                if (outputText == null)
-                    outputText = "output_test.txt";
-                outputText = JPSeekDecode(Path.GetFileName(tempFileName), outputText);
-                outputText = Path.Combine(FB_Image.BaseDirectory, outputText);
-
-                //compare 2 file
-                if (progress != null)
-                progress.Report("100|100|Finish");
-                if (Common.CompareOutputFile(inputText, outputText, tbInputMessage))
-                {
-                    return downloadImage.ImageID;
-                }
-                else
-                {
-                    var fb = new FacebookClient(ActiveUser.AccessToken);
-                    dynamic res = fb.Delete(downloadImage.ImageID);  // xóa ảnh
-                    return null;
-                }
-               
-            }
-            catch (Exception e)
-            {
-                Log(e);
-                return null;
-            }
-        }
 
         public static string JPHideEncode(string filename,string input)
         {
@@ -497,22 +329,25 @@ namespace FacebookImageUpload
                 {
                     throw new Exception("No need for full path");
                 }
-                Common.listFileDelete.Add(Path.Combine(FB_Image.BaseDirectory, filename));
-                Common.listFileDelete.Add(Path.Combine(FB_Image.BaseDirectory, input));
+                Common.ListFileDelete.Add(Path.Combine(FB_Image.BaseDirectory, filename));
+                Common.ListFileDelete.Add(Path.Combine(FB_Image.BaseDirectory, input));
                 input=Path.GetFileName(InsertCrc32(input));
-                Common.listFileDelete.Add(Path.Combine(FB_Image.BaseDirectory, input));
+                Common.ListFileDelete.Add(Path.Combine(FB_Image.BaseDirectory, input));
                 string enImageName = Path.GetFileNameWithoutExtension(filename)+"_encode"+Path.GetExtension(filename);
-                Common.listFileDelete.Add(Path.Combine(FB_Image.BaseDirectory, enImageName));
+                Common.ListFileDelete.Add(Path.Combine(FB_Image.BaseDirectory, enImageName));
                 Process proc = new Process();
                 proc.StartInfo.FileName = "cmd.exe";
                 proc.StartInfo.WorkingDirectory = FB_Image.BaseDirectory;
-                proc.StartInfo.Arguments = "/C jphide_modify " + filename + " " + enImageName + " " + input;
+                string commandArguments = String.Format("/C jphide_modify \"{0}\" \"{1}\" \"{2}\"", filename, enImageName, input);
+                //proc.StartInfo.Arguments = "/C jphide_modify " + filename + " " + enImageName + " " + input;
+                proc.StartInfo.Arguments = commandArguments;
                 proc.StartInfo.CreateNoWindow = true;
                 proc.StartInfo.UseShellExecute = false;
 
                 proc.Start();
                 while (!proc.HasExited)
                     ;
+                proc.Dispose();
                 return enImageName;
               
             }
@@ -551,23 +386,25 @@ namespace FacebookImageUpload
                     throw new Exception("No need for full path");
                 }
                 string imageName = filename;
-                Common.listFileDelete.Add(Path.Combine(FB_Image.BaseDirectory, filename));
+                Common.ListFileDelete.Add(Path.Combine(FB_Image.BaseDirectory, filename));
                 string hiddenFileName = output;
-                Common.listFileDelete.Add(Path.Combine(FB_Image.BaseDirectory, hiddenFileName));
+                Common.ListFileDelete.Add(Path.Combine(FB_Image.BaseDirectory, hiddenFileName));
                 Process proc = new Process();
                 proc.StartInfo.FileName = "cmd.exe";
                 proc.StartInfo.WorkingDirectory = FB_Image.BaseDirectory;
-                proc.StartInfo.Arguments = "/C jpseek_modify " + imageName + " " + hiddenFileName;
+                string commandArguments = String.Format("/C jpseek_modify \"{0}\" \"{1}\" ", imageName, hiddenFileName);
+                //proc.StartInfo.Arguments = "/C jpseek_modify " + imageName + " " + hiddenFileName;
+                proc.StartInfo.Arguments = commandArguments;
                 proc.StartInfo.CreateNoWindow = true;
                 proc.StartInfo.UseShellExecute = false;
                 proc.Start();
                 while (!proc.HasExited)
                     ;
-
+                proc.Dispose();
                 hiddenFileName = CheckCrc32(hiddenFileName);  
                 if (hiddenFileName != null)
                 {
-                    Common.listFileDelete.Add(Path.Combine(FB_Image.BaseDirectory, hiddenFileName));
+                    Common.ListFileDelete.Add(Path.Combine(FB_Image.BaseDirectory, hiddenFileName));
                     return Path.GetFileName(hiddenFileName);
                 }
                 else
@@ -618,106 +455,7 @@ namespace FacebookImageUpload
             }
         }
 
-        public List<FB_Image> AutoUploadAndDownload(string filename,IProgress<int> progress = null)
-        {
-            string tempName = filename;
-            List<FB_Image> uploadedImage = new List<FB_Image>();      
-            FB_Image currentImage = new FB_Image();
-            float ratio = 15;
-            float ratioMax = 1.005F;
-            while (ratio > ratioMax)
-            {
-                string id = Upload_Picture_FB(tempName, currentImage,ActiveUser.AccessToken,ActiveUser.PrivateAlbumID);
-                if (currentImage.ImageID.Equals(""))
-                {
-                    FB_Image temp = new FB_Image();
-                    currentImage.CopyTo(temp);
-                    uploadedImage.Add(temp);
-                }
 
-                FB_Image downImage = new FB_Image();
-                currentImage.CopyTo(downImage);
-                downImage.ImageID = id;
-                tempName= Download_Picture_FB(downImage);
-                Common.listFileDelete.Add(Path.Combine(FB_Image.BaseDirectory,tempName));
-                ratio = ((float)currentImage.FileSize / (float)downImage.FileSize);
-                FB_Image k = new FB_Image();
-                downImage.CopyTo(k);
-                uploadedImage.Add(k);
-                downImage.CopyTo(currentImage);
-                if (progress != null)
-                {
-                    float t = ratio;
-                    if (ratio > 9)
-                    {
-                        progress.Report(10);
-                    }
-                    else if (ratio >= 2)
-                    {
-                        progress.Report((int)(ratio * 10));
-                    }
-                    else if (ratio >= 1 && ratio < 2)
-                    {
-                        progress.Report((int)((ratio - 1) * 100));
-                    }
-                }
-
-            }
-            if(progress != null)
-                progress.Report(100);
-
-            return uploadedImage;
-        }
-        public List<FB_Image> AutoUploadAndDownload(string filename, IProgress<int> progress = null, int count = 5)
-        {
-            string tempName = filename;
-            List<FB_Image> uploadedImage = new List<FB_Image>();
-            FB_Image currentImage = new FB_Image();
-            float ratio = 15;
-            float ratioMax = 1.005F;
-            while (ratio > ratioMax)
-            {
-                string id = Upload_Picture_FB(tempName, currentImage, ActiveUser.AccessToken, ActiveUser.PrivateAlbumID);
-                if (currentImage.ImageID.Equals(""))
-                {
-                    FB_Image temp = new FB_Image();
-                    currentImage.CopyTo(temp);
-                    uploadedImage.Add(temp);
-                }
-
-                FB_Image downImage = new FB_Image();
-                currentImage.CopyTo(downImage);
-                downImage.ImageID = id;
-                tempName = Download_Picture_FB(downImage);
-                Common.listFileDelete.Add(Path.Combine(FB_Image.BaseDirectory, tempName));
-                ratio = ((float)currentImage.FileSize / (float)downImage.FileSize);
-                FB_Image k = new FB_Image();
-                downImage.CopyTo(k);
-                uploadedImage.Add(k);
-                downImage.CopyTo(currentImage);
-                if (progress != null)
-                {
-                    float t = ratio;
-                    if (ratio > 9)
-                    {
-                        progress.Report(10);
-                    }
-                    else if (ratio >= 2)
-                    {
-                        progress.Report((int)(ratio * 10));
-                    }
-                    else if (ratio >= 1 && ratio < 2)
-                    {
-                        progress.Report((int)((ratio - 1) * 100));
-                    }
-                }
-
-            }
-            if (progress != null)
-                progress.Report(100);
-
-            return uploadedImage;
-        }
 
 
         private void cmbSelectTextType_SelectedIndexChanged_Handle(object sender, EventArgs e)
