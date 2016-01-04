@@ -69,7 +69,8 @@ namespace FacebookImageUpload
                 Log(e);
             }
         }
-        public static string Crc32Hash(string filepath)
+        public static string 
+            Crc32Hash(string filepath)
         {
             Crc32 crc32 = new Crc32();
             String hash = String.Empty;
@@ -78,12 +79,19 @@ namespace FacebookImageUpload
             return hash;
         }
 
+        public static string Crc32HashFromString(string content)
+        {
+            Crc32 crc32 = new Crc32();
+            String hash = String.Empty;
+            foreach (byte b in crc32.ComputeHash(Encoding.UTF8.GetBytes(content))) hash += b.ToString("x2").ToLower();
+            return hash;
+        }
 
         uint start = 1;
         int gtemp = 0;
         
 
-        public void btnImageSearch_Click_fn(IProgress<string> progress)
+        public void GetProcessImageFromGoogleImage(IProgress<string> progress)
         {
             //string apiKey = "AIzaSyCKOq5EJwqwfQzmdfCW0VE-IX9fFMIZEUM";
             //string searchEngineId = "002524252275919064823:dlgwbkge9f0";
@@ -93,7 +101,8 @@ namespace FacebookImageUpload
             string query = tbKeyWord.Text;
             //start number of result return
             int count = 0;
-            while (count < 20)
+            int numOfImage = 5;
+            while (count <numOfImage)
             {
                 Search images = googleImage.googleImageSearch(apiKey, searchEngineId, query, start);
                 foreach (var item in images.Items)
@@ -116,10 +125,11 @@ namespace FacebookImageUpload
                                     newImage.Save(new_path, ImageFormat.Jpeg);
                                     Common.ListFileDelete.Add(new_path);
                                     string filename = new_path;
-                                    string coverImagePath = TestEncode(null, filename, Path.Combine(FB_Image.RelativeDirectory, "GoogleImage/10.txt"), ActiveUser.PrivateAlbumID, true);
+                                    string testMessage = SplitFileIntoPart(Path.Combine(FB_Image.RelativeDirectory, "GoogleImage/200.txt"),0)[0];
+                                    string coverImagePath = TestEncode(null, filename, testMessage, ActiveUser.PrivateAlbumID, true);
                                     if (coverImagePath != null)
                                     {
-                                        File.Copy(FB_Image.BaseDirectory + coverImagePath, "SuccessImage/" + query + "_" + gtemp + ".jpg", false);
+                                        File.Copy(coverImagePath, "SuccessImage/" + query + "_" + gtemp + ".jpg", true);
                                         count++;
                                         progress.Report("success"+Environment.NewLine);
                                     }
@@ -131,6 +141,11 @@ namespace FacebookImageUpload
                                 }
                             }
 
+                        }
+                        if (cancelSearching)
+                        {
+                            isStart = false;
+                            return;
                         }
                     }
                     catch (Exception e)
@@ -251,10 +266,10 @@ namespace FacebookImageUpload
             if (r != null)
             {
                 
-                lbAccessTokenExpire.Text = r.Expires.ToString();
                 List<string> s = Common.getUserInfo(r.AccessToken, "me", FB_Image.BaseDirectory);
                 pBoxUserAvatar.ImageLocation = s[1];
-                lbFacebookUserName.Text = s[0];
+                lbLoginUserName.Text = s[0];
+                lbLoginID.Text = s[2];
                 bool flag = false;
                 //Set private album
                 if (File.Exists(Path.Combine(FB_Image.RelativeDirectory, "UserSetting/" +s[2])))
@@ -275,6 +290,7 @@ namespace FacebookImageUpload
                         ActiveUser.PrivateAlbumID = a.PrivateAlbumID;
                         ActiveUser.PrivateAlbumName = a.PrivateAlbumName;
                         lbPrivateAlbum.Text = a.PrivateAlbumName.ToString();
+                        lbLoginPrivateAlbum.Text = a.PrivateAlbumName.ToString();
                         flag = true;
                     }
 
@@ -296,6 +312,7 @@ namespace FacebookImageUpload
                             Form1.ActiveUser.PrivateAlbumID = a.AlbumID;
                             Form1.ActiveUser.PrivateAlbumName = a.AlbumName;
                             lbPrivateAlbum.Text = a.AlbumName.ToString();
+                            lbLoginPrivateAlbum.Text = a.AlbumName.ToString();
                         }
                     }
                 }
@@ -317,12 +334,13 @@ namespace FacebookImageUpload
             }
             else
             {
-                lbAccessTokenExpire.Text = "";
-                lbFacebookUserName.Text = "Username";
+                lbLoginUserName.Text = "...";
+                lbLoginID.Text = "...";
                 pBoxUserAvatar.ImageLocation = Path.Combine(Common.ProjectDir,"images/profile.jpg");
                 Form1.ActiveUser = null;
                 btnFacebookLogin.Text = "Login";
                 lbPrivateAlbum.Text = "...";
+                lbLoginPrivateAlbum.Text = "...";
                 isLogin = false;
                 cmbInputAlbum.Items.Clear();
             }
@@ -330,17 +348,18 @@ namespace FacebookImageUpload
         }
         private void UpdateLoginControl()
         {
-            lbAccessTokenExpire.Text = "";
-            lbFacebookUserName.Text = "Username";
+            lbLoginUserName.Text = "Username";
+            lbLoginID.Text = "...";
             pBoxUserAvatar.ImageLocation = Path.Combine(Common.ProjectDir, "images/profile.jpg");
             Form1.ActiveUser = null;
             btnFacebookLogin.Text = "Login";
             isLogin = false;
             lbPrivateAlbum.Text = "...";
+            lbLoginPrivateAlbum.Text = "...";
             currentInbox = null;
             listViewFriends.Clear();
-            listViewTagImage.Clear();
-            listViewUserList.Clear();
+            listViewMessage.Clear();
+            listViewInbox.Clear();
 
         }
 
@@ -351,10 +370,11 @@ namespace FacebookImageUpload
                
                 Form1.ActiveUser = r;
                 ActiveUser.AccessToken = r.AccessToken;
-                lbAccessTokenExpire.Text = r.ExpiredTime;
                 pBoxUserAvatar.ImageLocation = r.ImgPath;
-                lbFacebookUserName.Text = r.UserName;
+                lbLoginUserName.Text = r.UserName;
+                lbLoginID.Text = r.UserID;
                 lbPrivateAlbum.Text = r.PrivateAlbumName;
+                lbLoginPrivateAlbum.Text = r.PrivateAlbumName;
                 isLogin = true;
                 btnFacebookLogin.Text = "LogOut";
                 if (ActiveUser.Albums.Count == 0)
@@ -395,6 +415,7 @@ namespace FacebookImageUpload
                 if (showNewMessage)
                 {
                     item.Text = GetInboxText(il.Images.Keys[j].ToString(),user[j].CountNew);
+                    UpdateNewMessageLabel(null, lbReceiverNewMessage, user[j]);
                 }
                 else{
                     item.Text = il.Images.Keys[j].ToString();
@@ -408,7 +429,7 @@ namespace FacebookImageUpload
 
         }
 
-        private void GetFriendList(IProgress<int> progress)
+        private void GetFriendList(IProgress<string> progress)
         {
             try
             {
@@ -427,7 +448,7 @@ namespace FacebookImageUpload
                         users.Add((string)data[i]["id"]);
                         i++;
                     }
-
+                    i=0;
                     foreach (string user in users.ToArray())
                     {
                         List<string> info = Common.getUserInfo(ActiveUser.AccessToken, user, FB_Image.BaseDirectory + "Test_User\\");
@@ -438,12 +459,15 @@ namespace FacebookImageUpload
                             ListInboxUser.Add(new InboxUser(user, info[0],info[1]));
                             if (progress != null)
                             {
-                                progress.Report(0);
+                                string per = (i / count).ToString();
+                                progress.Report(String.Format("{0}|{1}",per,"Getting Friends List"));
                             }
                         }
+                        i++;
 
 
                     }
+                    progress.Report(String.Format("{0}|{1}", 100, "Getting Friends List"));
 
                 }
                 else
@@ -509,6 +533,31 @@ namespace FacebookImageUpload
             }
         }
 
+        private string EncodeImage(string imageFile, string inputText, string password = null, bool isTest= false)
+        {
+            string coverImage = Common.CopyFileTo(imageFile, FB_Image.BaseDirectory);
+            string messageFile = Common.CopyFileTo(inputText, FB_Image.BaseDirectory);
+            if (!isTest)
+            {
+                coverImage = ProcessUserImage(coverImage);
+            }
+
+            string encodeFile = JPHideEncode(Path.GetFileName(coverImage), Path.GetFileName(messageFile),password);
+            return encodeFile;
+
+        }
+
+        private string DecodeImage(string imageFile, string password = null)
+        {
+            string coverImage = Common.CopyFileTo(imageFile, FB_Image.BaseDirectory);
+            string outputText = Path.GetFileNameWithoutExtension(imageFile)+"_output.txt";
+             outputText = JPSeekDecode(Path.GetFileName(imageFile), outputText);
+             return outputText;
+        }
+
+
+                
+
         private string SendImageWithTag(IProgress<string> progress, string filename, string inputText, List<string> uids, string albumID=null)
         {
             try
@@ -519,28 +568,28 @@ namespace FacebookImageUpload
                 //Encode
                 string encodeFile = JPHideEncode(Path.GetFileName(coverImage), Path.GetFileName(messageFile));
                 if (progress != null)
-                    progress.Report("25|25|Uploading Picture");
+                    progress.Report("25|Uploading Picture");
                 if (encodeFile == null)
                     return null;
                 string id = Upload_Picture_Tag(Path.Combine(FB_Image.BaseDirectory, encodeFile), uids,albumID);
                 if (progress != null)
-                    progress.Report("50|50|Checking ...");
+                    progress.Report("50|Checking ...");
                 string downloadFile = Common.AppendFileName(Path.Combine(FB_Image.BaseDirectory, encodeFile), "_download");
-                if (!DownloadFB(id, ActiveUser.AccessToken, downloadFile, false))
+                if (!DownloadFB(id, ActiveUser.AccessToken, downloadFile, true))
                     return null;
                 //Decode
-                string outputText = Common.AppenFileName(inputText, "_ouput");
+                string outputText = Common.AppendFileNameNoLimit(inputText, "_ouput");
                 if (outputText == null)
                     outputText = "output_test.txt";
-                outputText = JPSeekDecode(Path.GetFileName(downloadFile), outputText);
+                outputText = JPSeekDecode(Path.GetFileName(downloadFile), outputText,null,true);
                 if (outputText == null)
                     return null;
                 outputText = Path.Combine(FB_Image.BaseDirectory, outputText);
 
                 //compare 2 file
                 if (progress != null)
-                    progress.Report("100|100|Finish");
-                if (Common.CompareOutputFile(inputText, outputText, tbInputMessage))
+                    progress.Report("100|Finish");
+                if (Common.CompareOutputFile(inputText, outputText))
                 {
                     return id;
                 }
@@ -559,7 +608,7 @@ namespace FacebookImageUpload
             }
         }
 
-        public void GetImageTagged1(IProgress<int> progress,List<InboxUser> inbox)
+        public void GetImageTagged1(IProgress<string> progress,List<InboxUser> inbox)
         {
 
             try
@@ -584,7 +633,7 @@ namespace FacebookImageUpload
                     dynamic currentPhoto = photos[i];
                     string userID = (string)currentPhoto["from"]["id"];
                     long createdTime = long.Parse((string)currentPhoto["created_time"]);
-                    bool isSent = false;
+                   // bool isSent = false;
                     InboxUser userInbox = Common.GetInboxByUserID(userID,inbox);
                     if (userInbox == null)
                     {
@@ -606,18 +655,28 @@ namespace FacebookImageUpload
                     }
                     imagePath = FB_Image.BaseDirectory + imageId + ".jpg";
                     Common.DowloadImageFromLink(source_url, imagePath, ImageFormat.Jpeg);
-                    string content = Common.GetMessageFromImage(imagePath);
-                    userInbox.Messages.Add(new FB_Message(content, new FB_Image(imageId, Path.GetFileName(imagePath), Path.GetDirectoryName(imagePath)),createdTime,isSent));
-                    userInbox.CountNew++;
+                    byte[] content = Common.GetByteFromImage(imagePath);
+                    if(content != null)
+                    {
+                       string  s_content = CorrectErrorString(content);
+                       if (s_content != null)
+                       {
+                           //userInbox.Messages.Add(new FB_Message(content, new FB_Image(imageId,imagePath),createdTime,isSent));
+                           bool flag = userInbox.AddMessageToInbox(s_content, imageId, imagePath, createdTime);
+                           if (flag)
+                               userInbox.CountNew++;
+                       }
+                    }
                     i--;
+                    
                     if (progress != null)
                     {
-                        progress.Report(1);
+                        progress.Report(String.Format("{0}|{1}",(count-i)/count,"Getting Messages"));
                     }
                     
                 }
                 ActiveUser.CheckTime = Common.GetUnixTimesStamp(DateTime.Now);
-
+                progress.Report(String.Format("{0}|{1}", 100, "Getting Messages"));
             }
             catch (Exception ex)
             {
@@ -626,41 +685,41 @@ namespace FacebookImageUpload
         }
 
 
-        public bool CheckTester()
-        {
-            var app = new FacebookClient(Form1.AppToken);
-            dynamic res = app.Get(Form1.AppID + "/roles");
-            string json_string = Newtonsoft.Json.JsonConvert.SerializeObject(res);
-            var json = JObject.Parse(json_string);
-            dynamic roles = json["data"];
-            int count = roles.Count;
-            int i = 0;
-            while (i < count )
-            {
-                dynamic currentUser = roles[i];
-                string userID = (string)currentUser["user"];
-                if(userID == ActiveUser.UserID)
-                {
-                    return true;
-                }
-                i++;
-            }
+        //public bool CheckTester()
+        //{
+        //    var app = new FacebookClient(Form1.AppToken);
+        //    dynamic res = app.Get(Form1.AppID + "/roles");
+        //    string json_string = Newtonsoft.Json.JsonConvert.SerializeObject(res);
+        //    var json = JObject.Parse(json_string);
+        //    dynamic roles = json["data"];
+        //    int count = roles.Count;
+        //    int i = 0;
+        //    while (i < count )
+        //    {
+        //        dynamic currentUser = roles[i];
+        //        string userID = (string)currentUser["user"];
+        //        if(userID == ActiveUser.UserID)
+        //        {
+        //            return true;
+        //        }
+        //        i++;
+        //    }
 
-            return false;
-        }
-        private void btnTester_Click(object sender, EventArgs e)
-        {
-            dynamic userRole = new ExpandoObject();
-            userRole.user = ActiveUser.UserID;
-            userRole.role = "testers";
-            var app = new FacebookClient(FB_Image.AccessToken);
-            dynamic res = app.Post(Form1.AppID + "/roles", userRole);
-            if (res.success == true) {
-                MessageBox.Show("Join as tester successfully", "Tester", MessageBoxButtons.OK,
-                                           MessageBoxIcon.Information);
-                btnTester.Enabled = false;
-            }
-        }
+        //    return false;
+        //}
+        //private void btnTester_Click(object sender, EventArgs e)
+        //{
+        //    dynamic userRole = new ExpandoObject();
+        //    userRole.user = ActiveUser.UserID;
+        //    userRole.role = "testers";
+        //    var app = new FacebookClient(FB_Image.AccessToken);
+        //    dynamic res = app.Post(Form1.AppID + "/roles", userRole);
+        //    if (res.success == true) {
+        //        MessageBox.Show("Join as tester successfully", "Tester", MessageBoxButtons.OK,
+        //                                   MessageBoxIcon.Information);
+        //        btnTester.Enabled = false;
+        //    }
+        //}
     }
 
 }

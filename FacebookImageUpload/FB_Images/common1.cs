@@ -20,6 +20,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using ECC;
 
 // Huy file
 
@@ -73,32 +74,36 @@ namespace FacebookImageUpload
             }
         }
 
-        private async void LoadBasicInformation()
+        private async void LoadFriendListAndMessage(bool GetMessageOnly=false)
         {
 
-            var progress = new Progress<int>(s =>
+            if (!GetMessageOnly)
+                Common.EnableControl(false, btnShowFriendList, btnGetImageList, listViewFriends, listViewMessage, listViewInbox);
+            else
+                Common.EnableControl(false, btnGetImageList, listViewMessage, listViewInbox);
+            var progressMessage = new Progress<string>(s => 
             {
-                if (s == 0)
-                {
-                    UpdateFriendListView(this.listViewUserList, ListInboxUser, true);
-                    UpdateFriendListView(listViewFriends, ListInboxUser);
-                }
-                else if (s == 1)
-                {
-                    UpdateFriendListView(this.listViewUserList, ListInboxUser, true);
-                }
-                UpdateFriendListView(this.listViewUserList, ListInboxUser, true);
+                Common.ShowProgressBar(s, pbStatus, lbStatusBar, lbDoing);
+                UpdateFriendListView(this.listViewInbox, ListInboxUser, true);
                 UpdateFriendListView(listViewFriends, ListInboxUser);
+
+            });
+            var progressFriend = new Progress<string>(s =>
+            {
+                Common.ShowProgressBar(s, pbStatus, lbStatusBar, lbDoing);
+                UpdateFriendListView(listViewFriends, ListInboxUser);
+
             });
             await Task.Factory.StartNew(() => { 
-                GetFriendList(progress);
-                GetImageTagged1(progress, ListInboxUser);
-
+                if(!GetMessageOnly)
+                    GetFriendList(progressFriend);
+                GetImageTagged1(progressMessage, ListInboxUser);
             }, TaskCreationOptions.LongRunning);
-            //await Task.Factory.StartNew(() => flag = SendImageWithTag(progress, tbImagePath.Text, messagePath, tagList, albumId), TaskCreationOptions.LongRunning);
-            //UpdateFriendListView(this.listViewUserList, ListInboxUser, true);
-            //UpdateFriendListView(listViewFriends, ListInboxUser);
-           // MessageBox.Show("ok");
+            if (!GetMessageOnly)
+                Common.EnableControl(true, btnShowFriendList, btnGetImageList, listViewFriends, listViewMessage, listViewInbox);
+            else
+                Common.EnableControl(true, btnGetImageList, listViewMessage, listViewInbox);
+            Common.ResetStatusTrip(pbStatus, lbStatusBar, lbDoing);
         }
 
 
@@ -114,7 +119,7 @@ namespace FacebookImageUpload
             }
             dynamic res = fb.Post(albumID + "/photos", new
             {
-                message = "Image description",
+                //message = "Image description",
                 file = new FacebookMediaStream
                 {
                     ContentType = "image/jpeg",
@@ -193,42 +198,44 @@ namespace FacebookImageUpload
 
                 //Reduce size ratio of picture
                 if (progress != null)
-                    progress.Report("15|15|Preparing Image");
+                    progress.Report("15|Preparing Image");
                 string coverImageFileName = ProcessUserImage(filename);
                 string messageFile = Common.CopyFileTo(inputText, FB_Image.BaseDirectory);
 
                 //Encode
                 if (progress != null)
-                    progress.Report("50|50|Uploading Image");
+                    progress.Report("50|Uploading Image");
                 string encodeFile = JPHideEncode(Path.GetFileName(coverImageFileName), Path.GetFileName(inputText));
-                if (string.IsNullOrEmpty(encodeFile))
+                if (string.IsNullOrEmpty(encodeFile) || cancelSearching)
                 {
                     return null;
                 }
+
+
                 string id = Upload_Picture_Tag(Path.Combine(FB_Image.BaseDirectory, encodeFile), null, albumID);
-                if (string.IsNullOrEmpty(id))
+                if (string.IsNullOrEmpty(id) || cancelSearching)
                 {
                     return null;
                 }
                 string downloadFile = Common.AppendFileName(Path.Combine(FB_Image.BaseDirectory, encodeFile), "_download");
-                if (!DownloadFB(id, ActiveUser.AccessToken, downloadFile, false))
+                if (!DownloadFB(id, ActiveUser.AccessToken, downloadFile, true))
                     return null;
                 if (progress != null)
-                    progress.Report("75|75|Checking");
+                    progress.Report("75|Checking");
 
                 //Decode
-                string outputText = Common.AppenFileName(inputText, "_ouput");
+                string outputText = Common.AppendFileNameNoLimit(inputText, "_ouput");
                 if (outputText == null)
                     outputText = "output_test.txt";
-                outputText = JPSeekDecode(Path.GetFileName(downloadFile), outputText);
-                if (outputText == null)
+                outputText = JPSeekDecode(Path.GetFileName(downloadFile), outputText,null,true);
+                if (outputText == null || cancelSearching)
                     return null;
                 outputText = Path.Combine(FB_Image.BaseDirectory, outputText);
 
                 //compare 2 file
                 if (progress != null)
-                    progress.Report("100|100|Finish");
-                if (Common.CompareOutputFile(inputText, outputText, tbInputMessage))
+                    progress.Report("100|Finish");
+                if (Common.CompareOutputFile(inputText, outputText))
                 {
 
                     if (!googleSearch)
@@ -270,7 +277,7 @@ namespace FacebookImageUpload
 
                 //Encode
                 if (progress != null)
-                    progress.Report("50|50|Uploading Image");
+                    progress.Report("50|Uploading Image");
                 string encodeFile = JPHideEncode(Path.GetFileName(coverImageFileName), Path.GetFileName(inputText));
                 if (string.IsNullOrEmpty(encodeFile))
                 {
@@ -282,25 +289,25 @@ namespace FacebookImageUpload
                     return null;
                 }
                 if (progress != null)
-                    progress.Report("75|75|Checking");
+                    progress.Report("75|Checking");
                 string downloadFile = Common.AppendFileName(Path.Combine(FB_Image.BaseDirectory, encodeFile), "_download");
-                if (!DownloadFB(id, ActiveUser.AccessToken, downloadFile, false))
+                if (!DownloadFB(id, ActiveUser.AccessToken, downloadFile, true))
                     return null;
 
 
                 //Decode
-                string outputText = Common.AppenFileName(inputText, "_ouput");
+                string outputText = Common.AppendFileNameNoLimit(inputText, "_ouput");
                 if (outputText == null)
                     outputText = "output_test.txt";
-                outputText = JPSeekDecode(Path.GetFileName(downloadFile), outputText);
+                outputText = JPSeekDecode(Path.GetFileName(downloadFile), outputText,null,true);
                 if (outputText == null)
                     return null;
                 outputText = Path.Combine(FB_Image.BaseDirectory, outputText);
 
                 //compare 2 file
                 if (progress != null)
-                    progress.Report("100|100|Finish");
-                if (Common.CompareOutputFile(inputText, outputText, tbInputMessage))
+                    progress.Report("100|Finish");
+                if (Common.CompareOutputFile(inputText, outputText))
                 {           
                        return coverImageFileName;
                 }
@@ -321,7 +328,7 @@ namespace FacebookImageUpload
 
 
 
-        public static string JPHideEncode(string filename,string input)
+        public static string JPHideEncode(string filename,string input,string password = null)
         {
             try
             {
@@ -331,14 +338,21 @@ namespace FacebookImageUpload
                 }
                 Common.ListFileDelete.Add(Path.Combine(FB_Image.BaseDirectory, filename));
                 Common.ListFileDelete.Add(Path.Combine(FB_Image.BaseDirectory, input));
-                input=Path.GetFileName(InsertCrc32(input));
+               // input=Path.GetFileName(InsertCrc32(input));
                 Common.ListFileDelete.Add(Path.Combine(FB_Image.BaseDirectory, input));
                 string enImageName = Path.GetFileNameWithoutExtension(filename)+"_encode"+Path.GetExtension(filename);
                 Common.ListFileDelete.Add(Path.Combine(FB_Image.BaseDirectory, enImageName));
                 Process proc = new Process();
                 proc.StartInfo.FileName = "cmd.exe";
                 proc.StartInfo.WorkingDirectory = FB_Image.BaseDirectory;
-                string commandArguments = String.Format("/C jphide_modify \"{0}\" \"{1}\" \"{2}\"", filename, enImageName, input);
+                string commandArguments =null;
+                if (String.IsNullOrEmpty(password))
+                {
+                    commandArguments  = String.Format("/C jphide_modify \"{0}\" \"{1}\" \"{2}\"", filename, enImageName, input);
+                }else{
+                    commandArguments = String.Format("/C jphide_pass \"{0}\" \"{1}\" \"{2}\" \"{3}\"", filename, enImageName, input,password);
+                }
+                 
                 //proc.StartInfo.Arguments = "/C jphide_modify " + filename + " " + enImageName + " " + input;
                 proc.StartInfo.Arguments = commandArguments;
                 proc.StartInfo.CreateNoWindow = true;
@@ -357,6 +371,10 @@ namespace FacebookImageUpload
                 return null;
             }
         }
+        public void OpenFolder(string filePath)
+        {
+            Process.Start("explorer.exe", string.Format("/select,\"{0}\"", filePath));
+        }
 
         public static string InsertCrc32(string input)
         {
@@ -367,8 +385,10 @@ namespace FacebookImageUpload
             if (File.Exists(input_path))
             {
                 string currentContent = File.ReadAllText(input_path);
-                string newinput = Path.Combine(FB_Image.BaseDirectory, Common.AppenFileName(input, "_" + (r.Next(1337)).ToString()));
-                File.WriteAllText(newinput, crc + currentContent);
+                string newinput = Path.Combine(FB_Image.BaseDirectory, Common.AppendFileNameNoLimit(input, "_" + (r.Next(13377)).ToString()));
+                currentContent = crc + currentContent;
+                byte[] bContent = AddErrorCorrection(File.ReadAllBytes(currentContent));
+                File.WriteAllBytes(newinput, bContent);
                 return newinput;
             }
             else
@@ -377,7 +397,160 @@ namespace FacebookImageUpload
             }
         }
 
-        public  static string JPSeekDecode(string filename,string output)
+        public static List<string> SplitFileIntoPart(string fullPath, int n = 1)
+        {
+            try
+            {
+                byte[] bResult = null;
+                byte[] bContent = null;
+                List<byte[]> bListResult = new List<byte[]>();
+                List<string> listFile = new List<string>();
+                string id = Common.GetUnixTimesStamp(DateTime.Now).ToString();
+                if (n <= 0)
+                {
+
+                    string header = string.Format("{0}|00|0",id);
+                    bContent = Encoding.UTF8.GetBytes(header + File.ReadAllText(fullPath));
+                    bResult = AddErrorCorrection(bContent);
+                    string newFile = Path.Combine(Path.GetDirectoryName(fullPath), Path.GetFileNameWithoutExtension(fullPath) + "_one.txt");
+                    File.WriteAllBytes(Path.Combine(FB_Image.BaseDirectory,newFile), bResult);
+                    listFile.Add(newFile);
+                    return listFile;
+
+                }
+                else
+                {
+                    bContent = Encoding.UTF8.GetBytes(File.ReadAllText(fullPath));
+                    int dataLen = (BLOCK_LENGTH - EC) * n - HEADER_LEN;
+                    int numOfFile = bContent.Length % dataLen == 0 ? bContent.Length / dataLen : bContent.Length / dataLen + 1;
+                    int index = 0;
+                    for (int i = 0; i < numOfFile; i++)
+                    {
+                        byte[] temp = new byte[dataLen + HEADER_LEN];
+                        string offset = i < 10 ? "0" + i.ToString() : i.ToString();
+                        string flag = i == numOfFile - 1 ? "0" : "1";
+                        string header = String.Format("{0}|{1}|{2}", id, offset, flag);
+                        byte[] bHeader = Encoding.UTF8.GetBytes(header);
+                        int copyLen = dataLen;
+                        Array.Copy(bHeader, 0, temp, 0, HEADER_LEN);
+                        if (i == numOfFile - 1 && bContent.Length % dataLen != 0)
+                            copyLen = bContent.Length % dataLen;
+                        if (i == 0 && bContent.Length < dataLen)
+                            copyLen = bContent.Length;
+                        Array.Copy(bContent, index, temp, HEADER_LEN, copyLen);
+                        index += dataLen;
+                        byte[] tempResult = AddErrorCorrection(temp, EC);
+                        bListResult.Add(tempResult);
+
+                    }
+
+                }
+                if (bListResult.Count > 0)
+                {
+                    int j = 0;
+                    foreach (byte[] item in bListResult)
+                    {
+                        string newFile = Path.Combine(Path.GetDirectoryName(fullPath), Path.GetFileNameWithoutExtension(fullPath) +"_" +j.ToString()+".txt");
+                        //File.WriteAllText(newFile, Encoding.UTF8.GetString(item));
+                        File.WriteAllBytes(newFile, item);
+                        j++;
+                        listFile.Add(newFile);
+                       
+                    }
+                    return listFile;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return null;
+            }
+
+
+
+        }
+
+        public const int BLOCK_LENGTH = 255;
+        public const int EC = 32;
+        public const int HEADER_LEN = 15;
+
+        public static byte[] AddErrorCorrection(byte[] content, int ec = EC)
+        {
+            byte[] b = content;
+            int dataLen =b.Length > BLOCK_LENGTH ? BLOCK_LENGTH - ec:b.Length;
+            int blockLen = dataLen + ec;
+            int numOfBlock = b.Length % dataLen==0 ? b.Length / dataLen : b.Length / dataLen + 1;
+            int t = numOfBlock;
+            int index = 0;
+            List<int[]> arrayList = new List<int[]>();
+            for (int i = 0; i < numOfBlock; i++)
+            {
+                int tempBlockLen = 0;
+                int copyLen = dataLen;
+                if (numOfBlock == 1)
+                {
+                    tempBlockLen = blockLen;
+                    copyLen = dataLen;
+                }
+                else if (numOfBlock > 1 && i == numOfBlock - 1 && b.Length % dataLen != 0)
+                {
+                    tempBlockLen = b.Length % dataLen +ec;
+                    copyLen = b.Length % dataLen;
+                }
+                else
+                {
+                    tempBlockLen = BLOCK_LENGTH;
+                }
+                int[] temp = new int[tempBlockLen];
+                Array.Copy(b, index, temp, 0, copyLen);
+                arrayList.Add(temp);
+                index += dataLen;
+            }
+            ReedSolomonEncoder encoder = new ReedSolomonEncoder(GenericGF.QR_CODE_FIELD_256);
+            for (int i = 0; i < numOfBlock; i++)
+            {
+                encoder.encode(arrayList[i], ec);
+            }
+            byte[] bContent = ConvertIntListToByteArray(arrayList);
+            return bContent;
+        }
+        public static byte[] ConvertIntListToByteArray(List<int[]> list)
+        {
+            byte[] result=null;
+            int index = 0;
+            int resultLength=0;
+            if (list.Count > 0)
+            {
+                foreach (int[] i in list)
+                    resultLength += i.Length;
+                result = new byte[resultLength];
+
+                for (int i = 0; i < list.Count; i++)
+                {
+                    byte[] temp = new byte[list[i].Length];
+                    CopyInto2Byte(list[i], temp);
+                    Array.Copy(temp, 0, result, index, list[i].Length);
+                    index += list[i].Length;
+                }
+
+            }
+            return result;
+
+        }
+
+        public static void CopyInto2Byte(int[] a, byte[] b)
+        {
+            for (int i = 0; i < a.Length; i++)
+            {
+                b[i] = (byte)a[i];
+            }
+        }
+
+        public static string JPSeekDecode(string filename, string output,string password=null, bool isSent = false)
         {
             try
             {
@@ -393,6 +566,10 @@ namespace FacebookImageUpload
                 proc.StartInfo.FileName = "cmd.exe";
                 proc.StartInfo.WorkingDirectory = FB_Image.BaseDirectory;
                 string commandArguments = String.Format("/C jpseek_modify \"{0}\" \"{1}\" ", imageName, hiddenFileName);
+                if (!String.IsNullOrEmpty(password))
+                {
+                    commandArguments = String.Format("/C jpseek_passs \"{0}\" \"{1}\" \"{2}\"", imageName, hiddenFileName,password);
+                }
                 //proc.StartInfo.Arguments = "/C jpseek_modify " + imageName + " " + hiddenFileName;
                 proc.StartInfo.Arguments = commandArguments;
                 proc.StartInfo.CreateNoWindow = true;
@@ -401,7 +578,8 @@ namespace FacebookImageUpload
                 while (!proc.HasExited)
                     ;
                 proc.Dispose();
-                hiddenFileName = CheckCrc32(hiddenFileName);  
+                if(isSent)
+                    hiddenFileName = CheckCrc32(hiddenFileName);  
                 if (hiddenFileName != null)
                 {
                     Common.ListFileDelete.Add(Path.Combine(FB_Image.BaseDirectory, hiddenFileName));
@@ -419,41 +597,158 @@ namespace FacebookImageUpload
 
         public static string CheckCrc32(string filename)
         {
+
             string oldpath = Path.Combine(FB_Image.BaseDirectory, filename);
-            string newpath = Path.Combine(FB_Image.BaseDirectory, Common.AppenFileName(filename, "_check"));
-            string crc = "";
-            Regex g = new Regex(@"(\[)(crc)(:).*?(\])");
-
-            using (StreamWriter w = new StreamWriter(newpath))
+            string oldfile = Common.AppendFileName(oldpath, "_correction");
+            byte[] result = CorrectError(oldpath);
+            if (result != null)
             {
-
-                using (StreamReader r = new StreamReader(oldpath))
-                {
-                    string line;
-                    line = r.ReadToEnd();
-
-                    Match m = g.Match(line);
-                    if (m.Success)
-                    {
-                        string[] words = line.Split(':');
-                        crc = words[1].Remove(8);
-                        line = line.Remove(0, 14);
-                        w.Write(line);
-                    }
-                }
-
-
-            }
-            string hash = Crc32Hash(newpath);
-            if (hash == crc)
-            {
-                return newpath;
+                File.WriteAllBytes(oldfile, result);
+                return oldfile;
             }
             else
             {
                 return null;
             }
+
+
         }
+
+
+
+
+        public static byte[] CorrectError(string fileName, int ec=32)
+        {
+            byte[] bContent = File.ReadAllBytes(fileName);
+            int blockLen = bContent.Length < BLOCK_LENGTH ? bContent.Length : BLOCK_LENGTH;
+            int numOfBlock = bContent.Length % blockLen == 0 ? bContent.Length / blockLen : bContent.Length / blockLen + 1;
+            List<int[]> list = new List<int[]>();
+            int index = 0;
+            
+            for (int i = 0; i < numOfBlock; i++)
+            {
+                int[] temp = null;
+                int tempBlockLen = 0;
+                if (numOfBlock > 1 && i == numOfBlock - 1 && bContent.Length % blockLen != 0)
+                {
+                    tempBlockLen = bContent.Length % blockLen;
+                }
+                else
+                {
+                    tempBlockLen = blockLen;
+                }
+                temp = new int[tempBlockLen];
+                Array.Copy(bContent, index, temp, 0, tempBlockLen);
+                list.Add(temp);
+                index += tempBlockLen;
+
+            }
+
+            if (list.Count > 0)
+            {
+                ReedSolomonDecoder decoder = new ReedSolomonDecoder(GenericGF.QR_CODE_FIELD_256);
+                bool flag = true;
+                int size=0;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    size += list[i].Length - ec;
+                    if (!decoder.decode(list[i], ec))
+                    {
+                        flag = false;
+                        break;
+                    }
+                }
+                if (!flag)
+                    return null;
+
+                byte[] result = new byte[size];
+                index = 0;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    int len = list[i].Length;
+                    byte[] temp = new byte[len];
+                    CopyInto2Byte(list[i], temp);
+                    Array.Copy(temp, 0, result, index, len - ec);
+                    index += len - ec;
+                }
+                return result;
+
+
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+        public static string CorrectErrorString(byte[] content, int ec = 32)
+        {
+            byte[] bContent = content;
+            int blockLen = bContent.Length < BLOCK_LENGTH ? bContent.Length : BLOCK_LENGTH;
+            int numOfBlock = bContent.Length % blockLen == 0 ? bContent.Length / blockLen : bContent.Length / blockLen + 1;
+            List<int[]> list = new List<int[]>();
+            int index = 0;
+
+            for (int i = 0; i < numOfBlock; i++)
+            {
+                int[] temp = null;
+                int tempBlockLen = 0;
+                if (numOfBlock > 1 && i == numOfBlock - 1 && bContent.Length % blockLen != 0)
+                {
+                    tempBlockLen = bContent.Length % blockLen;
+                }
+                else
+                {
+                    tempBlockLen = blockLen;
+                }
+                temp = new int[tempBlockLen];
+                Array.Copy(bContent, index, temp, 0, tempBlockLen);
+                list.Add(temp);
+                index += tempBlockLen;
+
+            }
+
+            if (list.Count > 0)
+            {
+                ReedSolomonDecoder decoder = new ReedSolomonDecoder(GenericGF.QR_CODE_FIELD_256);
+                bool flag = true;
+                int size = 0;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    size += list[i].Length - ec;
+                    if (!decoder.decode(list[i], ec))
+                    {
+                        flag = false;
+                        break;
+                    }
+                }
+                if (!flag)
+                    return null;
+
+                byte[] result = new byte[size];
+                index = 0;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    int len = list[i].Length;
+                    byte[] temp = new byte[len];
+                    CopyInto2Byte(list[i], temp);
+                    Array.Copy(temp, 0, result, index, len - ec);
+                    index += len - ec;
+                }
+                return Encoding.UTF8.GetString(result);
+
+
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+
+
+
+
 
 
 
@@ -484,16 +779,18 @@ namespace FacebookImageUpload
 
 
         InboxUser currentInbox = null;
+        ListViewItem currentInboxLVItem = null;
         private void ChangeUserInbox(object sender, EventArgs e)
         {
             ListView lvUser = (ListView)sender;
             if (lvUser.SelectedItems.Count == 1 )
             {
                 InboxUser inbox = Common.GetInboxByUserID(lvUser.SelectedItems[0].Name, ListInboxUser);
-                UpdateMessageListView(listViewTagImage, inbox);
+                UpdateMessageListView(listViewMessage, inbox);
                 currentInbox = inbox;
                 ListViewItem item = ((ListView)sender).SelectedItems[0];
-                lbUserNameComm.Text = item.Text;
+                currentInboxLVItem = item;
+                lbUserNameComm.Text = inbox.UserName;
                 lbUserIdComm.Text = item.Name;
                 pBoxUserComm.ImageLocation = FB_Image.BaseDirectory + "Test_User\\profilePiture_" + item.Name + ".jpg";
 
@@ -504,6 +801,7 @@ namespace FacebookImageUpload
 
         private void ChangeUserMessage(object sender, EventArgs e)
         {
+            
             ListView lvMessage = (ListView)sender;
             if (lvMessage.SelectedItems.Count ==1 )
             {
@@ -512,13 +810,39 @@ namespace FacebookImageUpload
                     int i = lvMessage.SelectedItems[0].Index;
                     if (i < currentInbox.Messages.Count)
                     {
-                        tbInbox.Text = currentInbox.Messages[i].Content;
+                        if (currentInbox.Messages[i].IsFull)
+                        {
+                            tbInbox.Text = currentInbox.Messages[i].Content;
+                        }
+                        else
+                        {
+                            string s = currentInbox.Messages[i].GetContent();
+                            if (s != null)
+                                tbInbox.Text = s;
+                        }
+                        if (!currentInbox.Messages[i].IsRead)
+                        {
+                            currentInbox.Messages[i].IsRead = true;
+                            if(currentInbox.CountNew>0)
+                                currentInbox.CountNew--;
+
+                            currentInboxLVItem.Text = GetInboxText(currentInbox.UserName, currentInbox.CountNew);
+                            UpdateNewMessageLabel(currentInboxLVItem, lbReceiverNewMessage, currentInbox);
+
+                        }
+                        
                     }
 
                 }
                 
 
             }
+        }
+        private void UpdateNewMessageLabel(ListViewItem lvItem, Label label, InboxUser inbox)
+        {
+            if(lvItem != null)
+                lvItem.Text = GetInboxText(inbox.UserName, inbox.CountNew);
+            lbReceiverNewMessage.Text = String.Format("{0} in {1}", inbox.CountNew, inbox.Messages.Count);
         }
 
         private void UpdateMessageListView(ListView listview, InboxUser inbox)
@@ -531,7 +855,7 @@ namespace FacebookImageUpload
             List<FB_Message> messages = inbox.Messages;
             for (int i = 0; i < messages.Count; i++)
             {
-                il.Images.Add(Image.FromFile(Path.Combine(messages[i].Image.Directory,messages[i].Image.FileName)));
+                il.Images.Add(Image.FromFile(messages[i].Image.FullPath));
                 il.Images.SetKeyName(i, "Message_"+i);
             }
             listview.View = View.LargeIcon;

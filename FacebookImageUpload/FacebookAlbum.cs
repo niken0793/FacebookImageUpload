@@ -22,7 +22,7 @@ namespace FacebookImageUpload
         public string createAlbum(string _accessToken, string name = null,string privacy=null, string description = "Testing album (private)")
         {
             dynamic albumPost = new ExpandoObject();  // tạo đối tượng
-            albumPost.message = description;  // truyền tham số 
+            //albumPost.message = description;  // truyền tham số 
             albumPost.name = name;
             albumPost.privacy = privacy;
             var fb = new FacebookClient(_accessToken);

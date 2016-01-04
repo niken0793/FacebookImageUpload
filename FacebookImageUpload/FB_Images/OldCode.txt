@@ -774,3 +774,38 @@
         }
 
 		
+
+		checkCrc32:
+		            //string newpath = Path.Combine(FB_Image.BaseDirectory, Common.AppenFileName(filename, "_check"));
+            //string crc = "";
+            //Regex g = new Regex(@"(\[)(crc)(:).*?(\])");
+
+            //using (StreamWriter w = new StreamWriter(newpath))
+            //{
+
+            //    using (StreamReader r = new StreamReader(oldfile))
+            //    {
+            //        string line;
+            //        line = r.ReadToEnd();
+
+            //        Match m = g.Match(line);
+            //        if (m.Success)
+            //        {
+            //            string[] words = line.Split(':');
+            //            crc = words[1].Remove(8);
+            //            line = line.Remove(0, 14);
+            //            w.Write(line);
+            //        }
+            //    }
+
+
+            //}
+            //string hash = Crc32Hash(newpath);
+            //if (hash == crc)
+            //{
+            //    return newpath;
+            //}
+            //else
+            //{
+            //    return null;
+            //}

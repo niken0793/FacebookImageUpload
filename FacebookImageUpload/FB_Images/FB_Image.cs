@@ -113,11 +113,10 @@ namespace FacebookImageUpload.FB_Images
             
         }
 
-        public FB_Image(string paramImageID, string paramFileName, string paramDirectory)
+        public FB_Image(string paramImageID, string paramFullPath)
         {
             imageID = paramImageID;
-            fileName = paramFileName;
-            directory = paramDirectory;
+            fullPath = paramFullPath;
         }
 
         public FB_Image(string paramImageID, string paramFileName,string paramFileNameNo, string paramDirectory,

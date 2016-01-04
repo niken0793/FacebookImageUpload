@@ -31,12 +31,15 @@
             this.btnUploadImage = new System.Windows.Forms.Button();
             this.tbImagePath = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.lbFriendID = new System.Windows.Forms.Label();
             this.cmbInputAlbum = new System.Windows.Forms.ComboBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.btnCoverImage = new System.Windows.Forms.Button();
+            this.label13 = new System.Windows.Forms.Label();
+            this.btnShowFriendList = new System.Windows.Forms.Button();
+            this.label1111 = new System.Windows.Forms.Label();
+            this.lbFriendName = new System.Windows.Forms.Label();
+            this.pbFriend = new System.Windows.Forms.PictureBox();
             this.lbMessageLength = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.cbIsTested = new System.Windows.Forms.CheckBox();
             this.tbInputMessage = new System.Windows.Forms.TextBox();
             this.cmbSelectTextType = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -45,16 +48,19 @@
             this.label5 = new System.Windows.Forms.Label();
             this.fdOpenfile = new System.Windows.Forms.Button();
             this.listViewFriends = new System.Windows.Forms.ListView();
+            this.btnCoverImage = new System.Windows.Forms.Button();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabSender = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.lbFriendID = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.pbFriend = new System.Windows.Forms.PictureBox();
-            this.label1111 = new System.Windows.Forms.Label();
-            this.lbFriendName = new System.Windows.Forms.Label();
+            this.lbLoginPrivateAlbum = new System.Windows.Forms.Label();
+            this.lbLoginID = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.lbLoginUserName = new System.Windows.Forms.Label();
+            this.btnFacebookLogin = new System.Windows.Forms.Button();
+            this.pBoxUserAvatar = new System.Windows.Forms.PictureBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.lbCheckTime = new System.Windows.Forms.Label();
             this.lbImageSize = new System.Windows.Forms.Label();
             this.lbImageDirectory = new System.Windows.Forms.Label();
             this.lbImageName = new System.Windows.Forms.Label();
@@ -64,23 +70,41 @@
             this.pbImage = new System.Windows.Forms.PictureBox();
             this.tabReceiver = new System.Windows.Forms.TabPage();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.lbReceiverNewMessage = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
             this.lbUserIdComm = new System.Windows.Forms.Label();
-            this.btnGetUserList = new System.Windows.Forms.Button();
-            this.listViewUserList = new System.Windows.Forms.ListView();
+            this.btnGetImageList = new System.Windows.Forms.Button();
+            this.listViewInbox = new System.Windows.Forms.ListView();
             this.label14 = new System.Windows.Forms.Label();
             this.pBoxUserComm = new System.Windows.Forms.PictureBox();
             this.label12 = new System.Windows.Forms.Label();
             this.lbUserNameComm = new System.Windows.Forms.Label();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
-            this.listViewTagImage = new System.Windows.Forms.ListView();
+            this.listViewMessage = new System.Windows.Forms.ListView();
             this.tbInbox = new System.Windows.Forms.TextBox();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.btnManualClear = new System.Windows.Forms.Button();
+            this.lbManualLength = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.lbManualImageSize = new System.Windows.Forms.Label();
+            this.lbManualImageDir = new System.Windows.Forms.Label();
+            this.lbManualImageName = new System.Windows.Forms.Label();
+            this.btnManualDecode = new System.Windows.Forms.Button();
+            this.btnManualEncode = new System.Windows.Forms.Button();
+            this.tbManualStatus = new System.Windows.Forms.TextBox();
+            this.cmbManualFileType = new System.Windows.Forms.ComboBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.btnManualBrowseFile = new System.Windows.Forms.Button();
+            this.tbManualText = new System.Windows.Forms.TextBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.btnManualBrowseImage = new System.Windows.Forms.Button();
+            this.tbManualImage = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.pbManual = new System.Windows.Forms.PictureBox();
             this.tabGoogle = new System.Windows.Forms.TabPage();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.tbAlbumDesc = new System.Windows.Forms.TextBox();
-            this.tbAlbumName = new System.Windows.Forms.TextBox();
-            this.btnCreateAlbum = new System.Windows.Forms.Button();
             this.tbGoogleLink = new System.Windows.Forms.TextBox();
             this.btnImageSearch = new System.Windows.Forms.Button();
             this.tbKeyWord = new System.Windows.Forms.TextBox();
@@ -99,39 +123,32 @@
             this.btnShowPrivateAlbum = new System.Windows.Forms.Button();
             this.lbPrivateAlbum = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.btnTester = new System.Windows.Forms.Button();
-            this.lbAccessTokenExpire = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.btnFacebookLogin = new System.Windows.Forms.Button();
-            this.lbFacebookUserName = new System.Windows.Forms.Label();
-            this.pBoxUserAvatar = new System.Windows.Forms.PictureBox();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.settingToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.pbStatus = new System.Windows.Forms.ToolStripProgressBar();
             this.lbStatusBar = new System.Windows.Forms.ToolStripStatusLabel();
             this.lbDoing = new System.Windows.Forms.ToolStripStatusLabel();
             this.lbLogCount = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tbSettingBaseDir = new System.Windows.Forms.TextBox();
+            this.btnSettingChangeBaseDir = new System.Windows.Forms.Button();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbFriend)).BeginInit();
             this.tabControl.SuspendLayout();
             this.tabSender.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbFriend)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pBoxUserAvatar)).BeginInit();
             this.groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbImage)).BeginInit();
             this.tabReceiver.SuspendLayout();
             this.groupBox8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pBoxUserComm)).BeginInit();
             this.groupBox9.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbManual)).BeginInit();
             this.tabGoogle.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             this.tabSetting.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pBoxUserAvatar)).BeginInit();
-            this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -154,12 +171,15 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.lbFriendID);
             this.groupBox3.Controls.Add(this.cmbInputAlbum);
-            this.groupBox3.Controls.Add(this.button1);
-            this.groupBox3.Controls.Add(this.btnCoverImage);
+            this.groupBox3.Controls.Add(this.label13);
+            this.groupBox3.Controls.Add(this.btnShowFriendList);
+            this.groupBox3.Controls.Add(this.label1111);
+            this.groupBox3.Controls.Add(this.lbFriendName);
+            this.groupBox3.Controls.Add(this.pbFriend);
             this.groupBox3.Controls.Add(this.lbMessageLength);
             this.groupBox3.Controls.Add(this.label10);
-            this.groupBox3.Controls.Add(this.cbIsTested);
             this.groupBox3.Controls.Add(this.tbInputMessage);
             this.groupBox3.Controls.Add(this.cmbSelectTextType);
             this.groupBox3.Controls.Add(this.label7);
@@ -172,10 +192,19 @@
             this.groupBox3.Controls.Add(this.listViewFriends);
             this.groupBox3.Location = new System.Drawing.Point(15, 169);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(635, 264);
+            this.groupBox3.Size = new System.Drawing.Size(635, 296);
             this.groupBox3.TabIndex = 10;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Sending";
+            // 
+            // lbFriendID
+            // 
+            this.lbFriendID.AutoSize = true;
+            this.lbFriendID.Location = new System.Drawing.Point(507, 36);
+            this.lbFriendID.Name = "lbFriendID";
+            this.lbFriendID.Size = new System.Drawing.Size(16, 13);
+            this.lbFriendID.TabIndex = 35;
+            this.lbFriendID.Text = "...";
             // 
             // cmbInputAlbum
             // 
@@ -186,27 +215,53 @@
             this.cmbInputAlbum.TabIndex = 27;
             this.cmbInputAlbum.Text = "Choose a album";
             // 
-            // button1
+            // label13
             // 
-            this.button1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.button1.Image = global::FacebookImageUpload.Properties.Resources.Add_Friend_5121;
-            this.button1.Location = new System.Drawing.Point(610, 233);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(25, 25);
-            this.button1.TabIndex = 24;
-            this.button1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(459, 36);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(21, 13);
+            this.label13.TabIndex = 34;
+            this.label13.Text = "ID:";
             // 
-            // btnCoverImage
+            // btnShowFriendList
             // 
-            this.btnCoverImage.Location = new System.Drawing.Point(253, 228);
-            this.btnCoverImage.Name = "btnCoverImage";
-            this.btnCoverImage.Size = new System.Drawing.Size(134, 23);
-            this.btnCoverImage.TabIndex = 26;
-            this.btnCoverImage.Text = "Choose Cover Image";
-            this.btnCoverImage.UseVisualStyleBackColor = true;
-            this.btnCoverImage.Click += new System.EventHandler(this.btnCoverImage_Click);
+            this.btnShowFriendList.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnShowFriendList.Image = global::FacebookImageUpload.Properties.Resources.Add_Friend_5121;
+            this.btnShowFriendList.Location = new System.Drawing.Point(610, 233);
+            this.btnShowFriendList.Name = "btnShowFriendList";
+            this.btnShowFriendList.Size = new System.Drawing.Size(25, 25);
+            this.btnShowFriendList.TabIndex = 24;
+            this.btnShowFriendList.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnShowFriendList.UseVisualStyleBackColor = true;
+            this.btnShowFriendList.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // label1111
+            // 
+            this.label1111.AutoSize = true;
+            this.label1111.Location = new System.Drawing.Point(458, 16);
+            this.label1111.Name = "label1111";
+            this.label1111.Size = new System.Drawing.Size(38, 13);
+            this.label1111.TabIndex = 32;
+            this.label1111.Text = "Name:";
+            // 
+            // lbFriendName
+            // 
+            this.lbFriendName.AutoSize = true;
+            this.lbFriendName.Location = new System.Drawing.Point(508, 16);
+            this.lbFriendName.Name = "lbFriendName";
+            this.lbFriendName.Size = new System.Drawing.Size(16, 13);
+            this.lbFriendName.TabIndex = 33;
+            this.lbFriendName.Text = "...";
+            // 
+            // pbFriend
+            // 
+            this.pbFriend.Image = global::FacebookImageUpload.Properties.Resources.icon_profile;
+            this.pbFriend.Location = new System.Drawing.Point(402, 12);
+            this.pbFriend.Name = "pbFriend";
+            this.pbFriend.Size = new System.Drawing.Size(50, 50);
+            this.pbFriend.TabIndex = 31;
+            this.pbFriend.TabStop = false;
             // 
             // lbMessageLength
             // 
@@ -225,16 +280,6 @@
             this.label10.Size = new System.Drawing.Size(49, 13);
             this.label10.TabIndex = 24;
             this.label10.Text = "Length : ";
-            // 
-            // cbIsTested
-            // 
-            this.cbIsTested.AutoSize = true;
-            this.cbIsTested.Location = new System.Drawing.Point(266, 72);
-            this.cbIsTested.Name = "cbIsTested";
-            this.cbIsTested.Size = new System.Drawing.Size(59, 17);
-            this.cbIsTested.TabIndex = 17;
-            this.cbIsTested.Text = "Tested";
-            this.cbIsTested.UseVisualStyleBackColor = true;
             // 
             // tbInputMessage
             // 
@@ -291,12 +336,13 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(7, 26);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(98, 13);
+            this.label5.Size = new System.Drawing.Size(94, 13);
             this.label5.TabIndex = 10;
-            this.label5.Text = "Cover Image Path :";
+            this.label5.Text = "Input Image Path :";
             // 
             // fdOpenfile
             // 
+            this.fdOpenfile.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.fdOpenfile.Location = new System.Drawing.Point(196, 42);
             this.fdOpenfile.Name = "fdOpenfile";
             this.fdOpenfile.Size = new System.Drawing.Size(55, 23);
@@ -307,24 +353,34 @@
             // 
             // listViewFriends
             // 
-            this.listViewFriends.Location = new System.Drawing.Point(402, 41);
+            this.listViewFriends.Location = new System.Drawing.Point(402, 68);
             this.listViewFriends.Name = "listViewFriends";
-            this.listViewFriends.Size = new System.Drawing.Size(227, 210);
+            this.listViewFriends.Size = new System.Drawing.Size(227, 183);
             this.listViewFriends.TabIndex = 28;
             this.listViewFriends.UseCompatibleStateImageBehavior = false;
-            this.listViewFriends.Visible = false;
             this.listViewFriends.ItemActivate += new System.EventHandler(this.listViewFriends_ItemActivate);
+            // 
+            // btnCoverImage
+            // 
+            this.btnCoverImage.Location = new System.Drawing.Point(10, 127);
+            this.btnCoverImage.Name = "btnCoverImage";
+            this.btnCoverImage.Size = new System.Drawing.Size(134, 23);
+            this.btnCoverImage.TabIndex = 26;
+            this.btnCoverImage.Text = "Processed Images";
+            this.btnCoverImage.UseVisualStyleBackColor = true;
+            this.btnCoverImage.Click += new System.EventHandler(this.btnCoverImage_Click);
             // 
             // tabControl
             // 
             this.tabControl.Controls.Add(this.tabSender);
             this.tabControl.Controls.Add(this.tabReceiver);
+            this.tabControl.Controls.Add(this.tabPage1);
             this.tabControl.Controls.Add(this.tabGoogle);
             this.tabControl.Controls.Add(this.tabSetting);
-            this.tabControl.Location = new System.Drawing.Point(-1, 29);
+            this.tabControl.Location = new System.Drawing.Point(0, 2);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(675, 509);
+            this.tabControl.Size = new System.Drawing.Size(674, 536);
             this.tabControl.TabIndex = 11;
             // 
             // tabSender
@@ -336,73 +392,104 @@
             this.tabSender.Location = new System.Drawing.Point(4, 22);
             this.tabSender.Name = "tabSender";
             this.tabSender.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSender.Size = new System.Drawing.Size(667, 483);
+            this.tabSender.Size = new System.Drawing.Size(666, 510);
             this.tabSender.TabIndex = 0;
             this.tabSender.Text = "Sender";
             this.tabSender.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.lbFriendID);
-            this.groupBox1.Controls.Add(this.label13);
-            this.groupBox1.Controls.Add(this.pbFriend);
-            this.groupBox1.Controls.Add(this.label1111);
-            this.groupBox1.Controls.Add(this.lbFriendName);
-            this.groupBox1.Location = new System.Drawing.Point(390, 11);
+            this.groupBox1.Controls.Add(this.lbLoginPrivateAlbum);
+            this.groupBox1.Controls.Add(this.lbLoginID);
+            this.groupBox1.Controls.Add(this.label22);
+            this.groupBox1.Controls.Add(this.label21);
+            this.groupBox1.Controls.Add(this.label11);
+            this.groupBox1.Controls.Add(this.lbLoginUserName);
+            this.groupBox1.Controls.Add(this.btnFacebookLogin);
+            this.groupBox1.Controls.Add(this.pBoxUserAvatar);
+            this.groupBox1.Location = new System.Drawing.Point(368, 7);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(260, 152);
+            this.groupBox1.Size = new System.Drawing.Size(282, 156);
             this.groupBox1.TabIndex = 20;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Friends";
+            this.groupBox1.Text = "Login";
             // 
-            // lbFriendID
+            // lbLoginPrivateAlbum
             // 
-            this.lbFriendID.AutoSize = true;
-            this.lbFriendID.Location = new System.Drawing.Point(109, 76);
-            this.lbFriendID.Name = "lbFriendID";
-            this.lbFriendID.Size = new System.Drawing.Size(16, 13);
-            this.lbFriendID.TabIndex = 35;
-            this.lbFriendID.Text = "...";
+            this.lbLoginPrivateAlbum.AutoSize = true;
+            this.lbLoginPrivateAlbum.Location = new System.Drawing.Point(154, 87);
+            this.lbLoginPrivateAlbum.Name = "lbLoginPrivateAlbum";
+            this.lbLoginPrivateAlbum.Size = new System.Drawing.Size(16, 13);
+            this.lbLoginPrivateAlbum.TabIndex = 26;
+            this.lbLoginPrivateAlbum.Text = "...";
             // 
-            // label13
+            // lbLoginID
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(62, 76);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(21, 13);
-            this.label13.TabIndex = 34;
-            this.label13.Text = "ID:";
+            this.lbLoginID.AutoSize = true;
+            this.lbLoginID.Location = new System.Drawing.Point(154, 63);
+            this.lbLoginID.Name = "lbLoginID";
+            this.lbLoginID.Size = new System.Drawing.Size(16, 13);
+            this.lbLoginID.TabIndex = 25;
+            this.lbLoginID.Text = "...";
             // 
-            // pbFriend
+            // label22
             // 
-            this.pbFriend.Image = global::FacebookImageUpload.Properties.Resources.icon_profile;
-            this.pbFriend.Location = new System.Drawing.Point(6, 39);
-            this.pbFriend.Name = "pbFriend";
-            this.pbFriend.Size = new System.Drawing.Size(50, 50);
-            this.pbFriend.TabIndex = 31;
-            this.pbFriend.TabStop = false;
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(73, 87);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(75, 13);
+            this.label22.TabIndex = 24;
+            this.label22.Text = "Private Album:";
             // 
-            // label1111
+            // label21
             // 
-            this.label1111.AutoSize = true;
-            this.label1111.Location = new System.Drawing.Point(62, 39);
-            this.label1111.Name = "label1111";
-            this.label1111.Size = new System.Drawing.Size(38, 13);
-            this.label1111.TabIndex = 32;
-            this.label1111.Text = "Name:";
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(73, 63);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(21, 13);
+            this.label21.TabIndex = 23;
+            this.label21.Text = "ID:";
             // 
-            // lbFriendName
+            // label11
             // 
-            this.lbFriendName.AutoSize = true;
-            this.lbFriendName.Location = new System.Drawing.Point(106, 39);
-            this.lbFriendName.Name = "lbFriendName";
-            this.lbFriendName.Size = new System.Drawing.Size(16, 13);
-            this.lbFriendName.TabIndex = 33;
-            this.lbFriendName.Text = "...";
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(73, 36);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(38, 13);
+            this.label11.TabIndex = 22;
+            this.label11.Text = "Name:";
+            // 
+            // lbLoginUserName
+            // 
+            this.lbLoginUserName.AutoSize = true;
+            this.lbLoginUserName.Location = new System.Drawing.Point(155, 36);
+            this.lbLoginUserName.Name = "lbLoginUserName";
+            this.lbLoginUserName.Size = new System.Drawing.Size(16, 13);
+            this.lbLoginUserName.TabIndex = 7;
+            this.lbLoginUserName.Text = "...";
+            // 
+            // btnFacebookLogin
+            // 
+            this.btnFacebookLogin.Location = new System.Drawing.Point(9, 110);
+            this.btnFacebookLogin.Name = "btnFacebookLogin";
+            this.btnFacebookLogin.Size = new System.Drawing.Size(52, 23);
+            this.btnFacebookLogin.TabIndex = 21;
+            this.btnFacebookLogin.Text = "Login";
+            this.btnFacebookLogin.UseVisualStyleBackColor = true;
+            this.btnFacebookLogin.Click += new System.EventHandler(this.btnFacebookLogin_Click);
+            // 
+            // pBoxUserAvatar
+            // 
+            this.pBoxUserAvatar.Image = global::FacebookImageUpload.Properties.Resources._default;
+            this.pBoxUserAvatar.Location = new System.Drawing.Point(6, 36);
+            this.pBoxUserAvatar.Name = "pBoxUserAvatar";
+            this.pBoxUserAvatar.Size = new System.Drawing.Size(61, 64);
+            this.pBoxUserAvatar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pBoxUserAvatar.TabIndex = 6;
+            this.pBoxUserAvatar.TabStop = false;
             // 
             // groupBox7
             // 
-            this.groupBox7.Controls.Add(this.lbCheckTime);
             this.groupBox7.Controls.Add(this.lbImageSize);
             this.groupBox7.Controls.Add(this.lbImageDirectory);
             this.groupBox7.Controls.Add(this.lbImageName);
@@ -410,46 +497,40 @@
             this.groupBox7.Controls.Add(this.label8);
             this.groupBox7.Controls.Add(this.label6);
             this.groupBox7.Controls.Add(this.pbImage);
+            this.groupBox7.Controls.Add(this.btnCoverImage);
             this.groupBox7.Location = new System.Drawing.Point(15, 7);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(359, 156);
+            this.groupBox7.Size = new System.Drawing.Size(353, 156);
             this.groupBox7.TabIndex = 19;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Image Information";
             // 
-            // lbCheckTime
-            // 
-            this.lbCheckTime.AutoSize = true;
-            this.lbCheckTime.Location = new System.Drawing.Point(7, 122);
-            this.lbCheckTime.Name = "lbCheckTime";
-            this.lbCheckTime.Size = new System.Drawing.Size(35, 13);
-            this.lbCheckTime.TabIndex = 26;
-            this.lbCheckTime.Text = "label4";
-            this.lbCheckTime.Visible = false;
-            // 
             // lbImageSize
             // 
             this.lbImageSize.AutoSize = true;
-            this.lbImageSize.Location = new System.Drawing.Point(231, 91);
+            this.lbImageSize.Location = new System.Drawing.Point(192, 91);
             this.lbImageSize.Name = "lbImageSize";
-            this.lbImageSize.Size = new System.Drawing.Size(0, 13);
+            this.lbImageSize.Size = new System.Drawing.Size(16, 13);
             this.lbImageSize.TabIndex = 23;
+            this.lbImageSize.Text = "...";
             // 
             // lbImageDirectory
             // 
             this.lbImageDirectory.AutoSize = true;
-            this.lbImageDirectory.Location = new System.Drawing.Point(231, 53);
+            this.lbImageDirectory.Location = new System.Drawing.Point(192, 53);
             this.lbImageDirectory.Name = "lbImageDirectory";
-            this.lbImageDirectory.Size = new System.Drawing.Size(0, 13);
+            this.lbImageDirectory.Size = new System.Drawing.Size(16, 13);
             this.lbImageDirectory.TabIndex = 22;
+            this.lbImageDirectory.Text = "...";
             // 
             // lbImageName
             // 
             this.lbImageName.AutoSize = true;
-            this.lbImageName.Location = new System.Drawing.Point(231, 21);
+            this.lbImageName.Location = new System.Drawing.Point(192, 21);
             this.lbImageName.Name = "lbImageName";
-            this.lbImageName.Size = new System.Drawing.Size(0, 13);
+            this.lbImageName.Size = new System.Drawing.Size(16, 13);
             this.lbImageName.TabIndex = 21;
+            this.lbImageName.Text = "...";
             // 
             // label9
             // 
@@ -496,16 +577,18 @@
             this.tabReceiver.Location = new System.Drawing.Point(4, 22);
             this.tabReceiver.Name = "tabReceiver";
             this.tabReceiver.Padding = new System.Windows.Forms.Padding(3);
-            this.tabReceiver.Size = new System.Drawing.Size(667, 483);
+            this.tabReceiver.Size = new System.Drawing.Size(666, 510);
             this.tabReceiver.TabIndex = 1;
             this.tabReceiver.Text = "Receiver";
             this.tabReceiver.UseVisualStyleBackColor = true;
             // 
             // groupBox8
             // 
+            this.groupBox8.Controls.Add(this.lbReceiverNewMessage);
+            this.groupBox8.Controls.Add(this.label19);
             this.groupBox8.Controls.Add(this.lbUserIdComm);
-            this.groupBox8.Controls.Add(this.btnGetUserList);
-            this.groupBox8.Controls.Add(this.listViewUserList);
+            this.groupBox8.Controls.Add(this.btnGetImageList);
+            this.groupBox8.Controls.Add(this.listViewInbox);
             this.groupBox8.Controls.Add(this.label14);
             this.groupBox8.Controls.Add(this.pBoxUserComm);
             this.groupBox8.Controls.Add(this.label12);
@@ -517,57 +600,75 @@
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Receiver";
             // 
+            // lbReceiverNewMessage
+            // 
+            this.lbReceiverNewMessage.AutoSize = true;
+            this.lbReceiverNewMessage.Location = new System.Drawing.Point(154, 71);
+            this.lbReceiverNewMessage.Name = "lbReceiverNewMessage";
+            this.lbReceiverNewMessage.Size = new System.Drawing.Size(16, 13);
+            this.lbReceiverNewMessage.TabIndex = 32;
+            this.lbReceiverNewMessage.Text = "...";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(71, 71);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(77, 13);
+            this.label19.TabIndex = 31;
+            this.label19.Text = "New message:";
+            // 
             // lbUserIdComm
             // 
             this.lbUserIdComm.AutoSize = true;
-            this.lbUserIdComm.Location = new System.Drawing.Point(120, 73);
+            this.lbUserIdComm.Location = new System.Drawing.Point(135, 44);
             this.lbUserIdComm.Name = "lbUserIdComm";
-            this.lbUserIdComm.Size = new System.Drawing.Size(35, 13);
+            this.lbUserIdComm.Size = new System.Drawing.Size(16, 13);
             this.lbUserIdComm.TabIndex = 30;
-            this.lbUserIdComm.Text = "userid";
+            this.lbUserIdComm.Text = "...";
             // 
-            // btnGetUserList
+            // btnGetImageList
             // 
-            this.btnGetUserList.Location = new System.Drawing.Point(103, 383);
-            this.btnGetUserList.Name = "btnGetUserList";
-            this.btnGetUserList.Size = new System.Drawing.Size(52, 23);
-            this.btnGetUserList.TabIndex = 18;
-            this.btnGetUserList.Text = "Refresh";
-            this.btnGetUserList.UseVisualStyleBackColor = true;
-            this.btnGetUserList.Click += new System.EventHandler(this.btnGetUserList_Click);
+            this.btnGetImageList.Location = new System.Drawing.Point(103, 383);
+            this.btnGetImageList.Name = "btnGetImageList";
+            this.btnGetImageList.Size = new System.Drawing.Size(52, 23);
+            this.btnGetImageList.TabIndex = 18;
+            this.btnGetImageList.Text = "Refresh";
+            this.btnGetImageList.UseVisualStyleBackColor = true;
+            this.btnGetImageList.Click += new System.EventHandler(this.btnGetUserList_Click);
             // 
-            // listViewUserList
+            // listViewInbox
             // 
-            this.listViewUserList.Location = new System.Drawing.Point(6, 100);
-            this.listViewUserList.Name = "listViewUserList";
-            this.listViewUserList.Size = new System.Drawing.Size(233, 277);
-            this.listViewUserList.TabIndex = 18;
-            this.listViewUserList.UseCompatibleStateImageBehavior = false;
-            this.listViewUserList.ItemActivate += new System.EventHandler(this.listViewUserList_ItemActivate);
-            this.listViewUserList.SelectedIndexChanged += new System.EventHandler(this.listViewUserList_SelectedIndexChanged);
+            this.listViewInbox.Location = new System.Drawing.Point(6, 116);
+            this.listViewInbox.Name = "listViewInbox";
+            this.listViewInbox.Size = new System.Drawing.Size(233, 261);
+            this.listViewInbox.TabIndex = 18;
+            this.listViewInbox.UseCompatibleStateImageBehavior = false;
+            this.listViewInbox.ItemActivate += new System.EventHandler(this.listViewUserList_ItemActivate);
+            this.listViewInbox.SelectedIndexChanged += new System.EventHandler(this.listViewUserList_SelectedIndexChanged);
             // 
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(73, 73);
+            this.label14.Location = new System.Drawing.Point(71, 44);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(35, 13);
+            this.label14.Size = new System.Drawing.Size(21, 13);
             this.label14.TabIndex = 29;
-            this.label14.Text = "userid";
+            this.label14.Text = "ID:";
             // 
             // pBoxUserComm
             // 
             this.pBoxUserComm.Image = global::FacebookImageUpload.Properties.Resources.icon_profile;
-            this.pBoxUserComm.Location = new System.Drawing.Point(17, 36);
+            this.pBoxUserComm.Location = new System.Drawing.Point(15, 19);
             this.pBoxUserComm.Name = "pBoxUserComm";
-            this.pBoxUserComm.Size = new System.Drawing.Size(50, 50);
+            this.pBoxUserComm.Size = new System.Drawing.Size(50, 49);
             this.pBoxUserComm.TabIndex = 27;
             this.pBoxUserComm.TabStop = false;
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(73, 36);
+            this.label12.Location = new System.Drawing.Point(71, 19);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(58, 13);
             this.label12.TabIndex = 27;
@@ -576,107 +677,279 @@
             // lbUserNameComm
             // 
             this.lbUserNameComm.AutoSize = true;
-            this.lbUserNameComm.Location = new System.Drawing.Point(137, 36);
+            this.lbUserNameComm.Location = new System.Drawing.Point(135, 19);
             this.lbUserNameComm.Name = "lbUserNameComm";
-            this.lbUserNameComm.Size = new System.Drawing.Size(53, 13);
+            this.lbUserNameComm.Size = new System.Drawing.Size(16, 13);
             this.lbUserNameComm.TabIndex = 28;
-            this.lbUserNameComm.Text = "username";
+            this.lbUserNameComm.Text = "...";
             // 
             // groupBox9
             // 
-            this.groupBox9.Controls.Add(this.listViewTagImage);
-            this.groupBox9.Location = new System.Drawing.Point(9, 137);
+            this.groupBox9.Controls.Add(this.listViewMessage);
+            this.groupBox9.Location = new System.Drawing.Point(8, 206);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(381, 296);
+            this.groupBox9.Size = new System.Drawing.Size(381, 227);
             this.groupBox9.TabIndex = 21;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "Tag Image";
             // 
-            // listViewTagImage
+            // listViewMessage
             // 
-            this.listViewTagImage.Location = new System.Drawing.Point(0, 19);
-            this.listViewTagImage.Name = "listViewTagImage";
-            this.listViewTagImage.Size = new System.Drawing.Size(375, 181);
-            this.listViewTagImage.TabIndex = 10;
-            this.listViewTagImage.UseCompatibleStateImageBehavior = false;
-            this.listViewTagImage.SelectedIndexChanged += new System.EventHandler(this.listViewTagImage_SelectedIndexChanged);
+            this.listViewMessage.Location = new System.Drawing.Point(6, 32);
+            this.listViewMessage.Name = "listViewMessage";
+            this.listViewMessage.Size = new System.Drawing.Size(375, 181);
+            this.listViewMessage.TabIndex = 10;
+            this.listViewMessage.UseCompatibleStateImageBehavior = false;
+            this.listViewMessage.SelectedIndexChanged += new System.EventHandler(this.listViewTagImage_SelectedIndexChanged);
             // 
             // tbInbox
             // 
             this.tbInbox.Location = new System.Drawing.Point(9, 22);
             this.tbInbox.Multiline = true;
             this.tbInbox.Name = "tbInbox";
-            this.tbInbox.Size = new System.Drawing.Size(381, 94);
+            this.tbInbox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.tbInbox.Size = new System.Drawing.Size(381, 178);
             this.tbInbox.TabIndex = 2;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.groupBox5);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(666, 510);
+            this.tabPage1.TabIndex = 4;
+            this.tabPage1.Text = "Manual";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.btnManualClear);
+            this.groupBox5.Controls.Add(this.lbManualLength);
+            this.groupBox5.Controls.Add(this.label20);
+            this.groupBox5.Controls.Add(this.lbManualImageSize);
+            this.groupBox5.Controls.Add(this.lbManualImageDir);
+            this.groupBox5.Controls.Add(this.lbManualImageName);
+            this.groupBox5.Controls.Add(this.btnManualDecode);
+            this.groupBox5.Controls.Add(this.btnManualEncode);
+            this.groupBox5.Controls.Add(this.tbManualStatus);
+            this.groupBox5.Controls.Add(this.cmbManualFileType);
+            this.groupBox5.Controls.Add(this.label17);
+            this.groupBox5.Controls.Add(this.btnManualBrowseFile);
+            this.groupBox5.Controls.Add(this.tbManualText);
+            this.groupBox5.Controls.Add(this.label18);
+            this.groupBox5.Controls.Add(this.btnManualBrowseImage);
+            this.groupBox5.Controls.Add(this.tbManualImage);
+            this.groupBox5.Controls.Add(this.label4);
+            this.groupBox5.Controls.Add(this.label15);
+            this.groupBox5.Controls.Add(this.label16);
+            this.groupBox5.Controls.Add(this.pbManual);
+            this.groupBox5.Location = new System.Drawing.Point(8, 15);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(650, 438);
+            this.groupBox5.TabIndex = 0;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Manual Encode & Decode";
+            // 
+            // btnManualClear
+            // 
+            this.btnManualClear.Location = new System.Drawing.Point(322, 367);
+            this.btnManualClear.Name = "btnManualClear";
+            this.btnManualClear.Size = new System.Drawing.Size(40, 23);
+            this.btnManualClear.TabIndex = 43;
+            this.btnManualClear.Text = "Clear";
+            this.btnManualClear.UseVisualStyleBackColor = true;
+            this.btnManualClear.Click += new System.EventHandler(this.btnManualClear_Click);
+            // 
+            // lbManualLength
+            // 
+            this.lbManualLength.AutoSize = true;
+            this.lbManualLength.Location = new System.Drawing.Point(365, 345);
+            this.lbManualLength.Name = "lbManualLength";
+            this.lbManualLength.Size = new System.Drawing.Size(16, 13);
+            this.lbManualLength.TabIndex = 42;
+            this.lbManualLength.Text = "...";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(319, 345);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(49, 13);
+            this.label20.TabIndex = 41;
+            this.label20.Text = "Length : ";
+            // 
+            // lbManualImageSize
+            // 
+            this.lbManualImageSize.AutoSize = true;
+            this.lbManualImageSize.Location = new System.Drawing.Point(198, 89);
+            this.lbManualImageSize.Name = "lbManualImageSize";
+            this.lbManualImageSize.Size = new System.Drawing.Size(16, 13);
+            this.lbManualImageSize.TabIndex = 40;
+            this.lbManualImageSize.Text = "...";
+            // 
+            // lbManualImageDir
+            // 
+            this.lbManualImageDir.AutoSize = true;
+            this.lbManualImageDir.Location = new System.Drawing.Point(198, 51);
+            this.lbManualImageDir.Name = "lbManualImageDir";
+            this.lbManualImageDir.Size = new System.Drawing.Size(16, 13);
+            this.lbManualImageDir.TabIndex = 39;
+            this.lbManualImageDir.Text = "...";
+            // 
+            // lbManualImageName
+            // 
+            this.lbManualImageName.AutoSize = true;
+            this.lbManualImageName.Location = new System.Drawing.Point(198, 19);
+            this.lbManualImageName.Name = "lbManualImageName";
+            this.lbManualImageName.Size = new System.Drawing.Size(16, 13);
+            this.lbManualImageName.TabIndex = 38;
+            this.lbManualImageName.Text = "...";
+            // 
+            // btnManualDecode
+            // 
+            this.btnManualDecode.Location = new System.Drawing.Point(136, 367);
+            this.btnManualDecode.Name = "btnManualDecode";
+            this.btnManualDecode.Size = new System.Drawing.Size(99, 23);
+            this.btnManualDecode.TabIndex = 37;
+            this.btnManualDecode.Text = "Decode";
+            this.btnManualDecode.UseVisualStyleBackColor = true;
+            this.btnManualDecode.Click += new System.EventHandler(this.btnManualDecode_Click);
+            // 
+            // btnManualEncode
+            // 
+            this.btnManualEncode.Location = new System.Drawing.Point(12, 367);
+            this.btnManualEncode.Name = "btnManualEncode";
+            this.btnManualEncode.Size = new System.Drawing.Size(99, 23);
+            this.btnManualEncode.TabIndex = 36;
+            this.btnManualEncode.Text = "Encode";
+            this.btnManualEncode.UseVisualStyleBackColor = true;
+            this.btnManualEncode.Click += new System.EventHandler(this.btnManualEncode_Click);
+            // 
+            // tbManualStatus
+            // 
+            this.tbManualStatus.Location = new System.Drawing.Point(12, 228);
+            this.tbManualStatus.Multiline = true;
+            this.tbManualStatus.Name = "tbManualStatus";
+            this.tbManualStatus.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbManualStatus.Size = new System.Drawing.Size(381, 98);
+            this.tbManualStatus.TabIndex = 34;
+            this.tbManualStatus.TextChanged += new System.EventHandler(this.tbManualStatus_TextChanged);
+            // 
+            // cmbManualFileType
+            // 
+            this.cmbManualFileType.FormattingEnabled = true;
+            this.cmbManualFileType.Items.AddRange(new object[] {
+            "From File",
+            "From Text"});
+            this.cmbManualFileType.Location = new System.Drawing.Point(272, 201);
+            this.cmbManualFileType.Name = "cmbManualFileType";
+            this.cmbManualFileType.Size = new System.Drawing.Size(121, 21);
+            this.cmbManualFileType.TabIndex = 35;
+            this.cmbManualFileType.Text = "From file or text";
+            this.cmbManualFileType.SelectedIndexChanged += new System.EventHandler(this.cmbManualFileType_SelectedIndexChanged);
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(12, 183);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(81, 13);
+            this.label17.TabIndex = 33;
+            this.label17.Text = "Message Path :";
+            // 
+            // btnManualBrowseFile
+            // 
+            this.btnManualBrowseFile.Location = new System.Drawing.Point(201, 199);
+            this.btnManualBrowseFile.Name = "btnManualBrowseFile";
+            this.btnManualBrowseFile.Size = new System.Drawing.Size(55, 23);
+            this.btnManualBrowseFile.TabIndex = 32;
+            this.btnManualBrowseFile.Text = "Browse";
+            this.btnManualBrowseFile.UseVisualStyleBackColor = true;
+            this.btnManualBrowseFile.Click += new System.EventHandler(this.btnManualBrowseFile_Click);
+            // 
+            // tbManualText
+            // 
+            this.tbManualText.Location = new System.Drawing.Point(12, 199);
+            this.tbManualText.Name = "tbManualText";
+            this.tbManualText.Size = new System.Drawing.Size(184, 20);
+            this.tbManualText.TabIndex = 31;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(13, 133);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(98, 13);
+            this.label18.TabIndex = 30;
+            this.label18.Text = "Cover Image Path :";
+            // 
+            // btnManualBrowseImage
+            // 
+            this.btnManualBrowseImage.Location = new System.Drawing.Point(202, 149);
+            this.btnManualBrowseImage.Name = "btnManualBrowseImage";
+            this.btnManualBrowseImage.Size = new System.Drawing.Size(55, 23);
+            this.btnManualBrowseImage.TabIndex = 28;
+            this.btnManualBrowseImage.Text = "Browse";
+            this.btnManualBrowseImage.UseVisualStyleBackColor = true;
+            this.btnManualBrowseImage.Click += new System.EventHandler(this.btnManualBrowseImage_Click);
+            // 
+            // tbManualImage
+            // 
+            this.tbManualImage.Location = new System.Drawing.Point(12, 149);
+            this.tbManualImage.Name = "tbManualImage";
+            this.tbManualImage.Size = new System.Drawing.Size(184, 20);
+            this.tbManualImage.TabIndex = 29;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(135, 89);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(53, 13);
+            this.label4.TabIndex = 24;
+            this.label4.Text = "File size : ";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(135, 51);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(58, 13);
+            this.label15.TabIndex = 23;
+            this.label15.Text = "Directory : ";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(133, 19);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(44, 13);
+            this.label16.TabIndex = 21;
+            this.label16.Text = "Name : ";
+            // 
+            // pbManual
+            // 
+            this.pbManual.Image = global::FacebookImageUpload.Properties.Resources.gallery_icon;
+            this.pbManual.Location = new System.Drawing.Point(16, 19);
+            this.pbManual.Name = "pbManual";
+            this.pbManual.Size = new System.Drawing.Size(102, 92);
+            this.pbManual.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbManual.TabIndex = 22;
+            this.pbManual.TabStop = false;
             // 
             // tabGoogle
             // 
-            this.tabGoogle.Controls.Add(this.groupBox2);
             this.tabGoogle.Controls.Add(this.tbGoogleLink);
             this.tabGoogle.Controls.Add(this.btnImageSearch);
             this.tabGoogle.Controls.Add(this.tbKeyWord);
             this.tabGoogle.Location = new System.Drawing.Point(4, 22);
             this.tabGoogle.Name = "tabGoogle";
             this.tabGoogle.Padding = new System.Windows.Forms.Padding(3);
-            this.tabGoogle.Size = new System.Drawing.Size(667, 483);
+            this.tabGoogle.Size = new System.Drawing.Size(666, 510);
             this.tabGoogle.TabIndex = 3;
             this.tabGoogle.Text = "Google Images Search";
             this.tabGoogle.UseVisualStyleBackColor = true;
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Controls.Add(this.tbAlbumDesc);
-            this.groupBox2.Controls.Add(this.tbAlbumName);
-            this.groupBox2.Controls.Add(this.btnCreateAlbum);
-            this.groupBox2.Location = new System.Drawing.Point(395, 14);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(262, 149);
-            this.groupBox2.TabIndex = 19;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Facebook Image Upload";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 67);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(60, 13);
-            this.label2.TabIndex = 14;
-            this.label2.Text = "Description";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 35);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(67, 13);
-            this.label1.TabIndex = 13;
-            this.label1.Text = "Album Name";
-            // 
-            // tbAlbumDesc
-            // 
-            this.tbAlbumDesc.Location = new System.Drawing.Point(79, 64);
-            this.tbAlbumDesc.Name = "tbAlbumDesc";
-            this.tbAlbumDesc.Size = new System.Drawing.Size(143, 20);
-            this.tbAlbumDesc.TabIndex = 12;
-            // 
-            // tbAlbumName
-            // 
-            this.tbAlbumName.Location = new System.Drawing.Point(79, 32);
-            this.tbAlbumName.Name = "tbAlbumName";
-            this.tbAlbumName.Size = new System.Drawing.Size(143, 20);
-            this.tbAlbumName.TabIndex = 11;
-            // 
-            // btnCreateAlbum
-            // 
-            this.btnCreateAlbum.Location = new System.Drawing.Point(89, 110);
-            this.btnCreateAlbum.Name = "btnCreateAlbum";
-            this.btnCreateAlbum.Size = new System.Drawing.Size(92, 23);
-            this.btnCreateAlbum.TabIndex = 5;
-            this.btnCreateAlbum.Text = "Create Album";
-            this.btnCreateAlbum.UseVisualStyleBackColor = true;
             // 
             // tbGoogleLink
             // 
@@ -692,7 +965,7 @@
             this.btnImageSearch.Name = "btnImageSearch";
             this.btnImageSearch.Size = new System.Drawing.Size(93, 23);
             this.btnImageSearch.TabIndex = 17;
-            this.btnImageSearch.Text = "Image Search";
+            this.btnImageSearch.Text = "Search";
             this.btnImageSearch.UseVisualStyleBackColor = true;
             this.btnImageSearch.Click += new System.EventHandler(this.btnImageSearch_Click);
             // 
@@ -705,6 +978,8 @@
             // 
             // tabSetting
             // 
+            this.tabSetting.Controls.Add(this.btnSettingChangeBaseDir);
+            this.tabSetting.Controls.Add(this.tbSettingBaseDir);
             this.tabSetting.Controls.Add(this.btnDiff);
             this.tabSetting.Controls.Add(this.btnClear);
             this.tabSetting.Controls.Add(this.btnAutoTest);
@@ -716,7 +991,7 @@
             this.tabSetting.Location = new System.Drawing.Point(4, 22);
             this.tabSetting.Name = "tabSetting";
             this.tabSetting.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSetting.Size = new System.Drawing.Size(667, 483);
+            this.tabSetting.Size = new System.Drawing.Size(666, 510);
             this.tabSetting.TabIndex = 2;
             this.tabSetting.Text = "Setting";
             this.tabSetting.UseVisualStyleBackColor = true;
@@ -787,7 +1062,7 @@
             this.groupBox4.Controls.Add(this.dtpCheckTime);
             this.groupBox4.Location = new System.Drawing.Point(9, 16);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(317, 166);
+            this.groupBox4.Size = new System.Drawing.Size(212, 166);
             this.groupBox4.TabIndex = 22;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Check Time";
@@ -823,22 +1098,16 @@
             this.groupBox6.Controls.Add(this.btnShowPrivateAlbum);
             this.groupBox6.Controls.Add(this.lbPrivateAlbum);
             this.groupBox6.Controls.Add(this.label3);
-            this.groupBox6.Controls.Add(this.btnTester);
-            this.groupBox6.Controls.Add(this.lbAccessTokenExpire);
-            this.groupBox6.Controls.Add(this.label11);
-            this.groupBox6.Controls.Add(this.btnFacebookLogin);
-            this.groupBox6.Controls.Add(this.lbFacebookUserName);
-            this.groupBox6.Controls.Add(this.pBoxUserAvatar);
-            this.groupBox6.Location = new System.Drawing.Point(351, 16);
+            this.groupBox6.Location = new System.Drawing.Point(227, 16);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(258, 166);
+            this.groupBox6.Size = new System.Drawing.Size(175, 166);
             this.groupBox6.TabIndex = 21;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Facebook Login";
             // 
             // btnShowPrivateAlbum
             // 
-            this.btnShowPrivateAlbum.Location = new System.Drawing.Point(174, 137);
+            this.btnShowPrivateAlbum.Location = new System.Drawing.Point(9, 67);
             this.btnShowPrivateAlbum.Name = "btnShowPrivateAlbum";
             this.btnShowPrivateAlbum.Size = new System.Drawing.Size(61, 23);
             this.btnShowPrivateAlbum.TabIndex = 27;
@@ -849,7 +1118,7 @@
             // lbPrivateAlbum
             // 
             this.lbPrivateAlbum.AutoSize = true;
-            this.lbPrivateAlbum.Location = new System.Drawing.Point(93, 122);
+            this.lbPrivateAlbum.Location = new System.Drawing.Point(90, 31);
             this.lbPrivateAlbum.Name = "lbPrivateAlbum";
             this.lbPrivateAlbum.Size = new System.Drawing.Size(16, 13);
             this.lbPrivateAlbum.TabIndex = 25;
@@ -858,97 +1127,11 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 122);
+            this.label3.Location = new System.Drawing.Point(6, 31);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(78, 13);
             this.label3.TabIndex = 24;
             this.label3.Text = "Private Album: ";
-            // 
-            // btnTester
-            // 
-            this.btnTester.Location = new System.Drawing.Point(147, 48);
-            this.btnTester.Name = "btnTester";
-            this.btnTester.Size = new System.Drawing.Size(88, 23);
-            this.btnTester.TabIndex = 23;
-            this.btnTester.Text = "Join as Tester";
-            this.btnTester.UseVisualStyleBackColor = true;
-            // 
-            // lbAccessTokenExpire
-            // 
-            this.lbAccessTokenExpire.AutoSize = true;
-            this.lbAccessTokenExpire.Location = new System.Drawing.Point(93, 95);
-            this.lbAccessTokenExpire.Name = "lbAccessTokenExpire";
-            this.lbAccessTokenExpire.Size = new System.Drawing.Size(55, 13);
-            this.lbAccessTokenExpire.TabIndex = 11;
-            this.lbAccessTokenExpire.Text = "dd/mm/yy";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(6, 95);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(73, 13);
-            this.label11.TabIndex = 8;
-            this.label11.Text = "Token Expire:";
-            // 
-            // btnFacebookLogin
-            // 
-            this.btnFacebookLogin.Location = new System.Drawing.Point(79, 48);
-            this.btnFacebookLogin.Name = "btnFacebookLogin";
-            this.btnFacebookLogin.Size = new System.Drawing.Size(52, 23);
-            this.btnFacebookLogin.TabIndex = 21;
-            this.btnFacebookLogin.Text = "Login";
-            this.btnFacebookLogin.UseVisualStyleBackColor = true;
-            this.btnFacebookLogin.Click += new System.EventHandler(this.btnFacebookLogin_Click);
-            // 
-            // lbFacebookUserName
-            // 
-            this.lbFacebookUserName.AutoSize = true;
-            this.lbFacebookUserName.Location = new System.Drawing.Point(76, 21);
-            this.lbFacebookUserName.Name = "lbFacebookUserName";
-            this.lbFacebookUserName.Size = new System.Drawing.Size(55, 13);
-            this.lbFacebookUserName.TabIndex = 7;
-            this.lbFacebookUserName.Text = "Username";
-            // 
-            // pBoxUserAvatar
-            // 
-            this.pBoxUserAvatar.Image = global::FacebookImageUpload.Properties.Resources._default;
-            this.pBoxUserAvatar.Location = new System.Drawing.Point(9, 21);
-            this.pBoxUserAvatar.Name = "pBoxUserAvatar";
-            this.pBoxUserAvatar.Size = new System.Drawing.Size(50, 50);
-            this.pBoxUserAvatar.TabIndex = 6;
-            this.pBoxUserAvatar.TabStop = false;
-            // 
-            // menuStrip1
-            // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.settingToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(674, 24);
-            this.menuStrip1.TabIndex = 12;
-            this.menuStrip1.Text = "menuStrip1";
-            // 
-            // fileToolStripMenuItem
-            // 
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "File";
-            // 
-            // settingToolStripMenuItem
-            // 
-            this.settingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.settingToolStripMenuItem1});
-            this.settingToolStripMenuItem.Name = "settingToolStripMenuItem";
-            this.settingToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
-            this.settingToolStripMenuItem.Text = "Tool";
-            // 
-            // settingToolStripMenuItem1
-            // 
-            this.settingToolStripMenuItem1.Name = "settingToolStripMenuItem1";
-            this.settingToolStripMenuItem1.Size = new System.Drawing.Size(111, 22);
-            this.settingToolStripMenuItem1.Text = "Setting";
             // 
             // statusStrip1
             // 
@@ -996,6 +1179,23 @@
             this.lbLogCount.Size = new System.Drawing.Size(27, 19);
             this.lbLogCount.Text = "Log";
             // 
+            // tbSettingBaseDir
+            // 
+            this.tbSettingBaseDir.Location = new System.Drawing.Point(408, 44);
+            this.tbSettingBaseDir.Name = "tbSettingBaseDir";
+            this.tbSettingBaseDir.Size = new System.Drawing.Size(149, 20);
+            this.tbSettingBaseDir.TabIndex = 30;
+            // 
+            // btnSettingChangeBaseDir
+            // 
+            this.btnSettingChangeBaseDir.Location = new System.Drawing.Point(418, 95);
+            this.btnSettingChangeBaseDir.Name = "btnSettingChangeBaseDir";
+            this.btnSettingChangeBaseDir.Size = new System.Drawing.Size(61, 23);
+            this.btnSettingChangeBaseDir.TabIndex = 28;
+            this.btnSettingChangeBaseDir.Text = "Change";
+            this.btnSettingChangeBaseDir.UseVisualStyleBackColor = true;
+            this.btnSettingChangeBaseDir.Click += new System.EventHandler(this.btnSettingChangeBaseDir_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1003,18 +1203,17 @@
             this.ClientSize = new System.Drawing.Size(674, 518);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.tabControl);
-            this.Controls.Add(this.menuStrip1);
-            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "SteCom";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbFriend)).EndInit();
             this.tabControl.ResumeLayout(false);
             this.tabSender.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbFriend)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pBoxUserAvatar)).EndInit();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbImage)).EndInit();
@@ -1024,19 +1223,18 @@
             this.groupBox8.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pBoxUserComm)).EndInit();
             this.groupBox9.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbManual)).EndInit();
             this.tabGoogle.ResumeLayout(false);
             this.tabGoogle.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             this.tabSetting.ResumeLayout(false);
             this.tabSetting.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pBoxUserAvatar)).EndInit();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -1052,17 +1250,12 @@
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage tabSender;
         private System.Windows.Forms.TabPage tabReceiver;
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem settingToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem settingToolStripMenuItem1;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button btnSelectFile;
         private System.Windows.Forms.TextBox tbMessagePath;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox tbInputMessage;
         private System.Windows.Forms.ComboBox cmbSelectTextType;
-        private System.Windows.Forms.CheckBox cbIsTested;
         private System.Windows.Forms.TabPage tabSetting;
         private System.Windows.Forms.TextBox tbInbox;
         private System.Windows.Forms.TabPage tabGoogle;
@@ -1085,38 +1278,28 @@
         private System.Windows.Forms.ToolStripStatusLabel lbDoing;
         private System.Windows.Forms.Button btnCoverImage;
         private System.Windows.Forms.GroupBox groupBox9;
-        private System.Windows.Forms.ListView listViewTagImage;
+        private System.Windows.Forms.ListView listViewMessage;
         private System.Windows.Forms.Button fdOpenfile;
         private System.Windows.Forms.GroupBox groupBox8;
         private System.Windows.Forms.Label lbUserIdComm;
-        private System.Windows.Forms.Button btnGetUserList;
-        private System.Windows.Forms.ListView listViewUserList;
+        private System.Windows.Forms.Button btnGetImageList;
+        private System.Windows.Forms.ListView listViewInbox;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.PictureBox pBoxUserComm;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label lbUserNameComm;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox tbAlbumDesc;
-        private System.Windows.Forms.TextBox tbAlbumName;
-        private System.Windows.Forms.Button btnCreateAlbum;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnShowFriendList;
         private System.Windows.Forms.DateTimePicker dtpCheckTime;
         private System.Windows.Forms.Button btnChangeCheckTime;
         private System.Windows.Forms.TextBox tbCheckTime;
         private System.Windows.Forms.ToolStripStatusLabel lbLogCount;
         private System.Windows.Forms.ComboBox cmbInputAlbum;
-        private System.Windows.Forms.Label lbCheckTime;
         private System.Windows.Forms.ListView listViewFriends;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.Label lbPrivateAlbum;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button btnTester;
-        private System.Windows.Forms.Label lbAccessTokenExpire;
-        private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Button btnFacebookLogin;
-        private System.Windows.Forms.Label lbFacebookUserName;
+        private System.Windows.Forms.Label lbLoginUserName;
         private System.Windows.Forms.PictureBox pBoxUserAvatar;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label lbFriendID;
@@ -1132,6 +1315,37 @@
         private System.Windows.Forms.Button btnShowPrivateAlbum;
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Button btnDiff;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Label lbManualImageSize;
+        private System.Windows.Forms.Label lbManualImageDir;
+        private System.Windows.Forms.Label lbManualImageName;
+        private System.Windows.Forms.Button btnManualDecode;
+        private System.Windows.Forms.Button btnManualEncode;
+        private System.Windows.Forms.TextBox tbManualStatus;
+        private System.Windows.Forms.ComboBox cmbManualFileType;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Button btnManualBrowseFile;
+        private System.Windows.Forms.TextBox tbManualText;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Button btnManualBrowseImage;
+        private System.Windows.Forms.TextBox tbManualImage;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.PictureBox pbManual;
+        private System.Windows.Forms.Label lbManualLength;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Button btnManualClear;
+        private System.Windows.Forms.Label lbReceiverNewMessage;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label lbLoginPrivateAlbum;
+        private System.Windows.Forms.Label lbLoginID;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Button btnSettingChangeBaseDir;
+        private System.Windows.Forms.TextBox tbSettingBaseDir;
     }
 }
 

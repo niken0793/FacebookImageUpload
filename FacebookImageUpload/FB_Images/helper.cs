@@ -34,6 +34,9 @@ namespace FacebookImageUpload.FB_Images
 
 
 
+
+
+
         public  static string GetInboxText(string name, int count)
         {
             string text;
@@ -144,17 +147,7 @@ namespace FacebookImageUpload.FB_Images
             string dir = Path.GetDirectoryName(fullPath);
             string filename = Path.GetFileNameWithoutExtension(fullPath);
             string exten = Path.GetExtension(fullPath);
-            string[] a = filename.Split('_');
-            if (a.Length >= 2)
-            {
-                s = Path.Combine(dir, a[0] + "_" + a[1] + "_" + suffix + exten);
-            }
-            else
-            {
-                s = Path.Combine(dir, a[0] + "_" + suffix + exten);
-            }
-
-
+            s = Path.Combine(dir, filename + "_" + suffix + exten);
             return s;
         }
 
@@ -202,7 +195,7 @@ namespace FacebookImageUpload.FB_Images
             {
                 if(!dir.Equals((FB_Image.BaseDirectory.TrimEnd('\\'))))
                 {
-                    File.Copy(imagePath, Path.Combine(FB_Image.BaseDirectory,filename));
+                    File.Copy(imagePath, Path.Combine(FB_Image.BaseDirectory,filename),true);
                 }
                 string output = Form1.JPSeekDecode(filename, fileNameNO + ".txt");
                 if (!string.IsNullOrEmpty(output))
@@ -214,6 +207,29 @@ namespace FacebookImageUpload.FB_Images
             return "";
         }
 
+        public static byte[] GetByteFromImage(string imagePath)
+        {
+            string dir = Path.GetDirectoryName(imagePath);
+            string filename = Path.GetFileName(imagePath);
+            string fileNameNO = Path.GetFileNameWithoutExtension(imagePath);
+            byte[] content;
+
+            if (!string.IsNullOrEmpty(dir) && !string.IsNullOrEmpty(filename) && !string.IsNullOrEmpty(fileNameNO))
+            {
+                if (!dir.Equals((FB_Image.BaseDirectory.TrimEnd('\\'))))
+                {
+                    File.Copy(imagePath, Path.Combine(FB_Image.BaseDirectory, filename), true);
+                }
+                string output = Form1.JPSeekDecode(filename, fileNameNO + ".txt");
+                if (!string.IsNullOrEmpty(output))
+                {
+                    content = File.ReadAllBytes(Path.Combine(FB_Image.BaseDirectory, output));
+                    return content;
+                }
+            }
+            return null;
+        }
+
 
 
 
@@ -222,7 +238,7 @@ namespace FacebookImageUpload.FB_Images
             if (progress != null && progress.Length > 0)
             {
                 string[] a = progress.Split('|');
-                if (a.Length == 3)
+                if (a.Length == 2)
                 {
                     if (pb != null)
                     {
@@ -231,13 +247,22 @@ namespace FacebookImageUpload.FB_Images
                     }
                     if(lbPercent!= null)
                     {
-                        lbPercent.Text = a[1] +" %";
+                        lbPercent.Text = a[0] +" %";
                     }
                     if(lbDoing != null)
                     {
-                        lbDoing.Text = a[2];
+                        lbDoing.Text = a[1];
                     }
                 }
+            }
+        }
+
+        public static void EnableControl(bool enable=true, params Control[] args)
+        {
+            foreach (Control item in args)
+            {
+                if(item!= null)
+                    item.Enabled = enable;
             }
         }
 
@@ -358,17 +383,14 @@ namespace FacebookImageUpload.FB_Images
         }
 
 
-        public static bool CompareOutputFile(string path_file_in, string path_file_out, TextBox tb)
+        public static bool CompareOutputFile(string path_file_in, string path_file_out)
         {
             if (File.Exists(path_file_in) && File.Exists(path_file_out))
             {
-                string s_in = File.ReadAllText(path_file_in);
+                //string s_in = File.ReadAllText(path_file_in);
+                string s_in = Form1.CorrectErrorString(File.ReadAllBytes(path_file_in));
                 string s_out = File.ReadAllText(path_file_out);
-                if (tb != null)
-                {
-                }
-               
-                if (s_in.Equals(s_out))
+                if (s_in.IndexOf(s_out)==0)
                 {
                     return true;
                 }
@@ -376,16 +398,6 @@ namespace FacebookImageUpload.FB_Images
                 {
                     return false;
                 }
-                //if (s_out.Length > 0)
-                //{
-                //    return true;
-                //}
-                //else
-                //{
-                //    return false;
-                //}
-
-
             }
             else
             {
@@ -413,7 +425,7 @@ namespace FacebookImageUpload.FB_Images
             if (!t1.Equals(dir.Trim('\\')))
             {
                 File.Copy(source,newFullPath,true);
-            }else{
+            }else if(!t2.Equals(asciiFileName)){
                 if (File.Exists(newFullPath))
                     File.Delete(newFullPath);
                 File.Move(source, newFullPath);
@@ -436,7 +448,7 @@ namespace FacebookImageUpload.FB_Images
         } 
 
 
-        public static string AppenFileName(string fileName, string suffix)
+        public static string AppendFileNameNoLimit(string fileName, string suffix)
         {
             if (fileName != null && suffix != null && fileName != "" && suffix != "")
             {

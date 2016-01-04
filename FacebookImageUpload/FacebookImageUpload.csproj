@@ -14,6 +14,7 @@
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -26,7 +27,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -215,6 +215,11 @@
     <Compile Include="DCT\Sample.cs" />
     <Compile Include="DCT\SampleRow.cs" />
     <Compile Include="DCT\Utils.cs" />
+    <Compile Include="ECC\GenericGF.cs" />
+    <Compile Include="ECC\GenericGFPoly.cs" />
+    <Compile Include="ECC\ReedSolomonDecoder.cs" />
+    <Compile Include="ECC\ReedSolomonEncoder.cs" />
+    <Compile Include="Encrypt\StringCipher.cs" />
     <Compile Include="FacebookAlbum.cs" />
     <Compile Include="FacebookLoginForm.cs">
       <SubType>Form</SubType>
@@ -229,11 +234,11 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FB_Images\Crc32.cs" />
-    <Compile Include="FB_Images\CreateAlbum.cs">
+    <Compile Include="FB_Images\CreatePrivateAlbum.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FB_Images\CreateAlbum.Designer.cs">
-      <DependentUpon>CreateAlbum.cs</DependentUpon>
+    <Compile Include="FB_Images\CreatePrivateAlbum.Designer.cs">
+      <DependentUpon>CreatePrivateAlbum.cs</DependentUpon>
     </Compile>
     <Compile Include="FB_Images\helper.cs" />
     <Compile Include="FB_Images\Message.cs" />
@@ -254,6 +259,12 @@
     <Compile Include="GUI\Private_album\CreatePrivateAlbum.Designer.cs">
       <DependentUpon>CreatePrivateAlbum.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\SplitFile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\SplitFile.Designer.cs">
+      <DependentUpon>SplitFile.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="CoverImageForm.resx">
@@ -262,14 +273,17 @@
     <EmbeddedResource Include="FacebookLoginForm.resx">
       <DependentUpon>FacebookLoginForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FB_Images\CreateAlbum.resx">
-      <DependentUpon>CreateAlbum.cs</DependentUpon>
+    <EmbeddedResource Include="FB_Images\CreatePrivateAlbum.resx">
+      <DependentUpon>CreatePrivateAlbum.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Private_album\CreatePrivateAlbum.resx">
       <DependentUpon>CreatePrivateAlbum.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\SplitFile.resx">
+      <DependentUpon>SplitFile.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

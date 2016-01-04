@@ -192,3 +192,4 @@ C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookI
 C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\Emgu.Util.xml
 C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\opencv_core220.dll
 C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\bin\Debug\opencv_imgproc220.dll
+C:\Users\huy\Documents\Visual Studio 2012\Projects\FacebookImageUpload\FacebookImageUpload\obj\x86\Debug\FacebookImageUpload.SplitFile.resources

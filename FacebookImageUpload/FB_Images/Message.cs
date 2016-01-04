@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace FacebookImageUpload.FB_Images
 {
     public class FB_Message
     {
+
 
         private string content;
 
@@ -16,12 +18,12 @@ namespace FacebookImageUpload.FB_Images
             get { return content; }
             set { content = value; }
         }
-        private string crc;
+        private string id;
 
-        public string Crc
+        public string ID
         {
-            get { return crc; }
-            set { crc = value; }
+            get { return id; }
+            set { id = value; }
         }
 
         private long createdDate;
@@ -39,6 +41,21 @@ namespace FacebookImageUpload.FB_Images
             get { return isRead; }
             set { isRead = value; }
         }
+        private bool isFull;
+
+        public bool IsFull
+        {
+            get { return isFull; }
+            
+        }
+
+        private bool isOld;
+
+        public bool IsOld
+        {
+            get { return isOld; }
+            set { isOld = value; }
+        }
 
         private bool isSent;
 
@@ -47,6 +64,15 @@ namespace FacebookImageUpload.FB_Images
             get { return isSent; }
             set { isSent = value; }
         }
+
+        private List<MessagePart> part;
+
+        public List<MessagePart> Part
+        {
+            get { return part; }
+            set { part = value; }
+        }
+
 
         private FB_Image image;
 
@@ -59,6 +85,7 @@ namespace FacebookImageUpload.FB_Images
 
         public FB_Message()
         {
+            part = new List<MessagePart>();
         }
 
 
@@ -67,11 +94,135 @@ namespace FacebookImageUpload.FB_Images
             content = paramContent;
             image = paramImage;
         }
+        public FB_Message(string paramContent, FB_Image paramImage, string paramID,long pCreatedTime)
+            : this()
+        {
+            content = paramContent;
+            image = paramImage;
+            id = paramID;
+            createdDate = pCreatedTime;
+        }
+
         public FB_Message(string paramContent, FB_Image paramImage, long paramCreatedDate, bool paramSent)
             : this(paramContent, paramImage)
         {
             createdDate = paramCreatedDate;
             isSent = paramSent;
+        }
+
+        public string GetContent()
+        {
+            try
+            {
+                if (this.Part.Count > 0)
+                {
+                    SimplerAES aes = new SimplerAES("123");
+                    part.Sort(delegate(MessagePart a, MessagePart b) { return a.Offset.CompareTo(b.Offset); });
+                    string s = "";
+                    int start = part[0].Offset;
+                    int end = part[part.Count - 1].Offset;
+                    if (part[0].Offset == 0 && part[0].Flag == 0)
+                    {
+                        isFull = true;
+                        content = part[0].Content;
+                        string tempString  = aes.Decrypt(content.Trim('\0'));
+                        if (tempString != null)
+                        {
+                            content = tempString;
+                        }
+                        else
+                        {
+                            isOld = true;
+                        }
+                        
+
+                        return content;
+                    }
+                    int j = 0;
+                    if (start != 0)
+                        s += "[....]";
+                    for (int i = start; i <= end; i++)
+                    {
+
+                        if (part[j].Offset == i)
+                        {
+                            s += part[j].Content;
+                            j++;
+                        }
+                        else
+                        {
+                            s += "[....]";
+                        }
+                    }
+                    if (part[part.Count - 1].Flag == 1)
+                    {
+                        s += "[....]";
+                    }
+                    if (part.Count == part[part.Count - 1].Offset + 1 && part[part.Count - 1].Flag == 0)
+                    {
+                        isFull = true;
+                        content = s.Trim('\0');
+                        string tempString = aes.Decrypt(s.Trim('\0'));
+                        if (tempString != null)
+                        {
+                            content = tempString;
+                        }
+                        else
+                        {
+                            isOld = true;
+                        }
+                        return content;
+                    }
+
+
+                    content = s;
+                    return s;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return null;
+            }
+        }
+
+    }
+
+    public class MessagePart
+    {
+        private string content;
+
+        public string Content
+        {
+            get { return content; }
+            set { content = value; }
+        }
+        private int offset;
+
+        public int Offset
+        {
+            get { return offset; }
+            set { offset = value; }
+        }
+        private int flag;
+
+        public int Flag
+        {
+            get { return flag; }
+            set { flag = value; }
+        }
+
+        public MessagePart()
+        { }
+        public MessagePart(string pContent, int pOffset, int pFlag)
+        {
+            content = pContent;
+            offset = pOffset;
+            flag = pFlag;
         }
 
     }
@@ -122,6 +273,8 @@ namespace FacebookImageUpload.FB_Images
             set { profilePath = value; }
         }
 
+    
+
         public InboxUser()
         {
             messages = new List<FB_Message>();
@@ -138,6 +291,65 @@ namespace FacebookImageUpload.FB_Images
         {
             userID = paramID;
             userName = paramName;
+        }
+
+        public bool AddMessageToInbox(string content, string imageId, string imagePath, long createdTime, bool isSent = false)
+        {
+            try
+            {
+                if (content.Length >= Form1.HEADER_LEN)
+                {
+                    string header = content.Substring(0, Form1.HEADER_LEN);
+                    string[] headerComponent = header.Split('|');
+                    if (headerComponent.Length == 3)
+                    {
+                        string id = headerComponent[0];
+                        int offset = Int16.Parse(headerComponent[1]);
+                        int flag = Int16.Parse( headerComponent[2]);
+                        string subContent = content.Substring(Form1.HEADER_LEN, content.Length - Form1.HEADER_LEN);
+                        FB_Message m = GetMessageByID(messages, id);
+                        if (m != null)
+                        {
+                            
+                            m.Part.Add(new MessagePart(subContent, offset, flag));
+                            return false;
+                        }
+                        else
+                        {
+                            MessagePart part = new MessagePart(subContent, offset, flag);
+                            FB_Message mes = new FB_Message(content, new FB_Image(imageId, imagePath), id,createdTime);
+                            mes.Part.Add(part);
+                            messages.Add(mes);
+                            return true;
+                        }
+                        
+                    }
+                    
+
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return false;
+            }
+
+        }
+
+        public static FB_Message GetMessageByID(List<FB_Message> listMessage, string id)
+        {
+            if (listMessage != null && listMessage.Count > 0)
+            {
+                for (int i = 0; i < listMessage.Count; i++)
+                {
+                    if (listMessage[i].ID.Equals(id))
+                    {
+                        return listMessage[i];
+                    }
+                }
+            }
+            return null;
         }
 
 
