@@ -22,10 +22,10 @@ using System.Diagnostics;
 
 namespace FacebookImageUpload.FB_Images
 {
-    public class Common
+    public class MyHelper
     {
 
-        public static string ProjectDir= Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+        public static string ProjectDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
 
 
 
@@ -33,11 +33,90 @@ namespace FacebookImageUpload.FB_Images
 
 
 
+        //public static bool CheckingProgramDir()
+        //{
+        //    string jphide_pass = Path.Combine(FB_Image.BaseDirectory, "jphide_pass.exe");
+        //    string jpseek_pass = Path.Combine(FB_Image.BaseDirectory, "jpseek_pass.exe");
+        //    string jphide_modify = Path.Combine(FB_Image.BaseDirectory, "jphide_modify.exe");
+        //    string jpseek_modify = Path.Combine(FB_Image.BaseDirectory, "jpseek_modify.exe");
+        //    List<string> listDir = new List<string>();
+        //    listDir.AddRange(new string[] {
+        //      FB_Image.UserSettingDir,
+        //      FB_Image.UserImageDir,
+        //      FB_Image.BaseDirectory,
+        //      FB_Image.SuccessImageDir,
+        //      FB_Image.LogDir,
+        //      FB_Image.OutputDir,
+        //      FB_Image.TestInputDir,
+        //    });
+
+        //    List<string> listFile = new List<string>();
+
+
+        //    foreach (string item in listDir)
+        //    {
+                
+        //    }
+
+        //}
+
+        public static bool CreateProgramDir()
+        {
+            try
+            {
+                List<string> listDir = new List<string>();
+                listDir.AddRange(new string[] {
+              FB_Image.UserSettingDir,
+              FB_Image.UserImageDir,
+              FB_Image.BaseDirectory,
+              FB_Image.SuccessImageDir,
+              FB_Image.LogDir,
+              FB_Image.OutputDir,
+              FB_Image.TestInputDir
+            });
+                foreach (string dir in listDir)
+                {
+                    if (!Directory.Exists(dir))
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
+                }
+
+                string jphide_pass = Path.Combine(FB_Image.BaseDirectory,"jphide_pass.exe");
+                string jpseek_pass = Path.Combine( FB_Image.BaseDirectory,"jpseek_pass.exe");
+                string jphide_modify = Path.Combine( FB_Image.BaseDirectory,"jphide_modify.exe");
+                string jpseek_modify = Path.Combine( FB_Image.BaseDirectory,"jpseek_modify.exe");
+
+                if (!File.Exists(jphide_pass))
+                {
+                    File.WriteAllBytes(jphide_pass, Properties.Resources.jphide_pass);
+                }
+                if (!File.Exists(jpseek_pass))
+                {
+                    File.WriteAllBytes(jpseek_pass, Properties.Resources.jpseek_pass);
+                }
+                if (!File.Exists(jphide_modify))
+                {
+                    File.WriteAllBytes(jphide_modify, Properties.Resources.jphide_modify);
+                }
+                if (!File.Exists(jpseek_modify))
+                {
+                    File.WriteAllBytes(jpseek_modify, Properties.Resources.jpseek_modify);
+                }
 
 
 
 
-        public  static string GetInboxText(string name, int count)
+                return true;
+            }
+            catch (Exception e)
+            {
+                Form1.Log(e);
+                return false;
+            }
+        }
+
+        public static string GetInboxText(string name, int count)
         {
             string text;
             if (count > 0)
@@ -70,19 +149,13 @@ namespace FacebookImageUpload.FB_Images
             dynamic me = user.Get(uid);
             string userName = me.name;
             string userId = me.id;
-            userAvatarPath = path + "profilePiture_" + userId + ".jpg";
+            userAvatarPath = Path.Combine(path, userId + ".jpg");
 
             source_url = (string)json["picture"]["data"]["url"];
             if (!File.Exists(userAvatarPath))
             {
-
-                if (!DowloadImageFromLink(source_url, userAvatarPath, ImageFormat.Jpeg))
-                {
-                    userAvatarPath = Path.Combine(Common.ProjectDir, "images/profile.jpg");
-                }
-
+                DowloadImageFromLink(source_url, userAvatarPath, ImageFormat.Jpeg);
             }
-
             userInfo.Add(userName);
             userInfo.Add(userAvatarPath);
             userInfo.Add(userId);
@@ -100,7 +173,7 @@ namespace FacebookImageUpload.FB_Images
             {
                 userInbox = new List<FB_Message>();
                 userInbox.Add(message);
-                inbox.Add(userID,userInbox);
+                inbox.Add(userID, userInbox);
             }
         }
         public static DateTime UnixTimeStampToDateTime(long unixTimeStamp)
@@ -119,7 +192,7 @@ namespace FacebookImageUpload.FB_Images
 
         public static long GetCheckTimeFromInbox(List<InboxUser> inboxs)
         {
-            if (inboxs != null && inboxs.Count>0)
+            if (inboxs != null && inboxs.Count > 0)
             {
                 var min = inboxs.Min(r => r.CheckTime);
                 return (long)min;
@@ -136,12 +209,12 @@ namespace FacebookImageUpload.FB_Images
                 {
                     return i.First();
                 }
-                
+
             }
             return null;
         }
 
-        public static  string AppendFileName(string fullPath, string suffix)
+        public static string AppendFileName(string fullPath, string suffix)
         {
             string s = "";
             string dir = Path.GetDirectoryName(fullPath);
@@ -151,7 +224,7 @@ namespace FacebookImageUpload.FB_Images
             return s;
         }
 
-        public static bool DowloadImageFromLink(string link, string pathToSave, ImageFormat format,bool overWrite=false )
+        public static bool DowloadImageFromLink(string link, string pathToSave, ImageFormat format, bool overWrite = false)
         {
             try
             {
@@ -166,16 +239,18 @@ namespace FacebookImageUpload.FB_Images
                         {
                             using (var yourImage = Image.FromStream(mem))
                             {
-                                Common.PrepareDirectory(pathToSave);
+                                MyHelper.PrepareDirectory(pathToSave);
                                 yourImage.Save(pathToSave, format);
                                 return true;
                             }
                         }
                     }
-                }else{
+                }
+                else
+                {
                     return true;
                 }
-                
+
             }
             catch (Exception e)
             {
@@ -193,9 +268,9 @@ namespace FacebookImageUpload.FB_Images
 
             if (!string.IsNullOrEmpty(dir) && !string.IsNullOrEmpty(filename) && !string.IsNullOrEmpty(fileNameNO))
             {
-                if(!dir.Equals((FB_Image.BaseDirectory.TrimEnd('\\'))))
+                if (!dir.Equals((FB_Image.BaseDirectory.TrimEnd('\\'))))
                 {
-                    File.Copy(imagePath, Path.Combine(FB_Image.BaseDirectory,filename),true);
+                    File.Copy(imagePath, Path.Combine(FB_Image.BaseDirectory, filename), true);
                 }
                 string output = Form1.JPSeekDecode(filename, fileNameNO + ".txt");
                 if (!string.IsNullOrEmpty(output))
@@ -233,35 +308,42 @@ namespace FacebookImageUpload.FB_Images
 
 
 
-        public static void ShowProgressBar(string progress,ToolStripProgressBar pb, ToolStripLabel lbPercent,ToolStripLabel lbDoing)
+        public static void ShowProgressBar(string progress, ToolStripProgressBar pb, ToolStripLabel lbPercent, ToolStripLabel lbDoing)
         {
-            if (progress != null && progress.Length > 0)
+            try
             {
-                string[] a = progress.Split('|');
-                if (a.Length == 2)
+                if (progress != null && progress.Length > 0)
                 {
-                    if (pb != null)
+                    string[] a = progress.Split('|');
+                    if (a.Length == 2)
                     {
-                        pb.Value = Int16.Parse(a[0]);
+                        if (pb != null)
+                        {
+                            pb.Value = Int16.Parse(a[0]);
 
-                    }
-                    if(lbPercent!= null)
-                    {
-                        lbPercent.Text = a[0] +" %";
-                    }
-                    if(lbDoing != null)
-                    {
-                        lbDoing.Text = a[1];
+                        }
+                        if (lbPercent != null)
+                        {
+                            lbPercent.Text = a[0] + " %";
+                        }
+                        if (lbDoing != null)
+                        {
+                            lbDoing.Text = a[1];
+                        }
                     }
                 }
             }
+            catch (Exception e)
+            {
+                Form1.Log(e);
+            }
         }
 
-        public static void EnableControl(bool enable=true, params Control[] args)
+        public static void EnableControl(bool enable = true, params Control[] args)
         {
             foreach (Control item in args)
             {
-                if(item!= null)
+                if (item != null)
                     item.Enabled = enable;
             }
         }
@@ -271,19 +353,19 @@ namespace FacebookImageUpload.FB_Images
 
         public static void ResetStatusTrip(ToolStripProgressBar pb, ToolStripLabel lbPercent, ToolStripLabel lbDoing)
         {
-             if (pb != null)
-                    {
-                        pb.Value = 0;
+            if (pb != null)
+            {
+                pb.Value = 0;
 
-                    }
-                    if(lbPercent!= null)
-                    {
-                        lbPercent.Text = "...";
-                    }
-                    if(lbDoing != null)
-                    {
-                        lbDoing.Text = "Facebook Image Stegano";
-                    }
+            }
+            if (lbPercent != null)
+            {
+                lbPercent.Text = "...";
+            }
+            if (lbDoing != null)
+            {
+                lbDoing.Text = "Facebook Image Stegano";
+            }
         }
 
 
@@ -295,7 +377,7 @@ namespace FacebookImageUpload.FB_Images
             long bytes = Math.Abs(byteCount);
             int place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
             double num = Math.Round(bytes / Math.Pow(1024, place), 1);
-            return (Math.Sign(byteCount) * num).ToString() + " "+suf[place];
+            return (Math.Sign(byteCount) * num).ToString() + " " + suf[place];
         }
 
         public static void DeleteFile(string path)
@@ -329,7 +411,7 @@ namespace FacebookImageUpload.FB_Images
                             if (path != null && path != "" && File.Exists(path))
                             {
                                 File.Delete(path);
-                                
+
                             }
                         }
                         catch (Exception ee)
@@ -341,7 +423,7 @@ namespace FacebookImageUpload.FB_Images
                     pathes.Clear();
                     pathes.AddRange(errorFile);
 
-                   
+
                 }
             }
             catch (Exception e)
@@ -355,7 +437,7 @@ namespace FacebookImageUpload.FB_Images
         {
             string directory = Path.GetDirectoryName(filename);
             string file = Path.GetFileName(filename);
-            
+
             if (Directory.Exists(directory))
             {
                 if (!File.Exists(filename))
@@ -390,7 +472,7 @@ namespace FacebookImageUpload.FB_Images
                 //string s_in = File.ReadAllText(path_file_in);
                 string s_in = Form1.CorrectErrorString(File.ReadAllBytes(path_file_in));
                 string s_out = File.ReadAllText(path_file_out);
-                if (s_in.IndexOf(s_out)==0)
+                if (s_in.IndexOf(s_out) == 0)
                 {
                     return true;
                 }
@@ -411,21 +493,23 @@ namespace FacebookImageUpload.FB_Images
                 return null;
             foreach (AlbumInfo i in albums)
             {
-                if(i.Id.Equals(id))
+                if (i.Id.Equals(id))
                     return i;
             }
             return null;
         }
-        public static string CopyFileTo(string source,string dir)
+        public static string CopyFileTo(string source, string dir)
         {
             string t1 = Path.GetDirectoryName(source);
             string t2 = Path.GetFileName(source);
             string asciiFileName = ConvertVN(t2);
-            string newFullPath = Path.Combine(dir,asciiFileName);
+            string newFullPath = Path.Combine(dir, asciiFileName);
             if (!t1.Equals(dir.Trim('\\')))
             {
-                File.Copy(source,newFullPath,true);
-            }else if(!t2.Equals(asciiFileName)){
+                File.Copy(source, newFullPath, true);
+            }
+            else if (!t2.Equals(asciiFileName))
+            {
                 if (File.Exists(newFullPath))
                     File.Delete(newFullPath);
                 File.Move(source, newFullPath);
@@ -445,7 +529,7 @@ namespace FacebookImageUpload.FB_Images
                 chucodau = chucodau.Replace(chucodau[index], ReplText[index2]);
             }
             return chucodau;
-        } 
+        }
 
 
         public static string AppendFileNameNoLimit(string fileName, string suffix)

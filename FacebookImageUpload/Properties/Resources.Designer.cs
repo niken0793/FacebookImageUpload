@@ -63,9 +63,9 @@ namespace FacebookImageUpload.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap _default {
+        internal static System.Drawing.Bitmap Add_Friend {
             get {
-                object obj = ResourceManager.GetObject("default", resourceCulture);
+                object obj = ResourceManager.GetObject("Add_Friend", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,9 +73,9 @@ namespace FacebookImageUpload.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Add_Friend_512 {
+        internal static System.Drawing.Bitmap Add_Friend_2 {
             get {
-                object obj = ResourceManager.GetObject("Add_Friend-512", resourceCulture);
+                object obj = ResourceManager.GetObject("Add_Friend_2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -83,9 +83,9 @@ namespace FacebookImageUpload.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Add_Friend_5121 {
+        internal static System.Drawing.Bitmap Default {
             get {
-                object obj = ResourceManager.GetObject("Add_Friend-5121", resourceCulture);
+                object obj = ResourceManager.GetObject("Default", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -95,7 +95,7 @@ namespace FacebookImageUpload.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap gallery_icon {
             get {
-                object obj = ResourceManager.GetObject("gallery-icon", resourceCulture);
+                object obj = ResourceManager.GetObject("gallery_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -105,7 +105,57 @@ namespace FacebookImageUpload.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap icon_profile {
             get {
-                object obj = ResourceManager.GetObject("icon-profile", resourceCulture);
+                object obj = ResourceManager.GetObject("icon_profile", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] jphide_modify {
+            get {
+                object obj = ResourceManager.GetObject("jphide_modify", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] jphide_pass {
+            get {
+                object obj = ResourceManager.GetObject("jphide_pass", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] jpseek_modify {
+            get {
+                object obj = ResourceManager.GetObject("jpseek_modify", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] jpseek_pass {
+            get {
+                object obj = ResourceManager.GetObject("jpseek_pass", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap profile {
+            get {
+                object obj = ResourceManager.GetObject("profile", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

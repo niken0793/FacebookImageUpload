@@ -73,7 +73,7 @@ namespace FacebookImageUpload
             {
                 string plainText = File.ReadAllText(fullPath);
                 string cipherText = this.Encrypt(plainText);
-                string newPath = Common.AppendFileName(fullPath, "_encrypt");
+                string newPath = MyHelper.AppendFileName(fullPath, "_encrypt");
                 File.WriteAllText(newPath, cipherText);
                 return newPath;
             }
@@ -90,7 +90,7 @@ namespace FacebookImageUpload
             {
                 string cipherText = File.ReadAllText(fullPath);
                 string plaintText = this.Encrypt(cipherText);
-                string newPath = Common.AppendFileName(fullPath, "_decrypt");
+                string newPath = MyHelper.AppendFileName(fullPath, "_decrypt");
                 File.WriteAllText(newPath, plaintText);
                 return newPath;
             }

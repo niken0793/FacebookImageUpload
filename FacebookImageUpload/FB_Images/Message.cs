@@ -215,14 +215,23 @@ namespace FacebookImageUpload.FB_Images
             get { return flag; }
             set { flag = value; }
         }
+        private string imagePath;
+
+        public string ImagePath
+        {
+            get { return imagePath; }
+            set { imagePath = value; }
+        }
+
 
         public MessagePart()
         { }
-        public MessagePart(string pContent, int pOffset, int pFlag)
+        public MessagePart(string pContent, int pOffset, int pFlag, string pImage)
         {
             content = pContent;
             offset = pOffset;
             flag = pFlag;
+            imagePath = pImage;
         }
 
     }
@@ -311,12 +320,12 @@ namespace FacebookImageUpload.FB_Images
                         if (m != null)
                         {
                             
-                            m.Part.Add(new MessagePart(subContent, offset, flag));
+                            m.Part.Add(new MessagePart(subContent, offset, flag,imagePath));
                             return false;
                         }
                         else
                         {
-                            MessagePart part = new MessagePart(subContent, offset, flag);
+                            MessagePart part = new MessagePart(subContent, offset, flag,imagePath);
                             FB_Message mes = new FB_Message(content, new FB_Image(imageId, imagePath), id,createdTime);
                             mes.Part.Add(part);
                             messages.Add(mes);

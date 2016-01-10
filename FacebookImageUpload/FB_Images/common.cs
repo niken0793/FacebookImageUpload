@@ -35,7 +35,6 @@ namespace FacebookImageUpload
         private FacebookLoginForm facebookLoginForm;
         private bool isLogin = false;
         public static string AppID = "1499942773583853";
-        public static string AppToken = "1499942773583853|B5U1JXWJmlqtweGmZAPBPYlmDG4";
         public static List<InboxUser> ListInboxUser = new List<InboxUser>();
       
 
@@ -53,7 +52,7 @@ namespace FacebookImageUpload
                         pbImage.ImageLocation = open.FileName;
                         lbImageName.Text = Path.GetFileName(open.FileName);
                         lbImageDirectory.Text = Path.GetDirectoryName(open.FileName);
-                        lbImageSize.Text = Common.BytesToString(new FileInfo(open.FileName).Length);
+                        lbImageSize.Text = MyHelper.BytesToString(new FileInfo(open.FileName).Length);
                     }
                     else
                     {
@@ -69,6 +68,7 @@ namespace FacebookImageUpload
                 Log(e);
             }
         }
+
         public static string 
             Crc32Hash(string filepath)
         {
@@ -95,6 +95,7 @@ namespace FacebookImageUpload
         {
             //string apiKey = "AIzaSyCKOq5EJwqwfQzmdfCW0VE-IX9fFMIZEUM";
             //string searchEngineId = "002524252275919064823:dlgwbkge9f0";
+            
             string apiKey = "AIzaSyCOQh0JLePZur6o26W1lwI5mpj5pa3M5oA";
             string searchEngineId = "001783529186805515716:jqccojujq9c";
             GoogleImage googleImage = new GoogleImage();
@@ -120,16 +121,16 @@ namespace FacebookImageUpload
                             {
                                 using (var yourImage = Image.FromStream(mem))
                                 {
-                                    string new_path = FB_Image.BaseDirectory + query + "_" + gtemp + ".jpg";
+                                    string new_path = Path.Combine(FB_Image.BaseDirectory , query + "_" + gtemp + ".jpg");
                                     var newImage = googleImage.ScaleImage(yourImage, 960, 720);
                                     newImage.Save(new_path, ImageFormat.Jpeg);
-                                    Common.ListFileDelete.Add(new_path);
+                                    MyHelper.ListFileDelete.Add(new_path);
                                     string filename = new_path;
-                                    string testMessage = SplitFileIntoPart(Path.Combine(FB_Image.RelativeDirectory, "GoogleImage/200.txt"),0)[0];
+                                    string testMessage = SplitFileIntoPart(Path.Combine(FB_Image.RelativeDirectory,FB_Image.TestInputDir,"200.txt"),0)[0];
                                     string coverImagePath = TestEncode(null, filename, testMessage, ActiveUser.PrivateAlbumID, true);
                                     if (coverImagePath != null)
                                     {
-                                        File.Copy(coverImagePath, "SuccessImage/" + query + "_" + gtemp + ".jpg", true);
+                                        File.Copy(coverImagePath, Path.Combine(FB_Image.RelativeDirectory,FB_Image.SuccessImageDir, query + "_" + gtemp + ".jpg"), true);
                                         count++;
                                         progress.Report("success"+Environment.NewLine);
                                     }
@@ -155,7 +156,7 @@ namespace FacebookImageUpload
                     gtemp += 1;
 
                 }
-                Common.DeleteFile(Common.ListFileDelete);
+                MyHelper.DeleteFile(MyHelper.ListFileDelete);
                 start += 10;
             }
         }
@@ -188,7 +189,7 @@ namespace FacebookImageUpload
                             {
                                 using (var yourImage = Image.FromStream(mem))
                                 {
-                                    string new_path = Path.Combine(FB_Image.RelativeDirectory, "SuccessImage/" + query + "_" + gtemp + ".jpg");
+                                    string new_path = Path.Combine(FB_Image.RelativeDirectory, FB_Image.SuccessImageDir,query + "_" + gtemp + ".jpg");
                                     var newImage = googleImage.ScaleImage(yourImage, 960, 720);
                                     newImage.Save(new_path, ImageFormat.Jpeg);
 
@@ -206,7 +207,7 @@ namespace FacebookImageUpload
                     gtemp += 1;
 
                 }
-                Common.DeleteFile(Common.ListFileDelete);
+                MyHelper.DeleteFile(MyHelper.ListFileDelete);
                 start += 10;
             }
         }
@@ -231,12 +232,17 @@ namespace FacebookImageUpload
                     FacebookOAuthResult r = facebookLoginForm.AuthResult;
                     UpdateLoginControl(r);
                     SaveActiveUserOnDisk(ActiveUser);
+                    if (MyAppSetting == null)
+                        MyAppSetting = new AppSetting();
+                    MyAppSetting.ActiveUser = ActiveUser.UserID;
+                    SaveAppSettingOnDisk(MyAppSetting);
 
                 }
                 else
                 {
                     isLogin = false;
                 }
+                LoadFriendList();
             }
             else
             {
@@ -255,9 +261,7 @@ namespace FacebookImageUpload
             var fb = new FacebookClient();
             var logouUrl = fb.GetLogoutUrl(new { access_token = accessToken, next = "https://www.facebook.com/connect/login_success.html" });
             webBrowser.Navigate(logouUrl);
-            Properties.Settings.Default["ActiveUser"] = "no";
-            Properties.Settings.Default.Save();
-
+            MyAppSetting.ActiveUser = "0";
            
         }
 
@@ -266,15 +270,15 @@ namespace FacebookImageUpload
             if (r != null)
             {
                 
-                List<string> s = Common.getUserInfo(r.AccessToken, "me", FB_Image.BaseDirectory);
+                List<string> s = MyHelper.getUserInfo(r.AccessToken, "me", FB_Image.UserImageDir);
                 pBoxUserAvatar.ImageLocation = s[1];
                 lbLoginUserName.Text = s[0];
                 lbLoginID.Text = s[2];
                 bool flag = false;
                 //Set private album
-                if (File.Exists(Path.Combine(FB_Image.RelativeDirectory, "UserSetting/" +s[2])))
+                if (File.Exists(Path.Combine(FB_Image.RelativeDirectory, FB_Image.UserSettingDir,s[2])))
                 {
-                    UserSetting a = Common.DeSerializeObject<UserSetting>(Path.Combine(FB_Image.RelativeDirectory, "UserSetting/" + s[2]));
+                    UserSetting a = MyHelper.DeSerializeObject<UserSetting>(Path.Combine(FB_Image.RelativeDirectory, FB_Image.UserSettingDir , s[2]));
                     if (a != null)
                     {
                         Form1.ActiveUser = a;
@@ -282,7 +286,7 @@ namespace FacebookImageUpload
                     else
                     {
                         Form1.ActiveUser = new UserSetting(r.AccessToken, s[0], s[2], r.Expires.ToString(), s[1]);
-                        Form1.ActiveUser.CheckTime = Common.GetUnixTimesStamp(DateTime.Now);
+                        Form1.ActiveUser.CheckTime = MyHelper.GetUnixTimesStamp(DateTime.Now);
                     }
                     
                     if (a != null && !string.IsNullOrEmpty(a.PrivateAlbumID) && !string.IsNullOrEmpty(a.PrivateAlbumName))
@@ -299,7 +303,7 @@ namespace FacebookImageUpload
                 else
                 {
                     Form1.ActiveUser = new UserSetting(r.AccessToken, s[0], s[2], r.Expires.ToString(), s[1]);
-                    Form1.ActiveUser.CheckTime = Common.GetUnixTimesStamp(DateTime.Now);
+                    Form1.ActiveUser.CheckTime = MyHelper.GetUnixTimesStamp(DateTime.Now);
                 }
 
                 if (!flag)
@@ -326,8 +330,6 @@ namespace FacebookImageUpload
                 cmbInputAlbum.DisplayMember = "Name";
                 cmbInputAlbum.ValueMember = "ID";
               
-                Properties.Settings.Default["ActiveUser"] = s[2];
-                Properties.Settings.Default.Save();
                 btnFacebookLogin.Text = "LogOut";
                 isLogin = true;
 
@@ -336,7 +338,7 @@ namespace FacebookImageUpload
             {
                 lbLoginUserName.Text = "...";
                 lbLoginID.Text = "...";
-                pBoxUserAvatar.ImageLocation = Path.Combine(Common.ProjectDir,"images/profile.jpg");
+                pBoxUserAvatar.Image = Properties.Resources.profile;
                 Form1.ActiveUser = null;
                 btnFacebookLogin.Text = "Login";
                 lbPrivateAlbum.Text = "...";
@@ -350,7 +352,7 @@ namespace FacebookImageUpload
         {
             lbLoginUserName.Text = "Username";
             lbLoginID.Text = "...";
-            pBoxUserAvatar.ImageLocation = Path.Combine(Common.ProjectDir, "images/profile.jpg");
+            pBoxUserAvatar.Image = Properties.Resources.profile;
             Form1.ActiveUser = null;
             btnFacebookLogin.Text = "Login";
             isLogin = false;
@@ -397,34 +399,42 @@ namespace FacebookImageUpload
 
         private void UpdateFriendListView(ListView listview ,List<InboxUser> user, bool showNewMessage = false)
         {
-            listview.Clear();
-            ImageList il = new ImageList();
-            il.TransparentColor = Color.Blue;
-            il.ColorDepth = ColorDepth.Depth32Bit;
-            il.ImageSize = new Size(50, 50);
-            for (int i = 0; i < user.Count; i++)
+            try
             {
-                il.Images.Add(Image.FromFile(user[i].ProfilePath));
-                il.Images.SetKeyName(i,user[i].UserName);
-            }
-            listview.View = View.LargeIcon;
-            listview.LargeImageList = il;
-            for(int j=0;j<user.Count;j++)
-            {
-                ListViewItem item = new ListViewItem();
-                if (showNewMessage)
+                listview.Clear();
+                ImageList il = new ImageList();
+                il.TransparentColor = Color.Blue;
+                il.ColorDepth = ColorDepth.Depth32Bit;
+                il.ImageSize = new Size(50, 50);
+                for (int i = 0; i < user.Count; i++)
                 {
-                    item.Text = GetInboxText(il.Images.Keys[j].ToString(),user[j].CountNew);
-                    UpdateNewMessageLabel(null, lbReceiverNewMessage, user[j]);
+                    il.Images.Add(Image.FromFile(user[i].ProfilePath));
+                    il.Images.SetKeyName(i, user[i].UserName);
                 }
-                else{
-                    item.Text = il.Images.Keys[j].ToString();
-                }
+                listview.View = View.LargeIcon;
+                listview.LargeImageList = il;
+                for (int j = 0; j < user.Count; j++)
+                {
+                    ListViewItem item = new ListViewItem();
+                    if (showNewMessage)
+                    {
+                        item.Text = GetInboxText(il.Images.Keys[j].ToString(), user[j].CountNew);
+                        UpdateNewMessageLabel(null, lbReceiverNewMessage, user[j]);
+                    }
+                    else
+                    {
+                        item.Text = il.Images.Keys[j].ToString();
+                    }
 
-                item.Name = user[j].UserID;
-                item.ImageIndex = j;
-                listview.Items.Add(item);
-                
+                    item.Name = user[j].UserID;
+                    item.ImageIndex = j;
+                    listview.Items.Add(item);
+
+                }
+            }
+            catch (Exception e)
+            {
+                Form1.Log(e);
             }
 
         }
@@ -449,11 +459,12 @@ namespace FacebookImageUpload
                         i++;
                     }
                     i=0;
+                    ListInboxUser.Clear();
                     foreach (string user in users.ToArray())
                     {
-                        List<string> info = Common.getUserInfo(ActiveUser.AccessToken, user, FB_Image.BaseDirectory + "Test_User\\");
+                        List<string> info = MyHelper.getUserInfo(ActiveUser.AccessToken, user, FB_Image.UserImageDir);
 
-                        InboxUser a = Common.GetInboxByUserID(user, ListInboxUser);
+                        InboxUser a = MyHelper.GetInboxByUserID(user, ListInboxUser);
                         if (a == null && info!=null && info.Count==3)
                         {
                             ListInboxUser.Add(new InboxUser(user, info[0],info[1]));
@@ -535,8 +546,8 @@ namespace FacebookImageUpload
 
         private string EncodeImage(string imageFile, string inputText, string password = null, bool isTest= false)
         {
-            string coverImage = Common.CopyFileTo(imageFile, FB_Image.BaseDirectory);
-            string messageFile = Common.CopyFileTo(inputText, FB_Image.BaseDirectory);
+            string coverImage = MyHelper.CopyFileTo(imageFile, FB_Image.BaseDirectory);
+            string messageFile = MyHelper.CopyFileTo(inputText, FB_Image.BaseDirectory);
             if (!isTest)
             {
                 coverImage = ProcessUserImage(coverImage);
@@ -549,7 +560,7 @@ namespace FacebookImageUpload
 
         private string DecodeImage(string imageFile, string password = null)
         {
-            string coverImage = Common.CopyFileTo(imageFile, FB_Image.BaseDirectory);
+            string coverImage = MyHelper.CopyFileTo(imageFile, FB_Image.BaseDirectory);
             string outputText = Path.GetFileNameWithoutExtension(imageFile)+"_output.txt";
              outputText = JPSeekDecode(Path.GetFileName(imageFile), outputText);
              return outputText;
@@ -562,8 +573,8 @@ namespace FacebookImageUpload
         {
             try
             {
-                string coverImage = Common.CopyFileTo(filename, FB_Image.BaseDirectory);
-                string messageFile = Common.CopyFileTo(inputText, FB_Image.BaseDirectory);
+                string coverImage = MyHelper.CopyFileTo(filename, FB_Image.BaseDirectory);
+                string messageFile = MyHelper.CopyFileTo(inputText, FB_Image.BaseDirectory);
 
                 //Encode
                 string encodeFile = JPHideEncode(Path.GetFileName(coverImage), Path.GetFileName(messageFile));
@@ -574,11 +585,11 @@ namespace FacebookImageUpload
                 string id = Upload_Picture_Tag(Path.Combine(FB_Image.BaseDirectory, encodeFile), uids,albumID);
                 if (progress != null)
                     progress.Report("50|Checking ...");
-                string downloadFile = Common.AppendFileName(Path.Combine(FB_Image.BaseDirectory, encodeFile), "_download");
+                string downloadFile = MyHelper.AppendFileName(Path.Combine(FB_Image.BaseDirectory, encodeFile), "_download");
                 if (!DownloadFB(id, ActiveUser.AccessToken, downloadFile, true))
                     return null;
                 //Decode
-                string outputText = Common.AppendFileNameNoLimit(inputText, "_ouput");
+                string outputText = MyHelper.AppendFileNameNoLimit(inputText, "_ouput");
                 if (outputText == null)
                     outputText = "output_test.txt";
                 outputText = JPSeekDecode(Path.GetFileName(downloadFile), outputText,null,true);
@@ -589,7 +600,7 @@ namespace FacebookImageUpload
                 //compare 2 file
                 if (progress != null)
                     progress.Report("100|Finish");
-                if (Common.CompareOutputFile(inputText, outputText))
+                if (MyHelper.CompareOutputFile(inputText, outputText))
                 {
                     return id;
                 }
@@ -634,7 +645,7 @@ namespace FacebookImageUpload
                     string userID = (string)currentPhoto["from"]["id"];
                     long createdTime = long.Parse((string)currentPhoto["created_time"]);
                    // bool isSent = false;
-                    InboxUser userInbox = Common.GetInboxByUserID(userID,inbox);
+                    InboxUser userInbox = MyHelper.GetInboxByUserID(userID,inbox);
                     if (userInbox == null)
                     {
                         i--;
@@ -653,9 +664,9 @@ namespace FacebookImageUpload
                             break;
                         }
                     }
-                    imagePath = FB_Image.BaseDirectory + imageId + ".jpg";
-                    Common.DowloadImageFromLink(source_url, imagePath, ImageFormat.Jpeg);
-                    byte[] content = Common.GetByteFromImage(imagePath);
+                    imagePath = Path.Combine(FB_Image.BaseDirectory , imageId + ".jpg");
+                    MyHelper.DowloadImageFromLink(source_url, imagePath, ImageFormat.Jpeg);
+                    byte[] content = MyHelper.GetByteFromImage(imagePath);
                     if(content != null)
                     {
                        string  s_content = CorrectErrorString(content);
@@ -675,7 +686,7 @@ namespace FacebookImageUpload
                     }
                     
                 }
-                ActiveUser.CheckTime = Common.GetUnixTimesStamp(DateTime.Now);
+                ActiveUser.CheckTime = MyHelper.GetUnixTimesStamp(DateTime.Now);
                 progress.Report(String.Format("{0}|{1}", 100, "Getting Messages"));
             }
             catch (Exception ex)

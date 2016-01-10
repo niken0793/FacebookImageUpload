@@ -106,4 +106,26 @@ namespace FacebookImageUpload.FB_Images
 
        
     }
+
+    [Serializable]
+    public class AppSetting
+    {
+        private string activeUser;
+
+        public string ActiveUser
+        {
+            get { return activeUser; }
+            set { activeUser = value; }
+        }
+
+        public AppSetting()
+        {
+
+        }
+
+        public AppSetting(string pUser)
+        {
+            activeUser = pUser;
+        }
+    }
 }

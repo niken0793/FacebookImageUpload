@@ -14,33 +14,29 @@ namespace FacebookImageUpload.FB_Images
     public class FB_Image
     {
         //public static string UserAccessToken = "";
-        public static string AccessToken = "CAAVUMKQz7ZB0BAJG21S5gyhrBOpK7qvIZCViGPfbwMYckHWhXy8nPYcI5ZBxQOMZCjz5ieT9IydD6hDiE7sLEn6taU3K7ztbmZCgcHohnLqQw3vZAJPdXs5LjefrOEy4fIxQSPWXMe57n1TBCtmqUiWHdr4JSyq5ujBtQXWYlg5pdZBpQJncIvfU2rvPIkslQZCaZAs9ZAf8CRpQZDZD";
-        public static string Album_Test = "1661607290718778";
         public static int Temp = 0;
-        public static string BaseDirectory = @"E:\Tai lieu UIT\Khoa luan\Test\";
+    
         public static string RelativeDirectory =
             System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public static string LogDirectory = "Log/";
         public static string DefaultImage = "images/default.jpg";
-      
+
+        public const string UserSettingDir = "UserSetting";
+        public const string UserImageDir = "UserSetting\\images";
+        public static string BaseDirectory =Path.Combine(FB_Image.RelativeDirectory, "Temp");
+        public const string SuccessImageDir = "SuccessImage";
+        public const string LogDir = "Log";
+        public const string OutputDir = "Output";
+        public const string TestInputDir = "TestInput";
+
+
+        public const string AppSettingFile = "appsetting.xml";
+
+
         public static string DefaultAlbumID = "";
         public static int ImageSize = 960;
-        public static float RatioMax = 1.005F;
-        public static float RatioMin = 0.9F;
 
-        // Outbox Album Info
-        public static string AlbumDirectory = "Album_Save/album.xml";
-        public static List<string> List_AlbumID;
-        public static List<AlbumInfo> List_AlbumInfo = new List<AlbumInfo>();
-        public static ImageList Album_PhotoList;
 
-        // Inbox Album Info
-        public static string AlbumDirectory_In = "Album_Save/album_in.xml";
-        public static List<string> List_AlbumID_In;
-        public static List<AlbumInfo> List_AlbumInfo_In = new List<AlbumInfo>();
-        public static ImageList Album_PhotoList_In;
-        public static ImageList Image_Tags_In;
-        public static List<string> Image_TagsID_In;
 
 
         // property

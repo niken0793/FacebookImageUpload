@@ -31,13 +31,19 @@ namespace FacebookImageUpload
     {
         public Form1()
         {
-            if (!Directory.Exists(FB_Image.BaseDirectory))
-                FB_Image.BaseDirectory = @"C:\test\";
+
             InitializeComponent();
+            MyHelper.CreateProgramDir();
             cmbSelectTextType.SelectedIndex = 0;
             r = new Random();
             CheckUserSetting();
-			LoadFriendListAndMessage();
+
+        }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            LoadFriendList();
+            LoadMessage();
         }
 
         FB_Image browseImage = new FB_Image();
@@ -78,7 +84,7 @@ namespace FacebookImageUpload
                 List<string> FailFile = new List<string>();
 
                 string albumId = cmbInputAlbum.SelectedValue.ToString();
-                var progress = new Progress<string>(s => { Common.ShowProgressBar(s, pbStatus, lbStatusBar, lbDoing); });
+                var progress = new Progress<string>(s => { MyHelper.ShowProgressBar(s, pbStatus, lbStatusBar, lbDoing); });
                 List<string> tagList = new List<string>();
                 tagList.Add(lbFriendID.Text);
                 int count=0;
@@ -112,7 +118,7 @@ namespace FacebookImageUpload
                     MessageBox.Show("The message has been sent");
                 }
 
-                Common.ResetStatusTrip(pbStatus, lbStatusBar, lbDoing);
+                MyHelper.ResetStatusTrip(pbStatus, lbStatusBar, lbDoing);
                 // Common.DeleteFile(Common.listFileDelete);
             }
             else
@@ -134,7 +140,7 @@ namespace FacebookImageUpload
                     pbImage.ImageLocation = coverImageForm.imageLink;
                     lbImageName.Text = Path.GetFileName(coverImageForm.imageLink);
                     lbImageDirectory.Text = Path.GetDirectoryName(coverImageForm.imageLink);
-                    lbImageSize.Text = Common.BytesToString(new FileInfo(coverImageForm.imageLink).Length);
+                    lbImageSize.Text = MyHelper.BytesToString(new FileInfo(coverImageForm.imageLink).Length);
                 }
             }
 
@@ -228,7 +234,7 @@ namespace FacebookImageUpload
 
         private void dtpCheckTime_ValueChanged(object sender, EventArgs e)
         {
-            tbCheckTime.Text = Common.GetUnixTimesStamp(dtpCheckTime.Value).ToString();
+            tbCheckTime.Text = MyHelper.GetUnixTimesStamp(dtpCheckTime.Value).ToString();
         }
 
         private void btnFacebookLogin_Click(object sender, EventArgs e)
@@ -238,7 +244,7 @@ namespace FacebookImageUpload
         }
         private void btnGetUserList_Click(object sender, EventArgs e)
         {
-            LoadFriendListAndMessage(true);
+            LoadMessage();
 
         }
         private void listViewUserList_ItemActivate(object sender, EventArgs e)
@@ -249,7 +255,7 @@ namespace FacebookImageUpload
                 ListViewItem item = ((ListView)sender).SelectedItems[0];
                 lbUserNameComm.Text = item.Text;
                 lbUserIdComm.Text = item.Name;
-                pBoxUserComm.ImageLocation = FB_Image.BaseDirectory + "Test_User\\profilePiture_" + item.Name + ".jpg";
+                pBoxUserComm.ImageLocation =Path.Combine( FB_Image.RelativeDirectory , FB_Image.UserImageDir, item.Name + ".jpg");
             }
         }
         #endregion 
@@ -268,6 +274,7 @@ namespace FacebookImageUpload
 
             SaveActiveUserOnDisk(ActiveUser);
             SaveInboxOnDisk(ListInboxUser);
+            SaveAppSettingOnDisk(MyAppSetting);
         }
 
         private void btnChangeCheckTime_Click(object sender, EventArgs e)
@@ -284,7 +291,7 @@ namespace FacebookImageUpload
                 ListViewItem item = ((ListView)sender).SelectedItems[0];
                 lbFriendName.Text = item.Text;
                 lbFriendID.Text = item.Name;
-                pbFriend.ImageLocation = FB_Image.BaseDirectory + "Test_User\\profilePiture_" + item.Name + ".jpg";
+                pbFriend.ImageLocation = Path.Combine(FB_Image.RelativeDirectory, FB_Image.UserImageDir, item.Name + ".jpg");
             }
         }
 
@@ -304,7 +311,7 @@ namespace FacebookImageUpload
                         foreach (string i in files)
                         {
                             string id = UploadFB(i, ActiveUser.AccessToken, ActiveUser.PrivateAlbumID);
-                            string newfile = Common.AppendFileName(i, "down");
+                            string newfile = MyHelper.AppendFileName(i, "down");
                             DownloadFB(id, ActiveUser.AccessToken, newfile);
                         }
 
@@ -338,8 +345,8 @@ namespace FacebookImageUpload
                 {
                     int count = 0;
                     int success = 0;
-                    var progress = new Progress<string>(s => { Common.ShowProgressBar(s, pbStatus, lbStatusBar, lbDoing); });
-                    string messagePath = FB_Image.RelativeDirectory + "/GoogleImage/200.txt";
+                    var progress = new Progress<string>(s => { MyHelper.ShowProgressBar(s, pbStatus, lbStatusBar, lbDoing); });
+                    string messagePath =Path.Combine( FB_Image.RelativeDirectory,FB_Image.TestInputDir,"200.txt");
                     foreach (string i in files)
                     {
                             string flag = "";
@@ -515,7 +522,7 @@ namespace FacebookImageUpload
                     {
                         try
                         {
-                            string newpath = Common.AppendFileName(i, "fb");
+                            string newpath = MyHelper.AppendFileName(i, "fb");
                             string id = Form1.UploadFB(i, ActiveUser.AccessToken, ActiveUser.PrivateAlbumID);
                             if (Form1.DownloadFB(id, ActiveUser.AccessToken, newpath))
                             {
@@ -568,17 +575,56 @@ namespace FacebookImageUpload
         }
 
         #endregion
-
+        string[] manualListFile = null;
         private void btnManualBrowseImage_Click(object sender, EventArgs e)
         {
             string filter = "Image Files(*.jpg; *.jpeg)|*.jpg; *.jpeg";
-            openfile_Click_fn(tbManualImage, filter, true);
+            //openfile_Click_fn(tbManualImage, filter, true);
+            OpenFileDialog of = new OpenFileDialog();
+            of.Filter = filter;
+            if (radioManualEncode.Checked)
+            {
+                if (of.ShowDialog() == DialogResult.OK)
+                {
+                    tbManualImage.Text = of.FileName;
+                    pbManual.ImageLocation = of.FileName;
+                    lbManualImageName.Text = Path.GetFileName(of.FileName);
+                    lbManualImageDir.Text = Path.GetDirectoryName(of.FileName);
+                    lbManualImageSize.Text = MyHelper.BytesToString(new FileInfo(of.FileName).Length);
+                }
+
+            }
+            else
+            {
+                of.Multiselect = true;
+                if (of.ShowDialog() == DialogResult.OK && of.FileNames.Length>=1)
+                {
+                    manualListFile = of.FileNames;
+                    foreach (string item in of.FileNames)
+                        tbManualImage.AppendText(item + Environment.NewLine);
+                    pbManual.ImageLocation = of.FileNames[0];
+                    lbManualImageName.Text = Path.GetFileName(of.FileNames[0]);
+                    lbManualImageDir.Text = Path.GetDirectoryName(of.FileNames[0]);
+                    lbManualImageSize.Text = MyHelper.BytesToString(new FileInfo(of.FileNames[0]).Length);
+                }
+            }
         }
+
 
         private void btnManualBrowseFile_Click(object sender, EventArgs e)
         {
             string filter = "Text Files(*.txt)|*.txt";
-            openfile_Click_fn(tbManualText, filter);
+            //openfile_Click_fn(tbManualText, filter);
+            OpenFileDialog open = new OpenFileDialog();
+            open.Filter = filter;
+            if (open.ShowDialog() == DialogResult.OK)
+            {
+                tbManualText.Text = open.FileName;
+                tbManualStatus.Clear();
+                tbManualStatus.AppendText(File.ReadAllText(open.FileName));
+                tbManualStatus.AppendText(Environment.NewLine);
+            }
+
         }
 
         private void cmbManualFileType_SelectedIndexChanged(object sender, EventArgs e)
@@ -598,60 +644,111 @@ namespace FacebookImageUpload
             }
         }
 
+        InboxUser manualInbox;
         private void btnManualEncode_Click(object sender, EventArgs e)
         {
-            string messagePath = GetMessageInput(cmbManualFileType,tbManualText,tbManualStatus);
-
-            if (String.IsNullOrEmpty(tbManualImage.Text))
-            {
-                return;
-            }
-
-            int size = GetSplitSize();
-            if (size < 0)
-                return;
-            string encodeFile = tbImagePath.Text;
-            SimplerAES aes = new SimplerAES("123");
-            messagePath = aes.EncryptFile(messagePath);
-            List<string> a = SplitFileIntoPart(messagePath, size);
-            List<string> coverFile = new List<string>();
-            if (!GetMoreImage(encodeFile, a, coverFile))
-                return;
-            List<string> FailFile = new List<string>();
-            string flag = "";
-            int count = 0;
-            string successFile = "";
-            for (int i = 0; i < a.Count; i++)
-            {
-                //string newFile = Common.AppendFileName(encodeFile, i.ToString());
-                //File.Copy(encodeFile, newFile, true);
-                bool isTest = Path.GetDirectoryName(coverFile[i]).Equals(Path.Combine(FB_Image.RelativeDirectory, "SuccessImage"));
-                flag = EncodeImage(tbManualImage.Text, messagePath, null, isTest);
-
-                if (flag != null)
+            if (radioManualEncode.Checked) {
+                string messagePath = GetMessageInput(cmbManualFileType, tbManualText, tbManualStatus);
+                if (String.IsNullOrEmpty(tbManualImage.Text))
                 {
-                    string outputdir = Path.Combine(Path.Combine(FB_Image.RelativeDirectory, "output"));
-                    if (!Directory.Exists(outputdir))
+                    return;
+                }
+
+                int size = GetSplitSize();
+                if (size < 0)
+                    return;
+                string encodeFile = tbManualImage.Text;
+                SimplerAES aes = new SimplerAES("123");
+                messagePath = aes.EncryptFile(messagePath);
+                List<string> a = SplitFileIntoPart(messagePath, size);
+                List<string> coverFile = new List<string>();
+                if (!GetMoreImage(encodeFile, a, coverFile))
+                    return;
+                List<string> FailFile = new List<string>();
+                string flag = "";
+                int count = 0;
+                string successFile = "";
+                for (int i = 0; i < a.Count; i++)
+                {
+                    //string newFile = Common.AppendFileName(encodeFile, i.ToString());
+                    //File.Copy(encodeFile, newFile, true);
+                    bool isTest = Path.GetDirectoryName(coverFile[i]).Equals(Path.Combine(FB_Image.RelativeDirectory, "SuccessImage"));
+                    flag = EncodeImage(coverFile[i], a[i], null, isTest);
+
+                    if (flag != null)
                     {
-                        Directory.CreateDirectory(outputdir);
+                        string outputdir = Path.Combine(Path.Combine(FB_Image.RelativeDirectory, FB_Image.OutputDir));
+                        if (!Directory.Exists(outputdir))
+                        {
+                            Directory.CreateDirectory(outputdir);
+                        }
+                        successFile = MyHelper.CopyFileTo(Path.Combine(FB_Image.BaseDirectory, flag), outputdir);
+                        count++;
                     }
-                    successFile= Common.CopyFileTo(Path.Combine(FB_Image.BaseDirectory, flag), Path.Combine(FB_Image.RelativeDirectory, "output"));
-                    count++;
+                    else
+                    {
+                        FailFile.Add(a[i]);
+                    }
+                }
+                if (FailFile.Count > 0)
+                {
+                    MessageBox.Show("These images are not ready for sending your message");
                 }
                 else
                 {
-                    FailFile.Add(a[i]);
+                    OpenFolder(successFile);
+                    MessageBox.Show("Encoding Success");
                 }
-            }
-            if (FailFile.Count > 0)
-            {
-                MessageBox.Show("These images are not ready for sending your message");
             }
             else
             {
-                OpenFolder(successFile);
-                MessageBox.Show("Encoding Success");
+                if (manualListFile != null && manualListFile.Length >= 1)
+                {
+                    manualInbox = new InboxUser("1", "Manual");
+                    foreach (string item in manualListFile)
+                    {
+                        byte[] content = MyHelper.GetByteFromImage(item);
+                        if (content != null)
+                        {
+                            string s_content = CorrectErrorString(content);
+                            if (s_content != null)
+                            {
+                                //userInbox.Messages.Add(new FB_Message(content, new FB_Image(imageId,imagePath),createdTime,isSent));
+                                bool flag = manualInbox.AddMessageToInbox(s_content, "1", item, 0);
+                                if (flag)
+                                    manualInbox.CountNew++;
+                            }
+                        }
+                    }
+                    if (manualInbox.Messages.Count >= 0)
+                    {
+                        foreach (FB_Message mes in manualInbox.Messages)
+                        {
+                            string s = "";
+                            if (mes.Part.Count >= 1)
+                            {
+                                 s+="Images path:"+Environment.NewLine;
+                                 foreach (MessagePart  p in mes.Part)
+                                 {
+                                     s += p.ImagePath + Environment.NewLine;
+                                 }
+                                 s += "Message: ";
+                                 string content = mes.GetContent();
+                                 if (content != null)
+                                     s += content+Environment.NewLine;
+                                 else
+                                     s += "No Output"+Environment.NewLine;
+                                 s += "---------------------------------" + Environment.NewLine;
+                                 tbManualStatus.AppendText(s);
+   
+                            }
+                        }
+                    }
+                    
+                }
             }
+
+          
      
         }
 
@@ -662,7 +759,9 @@ namespace FacebookImageUpload
             if (a.Count > 1)
             {
                 OpenFileDialog opf = new OpenFileDialog();
+                string filter = "Image Files(*.jpg; *.jpeg)|*.jpg; *.jpeg";
                 opf.Title = "Choose: " + (a.Count - 1).ToString() + " files";
+                opf.Filter = filter;
                 opf.Multiselect = true;
                 do
                 {
@@ -713,10 +812,14 @@ namespace FacebookImageUpload
             }
             else if (cmbType.SelectedIndex == cmbType.Items.IndexOf("From Text"))
             {
-                string tempMessagePath = Path.Combine(FB_Image.RelativeDirectory, "temp", "temp_message.txt");
+                string tempMessagePath = Path.Combine(FB_Image.RelativeDirectory, FB_Image.TestInputDir, "temp_message.txt");
                 File.WriteAllText(tempMessagePath, tbInput.Text);
                 messagePath = tempMessagePath;
 
+            }
+            else
+            {
+                messagePath = tbInputPath.Text;
             }
             return messagePath;
         }
@@ -753,10 +856,41 @@ namespace FacebookImageUpload
             tbManualStatus.Clear();
         }
 
-        private void btnSettingChangeBaseDir_Click(object sender, EventArgs e)
+
+        private void radioManualEncode_CheckedChanged(object sender, EventArgs e)
         {
-            FB_Image.BaseDirectory = tbSettingBaseDir.Text;
+            bool flag = true;
+            tbManualText.Visible = flag;
+            cmbManualFileType.Visible = flag;
+            btnManualBrowseFile.Visible = flag;
+            lbManualMessage.Visible = flag;
+            tbManualImage.Size = new System.Drawing.Size(tbManualImage.Size.Width, 20);
+            MyHelper.EnableControl(flag, tbManualText, cmbManualFileType, btnManualBrowseFile,lbManualMessage);
+            tbManualStatus.Clear();
+            tbManualImage.Clear();
+            btnManualEncode.Text = "Encode";
         }
+
+        private void radioManualDecode_CheckedChanged(object sender, EventArgs e)
+        {
+            bool flag = false;
+            tbManualText.Visible = flag;
+            cmbManualFileType.Visible = flag;
+            btnManualBrowseFile.Visible = flag;
+            lbManualMessage.Visible = flag;
+            tbManualImage.Size = new System.Drawing.Size(tbManualImage.Size.Width, 80);
+            MyHelper.EnableControl(flag, tbManualText, cmbManualFileType, btnManualBrowseFile, lbManualMessage);
+            tbManualStatus.Clear();
+            tbManualImage.Clear();
+            btnManualEncode.Text = "Decode";
+        }
+
+        private void button1_Click_2(object sender, EventArgs e)
+        {
+            LoadFriendList();
+        }
+
+
 
 
 

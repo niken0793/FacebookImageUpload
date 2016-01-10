@@ -227,7 +227,7 @@ namespace FacebookImageUpload
             oJpegDecompress.jpeg_finish_decompress();
             oFileStreamImage.Close();
             ////
-            string filenameNew = Common.AppendFileName(fullPath, suffix);
+            string filenameNew = MyHelper.AppendFileName(fullPath, suffix);
             System.IO.FileStream objFileStreamMegaMap = System.IO.File.Create(filenameNew);
             BitMiracle.LibJpeg.Classic.jpeg_compress_struct oJpegCompress = new BitMiracle.LibJpeg.Classic.jpeg_compress_struct();
             oJpegCompress.jpeg_stdio_dest(objFileStreamMegaMap);
@@ -275,7 +275,7 @@ namespace FacebookImageUpload
             oJpegDecompress.jpeg_finish_decompress();
             oFileStreamImage.Close();
             ////
-            string filenameNew = Common.AppendFileName(fullPath, suffix);
+            string filenameNew = MyHelper.AppendFileName(fullPath, suffix);
             System.IO.FileStream objFileStreamMegaMap = System.IO.File.Create(filenameNew);
             BitMiracle.LibJpeg.Classic.jpeg_compress_struct oJpegCompress = new BitMiracle.LibJpeg.Classic.jpeg_compress_struct();
             oJpegCompress.jpeg_stdio_dest(objFileStreamMegaMap);
@@ -298,8 +298,8 @@ namespace FacebookImageUpload
             {
 
 
-                string file1 = Common.AppendFileName(fullPath, "resave1");
-                string file2 = Common.AppendFileName(fullPath, "resave2");
+                string file1 = MyHelper.AppendFileName(fullPath, "resave1");
+                string file2 = MyHelper.AppendFileName(fullPath, "resave2");
                 File.Copy(fullPath, file1, true);
                 int vstart = 5;
                 while (vstart > 0)
@@ -337,8 +337,8 @@ namespace FacebookImageUpload
             {
 
 
-                string file1 = Common.AppendFileName(fullPath, "resave1");
-                string file2 = Common.AppendFileName(fullPath, "resave2");
+                string file1 = MyHelper.AppendFileName(fullPath, "resave1");
+                string file2 = MyHelper.AppendFileName(fullPath, "resave2");
                 File.Copy(fullPath, file1, true);
                 int vstart = 5;
                 while (vstart > 0)
@@ -416,7 +416,7 @@ namespace FacebookImageUpload
                 while (step > 0)
                 {
                     string testFile = IncImageDCT(s);
-                    string testFileCopy = Common.AppendFileName(testFile, "copy");
+                    string testFileCopy = MyHelper.AppendFileName(testFile, "copy");
                     saveJpeg(testFile, testFileCopy, Ratio);
                     List<DiffDCT> a = CompareDctFiles(testFile, testFileCopy, true);
                     if (a.Count > 0)

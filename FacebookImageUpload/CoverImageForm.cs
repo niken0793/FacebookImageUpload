@@ -38,12 +38,12 @@ namespace FacebookImageUpload
             if (pattern == "")
             {
                 pattern = ".*jpg";
-                files = Directory.GetFiles(@"ela")
+                files = Directory.GetFiles(Path.Combine(FB_Image.RelativeDirectory,FB_Image.SuccessImageDir))
                .Where(path => Regex.Match(path, pattern).Success);
             }
             else
             {
-                files = Directory.GetFiles(@"ela")
+                files = Directory.GetFiles(Path.Combine(FB_Image.RelativeDirectory, FB_Image.SuccessImageDir))
                .Where(path => Regex.Match(path, pattern).Success);
             }
             this.listViewSuccessImage.Clear();
@@ -85,7 +85,7 @@ namespace FacebookImageUpload
             if (dlg == DialogResult.Yes)
             {
                 ListViewItem item = ((ListView)sender).SelectedItems[0];
-                imageLink = Path.Combine(FB_Image.RelativeDirectory,"SuccessImage/" + item.Text);
+                imageLink = Path.Combine(FB_Image.RelativeDirectory,FB_Image.SuccessImageDir, item.Text);
                 this.DialogResult = DialogResult.Yes;
             }
         }
