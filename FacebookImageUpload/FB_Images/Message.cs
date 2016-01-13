@@ -110,13 +110,13 @@ namespace FacebookImageUpload.FB_Images
             isSent = paramSent;
         }
 
-        public string GetContent()
+        public string GetContent(string pass)
         {
             try
             {
                 if (this.Part.Count > 0)
                 {
-                    SimplerAES aes = new SimplerAES("123");
+                    SimplerAES aes = new SimplerAES(pass);
                     part.Sort(delegate(MessagePart a, MessagePart b) { return a.Offset.CompareTo(b.Offset); });
                     string s = "";
                     int start = part[0].Offset;
@@ -185,7 +185,7 @@ namespace FacebookImageUpload.FB_Images
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                Form1.Log(e);
                 return null;
             }
         }
@@ -274,6 +274,23 @@ namespace FacebookImageUpload.FB_Images
             get { return countNew; }
             set { countNew = value; }
         }
+
+        private bool isSavePass;
+
+        public bool IsSavePass
+        {
+            get { return isSavePass; }
+            set { isSavePass = value; }
+        }
+
+        private string password="123";
+
+        public string Password
+        {
+            get { return password; }
+            set { password = value; }
+        }
+
         private string profilePath;
 
         public string ProfilePath

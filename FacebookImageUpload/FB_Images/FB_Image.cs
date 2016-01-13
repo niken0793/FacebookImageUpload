@@ -35,6 +35,7 @@ namespace FacebookImageUpload.FB_Images
 
         public static string DefaultAlbumID = "";
         public static int ImageSize = 960;
+        public static string DefaultPassword = "123";
 
 
 

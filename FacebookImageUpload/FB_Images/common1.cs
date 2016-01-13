@@ -47,10 +47,12 @@ namespace FacebookImageUpload
                     MyAppSetting = tempApp;
                     if (File.Exists(usrPath))
                     {
-                        UserSetting a = MyHelper.DeSerializeObject<UserSetting>(Path.Combine(FB_Image.RelativeDirectory, FB_Image.UserSettingDir, tempApp.ActiveUser));
+                        UserSetting a = MyHelper.DeSerializeObject<UserSetting>(Path.Combine(FB_Image.RelativeDirectory, FB_Image.UserSettingDir, tempApp.ActiveUser),true);
                         if (a != null)
                         {
                             UpdateLoginControl(a);
+                            LoadFriendList();
+                            LoadMessage();
                             return;
                         }
                     }
@@ -58,7 +60,7 @@ namespace FacebookImageUpload
                 }
             }
           
-            LoginFacebook();
+            //LoginFacebook();
             
         }
 
@@ -66,7 +68,7 @@ namespace FacebookImageUpload
         {
              if (active != null)
             {
-                MyHelper.SerializeObject(active, Path.Combine(FB_Image.RelativeDirectory, FB_Image.UserSettingDir , active.UserID));
+                MyHelper.SerializeObject(active, Path.Combine(FB_Image.RelativeDirectory, FB_Image.UserSettingDir , active.UserID),true);
             }
         }
         private void SaveAppSettingOnDisk(AppSetting app)
@@ -839,6 +841,7 @@ namespace FacebookImageUpload
 
         InboxUser currentInbox = null;
         ListViewItem currentInboxLVItem = null;
+        private string receivePass = null;
         private void ChangeUserInbox(object sender, EventArgs e)
         {
             ListView lvUser = (ListView)sender;
@@ -852,6 +855,7 @@ namespace FacebookImageUpload
                 lbUserNameComm.Text = inbox.UserName;
                 lbUserIdComm.Text = item.Name;
                 pBoxUserComm.ImageLocation = Path.Combine(FB_Image.RelativeDirectory, FB_Image.UserImageDir, item.Name + ".jpg");
+                receivePass = GetMessagePassword(lbUserIdComm.Text);
 
             }
          
@@ -874,8 +878,10 @@ namespace FacebookImageUpload
                             tbInbox.Text = currentInbox.Messages[i].Content;
                         }
                         else
-                        {
-                            string s = currentInbox.Messages[i].GetContent();
+                        {                            
+                           if (receivePass == null)
+                                return;
+                            string s = currentInbox.Messages[i].GetContent(receivePass);
                             if (s != null)
                                 tbInbox.Text = s;
                         }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.btnUploadImage = new System.Windows.Forms.Button();
             this.tbImagePath = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -133,6 +134,8 @@
             this.lbStatusBar = new System.Windows.Forms.ToolStripStatusLabel();
             this.lbDoing = new System.Windows.Forms.ToolStripStatusLabel();
             this.lbLogCount = new System.Windows.Forms.ToolStripStatusLabel();
+            this.cmnLVMessage = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsmenuItemChangePass = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbFriend)).BeginInit();
             this.tabControl.SuspendLayout();
@@ -154,6 +157,7 @@
             this.groupBox4.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            this.cmnLVMessage.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnUploadImage
@@ -661,7 +665,6 @@
             this.listViewInbox.Size = new System.Drawing.Size(233, 261);
             this.listViewInbox.TabIndex = 18;
             this.listViewInbox.UseCompatibleStateImageBehavior = false;
-            this.listViewInbox.ItemActivate += new System.EventHandler(this.listViewUserList_ItemActivate);
             this.listViewInbox.SelectedIndexChanged += new System.EventHandler(this.listViewUserList_SelectedIndexChanged);
             // 
             // label14
@@ -718,6 +721,7 @@
             this.listViewMessage.TabIndex = 10;
             this.listViewMessage.UseCompatibleStateImageBehavior = false;
             this.listViewMessage.SelectedIndexChanged += new System.EventHandler(this.listViewTagImage_SelectedIndexChanged);
+            this.listViewMessage.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listViewMessage_MouseClick);
             // 
             // tbInbox
             // 
@@ -1242,6 +1246,19 @@
             this.lbLogCount.Size = new System.Drawing.Size(27, 19);
             this.lbLogCount.Text = "Log";
             // 
+            // cmnLVMessage
+            // 
+            this.cmnLVMessage.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmenuItemChangePass});
+            this.cmnLVMessage.Name = "cmnLVMessage";
+            this.cmnLVMessage.Size = new System.Drawing.Size(153, 48);
+            // 
+            // tsmenuItemChangePass
+            // 
+            this.tsmenuItemChangePass.Name = "tsmenuItemChangePass";
+            this.tsmenuItemChangePass.Size = new System.Drawing.Size(152, 22);
+            this.tsmenuItemChangePass.Text = "ChangePass";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1286,6 +1303,7 @@
             this.groupBox6.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.cmnLVMessage.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1398,6 +1416,8 @@
         private System.Windows.Forms.RadioButton radioManualDecode;
         private System.Windows.Forms.RadioButton radioManualEncode;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ContextMenuStrip cmnLVMessage;
+        private System.Windows.Forms.ToolStripMenuItem tsmenuItemChangePass;
     }
 }
 

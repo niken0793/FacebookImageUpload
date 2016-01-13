@@ -44,6 +44,7 @@ namespace FacebookImageUpload
             {
                 OpenFileDialog open = new OpenFileDialog();
                 open.Filter = filter;
+                //open.StartPosition = FormStartPosition.CenterParent;
                 if (open.ShowDialog() == DialogResult.OK)
                 {
                     tb.Text = open.FileName;
@@ -212,18 +213,13 @@ namespace FacebookImageUpload
             }
         }
 
-
-
-
-
-
-
         private void LoginFacebook()
         {
             if (!isLogin)
             {
                 string extendPermission = "user_photos,user_posts,user_status,user_likes,user_friends,publish_actions";
                 facebookLoginForm = new FacebookLoginForm(AppID, extendPermission);
+                facebookLoginForm.StartPosition = FormStartPosition.CenterParent;
                 DialogResult d = facebookLoginForm.ShowDialog();
                 if (d.Equals(DialogResult.OK))
                 {
@@ -242,7 +238,7 @@ namespace FacebookImageUpload
                 {
                     isLogin = false;
                 }
-                LoadFriendList();
+
             }
             else
             {
@@ -305,10 +301,13 @@ namespace FacebookImageUpload
                     Form1.ActiveUser = new UserSetting(r.AccessToken, s[0], s[2], r.Expires.ToString(), s[1]);
                     Form1.ActiveUser.CheckTime = MyHelper.GetUnixTimesStamp(DateTime.Now);
                 }
+                LoadFriendList();
+                //LoadMessage();
 
                 if (!flag)
                 {
                     CreateAlbum a = new CreateAlbum(ActiveUser.AccessToken);
+                    a.StartPosition = FormStartPosition.CenterParent;
                     if (a.ShowDialog() == DialogResult.OK)
                     {
                         if (Form1.ActiveUser != null)
@@ -412,7 +411,8 @@ namespace FacebookImageUpload
                     il.Images.SetKeyName(i, user[i].UserName);
                 }
                 listview.View = View.LargeIcon;
-                listview.LargeImageList = il;
+                //listview.LargeImageList = il;
+                listview.Invoke(new Action(()=>listview.LargeImageList = il));
                 for (int j = 0; j < user.Count; j++)
                 {
                     ListViewItem item = new ListViewItem();
@@ -428,7 +428,8 @@ namespace FacebookImageUpload
 
                     item.Name = user[j].UserID;
                     item.ImageIndex = j;
-                    listview.Items.Add(item);
+                   // listview.Items.Add(item);
+                    listview.Invoke(new Action(()=>listview.Items.Add(item)));
 
                 }
             }

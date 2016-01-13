@@ -135,6 +135,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -233,6 +234,7 @@
     <Compile Include="ECC\GenericGFPoly.cs" />
     <Compile Include="ECC\ReedSolomonDecoder.cs" />
     <Compile Include="ECC\ReedSolomonEncoder.cs" />
+    <Compile Include="Encrypt\SecureUserInfo.cs" />
     <Compile Include="Encrypt\StringCipher.cs" />
     <Compile Include="FacebookAlbum.cs" />
     <Compile Include="FacebookLoginForm.cs">
@@ -267,6 +269,12 @@
     </Compile>
     <Compile Include="FB_Images\FB_Image.cs" />
     <Compile Include="GoogleImage.cs" />
+    <Compile Include="GUI\GetPassword.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\GetPassword.Designer.cs">
+      <DependentUpon>GetPassword.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Private_album\CreatePrivateAlbum.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -292,6 +300,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\GetPassword.resx">
+      <DependentUpon>GetPassword.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Private_album\CreatePrivateAlbum.resx">
       <DependentUpon>CreatePrivateAlbum.cs</DependentUpon>

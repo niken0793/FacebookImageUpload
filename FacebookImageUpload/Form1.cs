@@ -20,6 +20,7 @@ using Emgu.CV;
 using Emgu.Util;
 using Emgu.CV.Structure;
 using FacebookImageUpload.FB_Images;
+using FacebookImageUpload.GUI;
 using System.Threading;
 
 // project test sync
@@ -42,8 +43,11 @@ namespace FacebookImageUpload
 
         private void Form1_Shown(object sender, EventArgs e)
         {
-            LoadFriendList();
-            LoadMessage();
+            if (IsHandleCreated)
+            {
+                //LoadFriendList();
+                //LoadMessage();
+            }
         }
 
         FB_Image browseImage = new FB_Image();
@@ -70,11 +74,17 @@ namespace FacebookImageUpload
         {
 
             int size = GetSplitSize();
+            if (size == -1)
+                return;
             if (lbFriendID.Text != "...")
             {
                 string messagePath = GetMessageInput(cmbSelectTextType, tbMessagePath, tbInputMessage);
                 string encodeFile =tbImagePath.Text;
-                SimplerAES aes = new SimplerAES("123");
+                List<string> tagList = new List<string>();
+                tagList.Add(lbFriendID.Text);
+                if (sentPass == null)
+                    return;
+                SimplerAES aes = new SimplerAES(sentPass);
                 messagePath = aes.EncryptFile(messagePath);
                 List<string> a = SplitFileIntoPart(messagePath, size);
                 List<string> coverFile = new List<string>();
@@ -85,8 +95,7 @@ namespace FacebookImageUpload
 
                 string albumId = cmbInputAlbum.SelectedValue.ToString();
                 var progress = new Progress<string>(s => { MyHelper.ShowProgressBar(s, pbStatus, lbStatusBar, lbDoing); });
-                List<string> tagList = new List<string>();
-                tagList.Add(lbFriendID.Text);
+
                 int count=0;
                 for (int i = 0; i < a.Count; i++)
                 {
@@ -132,6 +141,7 @@ namespace FacebookImageUpload
         private void btnCoverImage_Click(object sender, EventArgs e)
         {
             coverImageForm = new CoverImageForm();
+            coverImageForm.StartPosition = FormStartPosition.CenterParent;
             if (coverImageForm.ShowDialog() == DialogResult.Yes)
             {
                 if (!string.IsNullOrEmpty(coverImageForm.imageLink))
@@ -247,17 +257,7 @@ namespace FacebookImageUpload
             LoadMessage();
 
         }
-        private void listViewUserList_ItemActivate(object sender, EventArgs e)
-        {
-            DialogResult dlg = MessageBox.Show("Do you want to use this user to communicate?", "Choose User", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (dlg == DialogResult.Yes)
-            {
-                ListViewItem item = ((ListView)sender).SelectedItems[0];
-                lbUserNameComm.Text = item.Text;
-                lbUserIdComm.Text = item.Name;
-                pBoxUserComm.ImageLocation =Path.Combine( FB_Image.RelativeDirectory , FB_Image.UserImageDir, item.Name + ".jpg");
-            }
-        }
+
         #endregion 
 
 
@@ -283,16 +283,17 @@ namespace FacebookImageUpload
             
         }
 
+        private string sentPass = null;
         private void listViewFriends_ItemActivate(object sender, EventArgs e)
         {
-            DialogResult dlg = MessageBox.Show("Do you want to use this user to communicate?", "Choose User", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (dlg == DialogResult.Yes)
-            {
-                ListViewItem item = ((ListView)sender).SelectedItems[0];
-                lbFriendName.Text = item.Text;
-                lbFriendID.Text = item.Name;
-                pbFriend.ImageLocation = Path.Combine(FB_Image.RelativeDirectory, FB_Image.UserImageDir, item.Name + ".jpg");
-            }
+
+            ListViewItem item = ((ListView)sender).SelectedItems[0];
+            lbFriendName.Text = item.Text;
+            lbFriendID.Text = item.Name;
+            pbFriend.ImageLocation = Path.Combine(FB_Image.RelativeDirectory, FB_Image.UserImageDir, item.Name + ".jpg");
+            string pass = GetMessagePassword(lbFriendID.Text);
+            sentPass = pass;
+            
         }
 
         private void btnUpFolder_Click(object sender, EventArgs e)
@@ -300,6 +301,7 @@ namespace FacebookImageUpload
             try
             {
                 FolderBrowserDialog f = new FolderBrowserDialog();
+                
                 if (DialogResult.OK == f.ShowDialog())
                 {
                     string dir = f.SelectedPath;
@@ -442,6 +444,7 @@ namespace FacebookImageUpload
         {
            
                 CreateAlbum a = new CreateAlbum(ActiveUser.AccessToken);
+                a.StartPosition = FormStartPosition.CenterParent;
                 if (a.ShowDialog() == DialogResult.OK)
                 {
                     if (Form1.ActiveUser != null)
@@ -575,6 +578,11 @@ namespace FacebookImageUpload
         }
 
         #endregion
+
+      
+
+
+        #region manual
         string[] manualListFile = null;
         private void btnManualBrowseImage_Click(object sender, EventArgs e)
         {
@@ -597,7 +605,7 @@ namespace FacebookImageUpload
             else
             {
                 of.Multiselect = true;
-                if (of.ShowDialog() == DialogResult.OK && of.FileNames.Length>=1)
+                if (of.ShowDialog() == DialogResult.OK && of.FileNames.Length >= 1)
                 {
                     manualListFile = of.FileNames;
                     foreach (string item in of.FileNames)
@@ -625,6 +633,8 @@ namespace FacebookImageUpload
                 tbManualStatus.AppendText(Environment.NewLine);
             }
 
+            
+
         }
 
         private void cmbManualFileType_SelectedIndexChanged(object sender, EventArgs e)
@@ -647,7 +657,11 @@ namespace FacebookImageUpload
         InboxUser manualInbox;
         private void btnManualEncode_Click(object sender, EventArgs e)
         {
-            if (radioManualEncode.Checked) {
+            string pass = GetMessagePasswordNoID();
+            if (pass == null)
+                return;
+            if (radioManualEncode.Checked)
+            {
                 string messagePath = GetMessageInput(cmbManualFileType, tbManualText, tbManualStatus);
                 if (String.IsNullOrEmpty(tbManualImage.Text))
                 {
@@ -658,7 +672,7 @@ namespace FacebookImageUpload
                 if (size < 0)
                     return;
                 string encodeFile = tbManualImage.Text;
-                SimplerAES aes = new SimplerAES("123");
+                SimplerAES aes = new SimplerAES(pass);
                 messagePath = aes.EncryptFile(messagePath);
                 List<string> a = SplitFileIntoPart(messagePath, size);
                 List<string> coverFile = new List<string>();
@@ -727,29 +741,29 @@ namespace FacebookImageUpload
                             string s = "";
                             if (mes.Part.Count >= 1)
                             {
-                                 s+="Images path:"+Environment.NewLine;
-                                 foreach (MessagePart  p in mes.Part)
-                                 {
-                                     s += p.ImagePath + Environment.NewLine;
-                                 }
-                                 s += "Message: ";
-                                 string content = mes.GetContent();
-                                 if (content != null)
-                                     s += content+Environment.NewLine;
-                                 else
-                                     s += "No Output"+Environment.NewLine;
-                                 s += "---------------------------------" + Environment.NewLine;
-                                 tbManualStatus.AppendText(s);
-   
+                                s += "Images path:" + Environment.NewLine;
+                                foreach (MessagePart p in mes.Part)
+                                {
+                                    s += p.ImagePath + Environment.NewLine;
+                                }
+                                s += "Message: ";
+                                string content = mes.GetContent(pass);
+                                if (content != null)
+                                    s += content + Environment.NewLine;
+                                else
+                                    s += "No Output" + Environment.NewLine;
+                                s += "---------------------------------" + Environment.NewLine;
+                                tbManualStatus.AppendText(s);
+
                             }
                         }
                     }
-                    
+
                 }
             }
 
-          
-     
+
+
         }
 
         private static bool GetMoreImage(string encodeFile, List<string> a, List<string> coverFile)
@@ -774,7 +788,7 @@ namespace FacebookImageUpload
                 } while (opf.FileNames.Length != a.Count - 1);
 
                 coverFile.AddRange(opf.FileNames);
-               
+
             }
             return true;
         }
@@ -782,7 +796,7 @@ namespace FacebookImageUpload
         private static int GetSplitSize()
         {
             int size;
-            
+
             SplitFile sp = new SplitFile();
             sp.StartPosition = FormStartPosition.CenterParent;
             if (DialogResult.OK == sp.ShowDialog())
@@ -824,6 +838,50 @@ namespace FacebookImageUpload
             return messagePath;
         }
 
+        private string GetMessagePassword(string friendID)
+        {
+            InboxUser a = MyHelper.GetInboxByUserID(friendID, ListInboxUser);
+            if (a != null)
+            {
+                if (!string.IsNullOrEmpty(a.Password) && a.IsSavePass)
+                {
+                    return a.Password;
+                }
+                else
+                {
+                    GetPassword getPass = new GetPassword();
+                    getPass.StartPosition = FormStartPosition.CenterParent;
+                    if (getPass.ShowDialog() == DialogResult.OK)
+                    {
+                        a.Password = getPass.Password;
+                        a.IsSavePass = getPass.IsSavePass;
+                        return a.Password;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+            return null; ;
+
+        }
+        private string GetMessagePasswordNoID()
+        {
+
+            GetPassword getPass = new GetPassword();
+            getPass.StartPosition = FormStartPosition.CenterParent;
+            if (getPass.ShowDialog() == DialogResult.OK)
+            {
+                return getPass.Password;
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+
 
         private void btnManualDecode_Click(object sender, EventArgs e)
         {
@@ -842,7 +900,7 @@ namespace FacebookImageUpload
             }
 
 
-            
+
         }
 
         private void tbManualStatus_TextChanged(object sender, EventArgs e)
@@ -865,8 +923,9 @@ namespace FacebookImageUpload
             btnManualBrowseFile.Visible = flag;
             lbManualMessage.Visible = flag;
             tbManualImage.Size = new System.Drawing.Size(tbManualImage.Size.Width, 20);
-            MyHelper.EnableControl(flag, tbManualText, cmbManualFileType, btnManualBrowseFile,lbManualMessage);
+            MyHelper.EnableControl(flag, tbManualText, cmbManualFileType, btnManualBrowseFile, lbManualMessage);
             tbManualStatus.Clear();
+            tbManualText.Clear();
             tbManualImage.Clear();
             btnManualEncode.Text = "Encode";
         }
@@ -882,24 +941,34 @@ namespace FacebookImageUpload
             MyHelper.EnableControl(flag, tbManualText, cmbManualFileType, btnManualBrowseFile, lbManualMessage);
             tbManualStatus.Clear();
             tbManualImage.Clear();
+            tbManualText.Clear();
             btnManualEncode.Text = "Decode";
         }
 
         private void button1_Click_2(object sender, EventArgs e)
         {
+            //LoadFriendList();
+            //GetPassword a = new GetPassword();
+            //a.ShowDialog();
+            //string cipher = "123".ToSecureString().EncryptString();
+            //string plain = cipher.DecryptString().ToInsecureString();
             LoadFriendList();
+            LoadMessage();
         }
 
-
-
-
-
-
-
-
-        #region manual
-
+        private void listViewMessage_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (((ListView)sender).FocusedItem.Bounds.Contains(e.Location))
+                {
+                    //cmnLVMessage.Show(Cursor.Position);
+                }
+            }
+        }
         #endregion
+
+
 
 
     }

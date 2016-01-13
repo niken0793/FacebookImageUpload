@@ -60,6 +60,12 @@ namespace FacebookImageUpload.FB_Images
 
         //}
 
+        public static void ShowToolTip(string message, Control control, int time, int x = 0, int y = 0)
+        {
+            ToolTip t = new ToolTip();
+            t.Show(message, control, x, y, time);
+        }
+
         public static bool CreateProgramDir()
         {
             try
@@ -343,8 +349,11 @@ namespace FacebookImageUpload.FB_Images
         {
             foreach (Control item in args)
             {
-                if (item != null)
-                    item.Enabled = enable;
+                if (item != null && item.IsHandleCreated)
+                {
+                    item.Invoke(new Action(()=>item.Enabled = enable));
+                    //item.Enabled = enable;
+                }
             }
         }
 
@@ -553,7 +562,7 @@ namespace FacebookImageUpload.FB_Images
         /// <typeparam name="T"></typeparam>
         /// <param name="serializableObject"></param>
         /// <param name="fileName"></param>
-        public static void SerializeObject<T>(T serializableObject, string fileName)
+        public static void SerializeObject<T>(T serializableObject, string fileName, bool isEncrypt = false)
         {
             if (serializableObject == null) { return; }
 
@@ -568,6 +577,11 @@ namespace FacebookImageUpload.FB_Images
                     stream.Position = 0;
                     xmlDocument.Load(stream);
                     xmlDocument.Save(fileName);
+                    if (isEncrypt)
+                    {
+                        string cipher = File.ReadAllText(fileName).ToSecureString().EncryptString();
+                        File.WriteAllText(fileName, cipher);
+                    }
                     stream.Close();
                 }
             }
@@ -584,7 +598,7 @@ namespace FacebookImageUpload.FB_Images
         /// <typeparam name="T"></typeparam>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public static T DeSerializeObject<T>(string fileName)
+        public static T DeSerializeObject<T>(string fileName, bool isDecrypt = false)
         {
             if (string.IsNullOrEmpty(fileName)) { return default(T); }
 
@@ -592,10 +606,24 @@ namespace FacebookImageUpload.FB_Images
 
             try
             {
-                PreparePath(fileName);
                 string attributeXml = string.Empty;
                 XmlDocument xmlDocument = new XmlDocument();
-                xmlDocument.Load(fileName);
+
+                if (File.Exists(fileName))
+                {
+                    if (isDecrypt)
+                    {
+                        xmlDocument.Load(GenerateStreamFromString( File.ReadAllText(fileName).DecryptString().ToInsecureString()));
+                    }
+                    else
+                    {
+                        xmlDocument.Load(fileName);
+                    }
+                }
+                else
+                {
+                    return default(T);
+                }
                 string xmlString = xmlDocument.OuterXml;
 
                 using (StringReader read = new StringReader(xmlString))
@@ -618,6 +646,16 @@ namespace FacebookImageUpload.FB_Images
             }
 
             return objectOut;
+        }
+
+        public static Stream GenerateStreamFromString( string s)
+        {
+            MemoryStream stream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(stream,Encoding.Unicode);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
         }
     }
 }
