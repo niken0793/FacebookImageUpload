@@ -373,7 +373,7 @@ namespace FacebookImageUpload.FB_Images
             }
             if (lbDoing != null)
             {
-                lbDoing.Text = "Facebook Image Stegano";
+                lbDoing.Text = "StegoCom";
             }
         }
 

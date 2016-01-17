@@ -257,6 +257,9 @@
       <DependentUpon>CreatePrivateAlbum.cs</DependentUpon>
     </Compile>
     <Compile Include="FB_Images\helper.cs" />
+    <Compile Include="FB_Images\LogTab.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FB_Images\Message.cs" />
     <Compile Include="FB_Images\ProccessImage.cs" />
     <Compile Include="FB_Images\User.cs" />

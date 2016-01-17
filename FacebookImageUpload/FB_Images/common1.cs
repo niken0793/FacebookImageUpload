@@ -50,6 +50,9 @@ namespace FacebookImageUpload
                         UserSetting a = MyHelper.DeSerializeObject<UserSetting>(Path.Combine(FB_Image.RelativeDirectory, FB_Image.UserSettingDir, tempApp.ActiveUser),true);
                         if (a != null)
                         {
+                            List<InboxUser> inboxs = MyHelper.DeSerializeObject<List<InboxUser>>(Path.Combine(FB_Image.RelativeDirectory,FB_Image.UserSettingDir,a.UserID+"inbox"));
+                            if(inboxs!= null)
+                                ListInboxUser = inboxs;
                             UpdateLoginControl(a);
                             LoadFriendList();
                             LoadMessage();
@@ -81,9 +84,9 @@ namespace FacebookImageUpload
 
         private void SaveInboxOnDisk(List<InboxUser> inbox)
         {
-            if (inbox != null)
+            if (inbox != null && ActiveUser != null)
             {
-                string savePath = Path.Combine(FB_Image.RelativeDirectory,FB_Image.UserSettingDir,"inbox");
+                string savePath = Path.Combine(FB_Image.RelativeDirectory,FB_Image.UserSettingDir,ActiveUser.UserID+"inbox");
                 MyHelper.PreparePath(savePath);
                 MyHelper.SerializeObject(inbox, savePath);
             }
@@ -102,6 +105,7 @@ namespace FacebookImageUpload
                         MyHelper.ShowProgressBar(s, pbStatus, lbStatusBar, lbDoing);
                         UpdateFriendListView(this.listViewInbox, ListInboxUser, true);
                         UpdateFriendListView(listViewFriends, ListInboxUser);
+                        UpdateFriendListView(lvLogUsers, ListInboxUser);
 
 
                     });
@@ -855,7 +859,9 @@ namespace FacebookImageUpload
                 lbUserNameComm.Text = inbox.UserName;
                 lbUserIdComm.Text = item.Name;
                 pBoxUserComm.ImageLocation = Path.Combine(FB_Image.RelativeDirectory, FB_Image.UserImageDir, item.Name + ".jpg");
+                UpdateNewMessageLabel(null, lbReceiverNewMessage, currentInbox);
                 receivePass = GetMessagePassword(lbUserIdComm.Text);
+
 
             }
          
@@ -870,12 +876,13 @@ namespace FacebookImageUpload
             {
                 if (currentInbox != null)
                 {
-                    int i = lvMessage.SelectedItems[0].Index;
+                    int i = Int32.Parse( lvMessage.SelectedItems[0].Name);
                     if (i < currentInbox.Messages.Count)
                     {
                         if (currentInbox.Messages[i].IsFull)
                         {
                             tbInbox.Text = currentInbox.Messages[i].Content;
+                            tbInbox.AppendText(Environment.NewLine + Environment.NewLine+  MyHelper.UnixTimeStampToDateTime(currentInbox.Messages[i].CreatedDate).ToString());
                         }
                         else
                         {                            
@@ -883,7 +890,16 @@ namespace FacebookImageUpload
                                 return;
                             string s = currentInbox.Messages[i].GetContent(receivePass);
                             if (s != null)
+                            {
                                 tbInbox.Text = s;
+                                tbInbox.AppendText(Environment.NewLine+ Environment.NewLine + MyHelper.UnixTimeStampToDateTime(currentInbox.Messages[i].CreatedDate).ToString());
+                            }
+                            else
+                            {
+                                tbInbox.Text = "No output or wrong pass!";
+                                tbInbox.AppendText(Environment.NewLine + Environment.NewLine + MyHelper.UnixTimeStampToDateTime(currentInbox.Messages[i].CreatedDate).ToString());
+                            }
+                            
                         }
                         if (!currentInbox.Messages[i].IsRead)
                         {
@@ -920,18 +936,22 @@ namespace FacebookImageUpload
             List<FB_Message> messages = inbox.Messages;
             for (int i = 0; i < messages.Count; i++)
             {
-                il.Images.Add(Image.FromFile(messages[i].Image.FullPath));
-                il.Images.SetKeyName(i, "Message_"+i);
+                    il.Images.Add(Image.FromFile(messages[i].Image.FullPath));
+                    il.Images.SetKeyName(i, "Message_" + i);
             }
             listview.View = View.LargeIcon;
             listview.LargeImageList = il;
             for (int j = 0; j < messages.Count; j++)
             {
-                ListViewItem item = new ListViewItem();
+                if (!messages[j].IsSent)
+                {
+                    ListViewItem item = new ListViewItem();
                     item.Text = il.Images.Keys[j].ToString();
-                item.Name = j.ToString();
-                item.ImageIndex = j;
-                listview.Items.Add(item);
+                    item.Name = j.ToString();
+                    item.ImageIndex = j;
+                    listview.Items.Add(item);
+                    
+                }
             }
             if (listview.Items.Count > 0)
             {

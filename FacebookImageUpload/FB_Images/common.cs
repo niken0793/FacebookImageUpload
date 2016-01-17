@@ -243,6 +243,8 @@ namespace FacebookImageUpload
             else
             {
                 Logout(ActiveUser.AccessToken);
+                if(ListInboxUser != null)
+                    ListInboxUser.Clear();
                 UpdateLoginControl();
 
             }
@@ -460,7 +462,7 @@ namespace FacebookImageUpload
                         i++;
                     }
                     i=0;
-                    ListInboxUser.Clear();
+                    //ListInboxUser.Clear();
                     foreach (string user in users.ToArray())
                     {
                         List<string> info = MyHelper.getUserInfo(ActiveUser.AccessToken, user, FB_Image.UserImageDir);

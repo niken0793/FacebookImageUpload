@@ -88,6 +88,7 @@
             this.radioSplitAuto.TabStop = true;
             this.radioSplitAuto.Text = "Auto";
             this.radioSplitAuto.UseVisualStyleBackColor = true;
+            this.radioSplitAuto.Visible = false;
             this.radioSplitAuto.CheckedChanged += new System.EventHandler(this.radioSplitAuto_CheckedChanged);
             // 
             // radioSplitFile

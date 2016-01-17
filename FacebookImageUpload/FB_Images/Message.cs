@@ -45,6 +45,7 @@ namespace FacebookImageUpload.FB_Images
 
         public bool IsFull
         {
+            set { isFull = value; }
             get { return isFull; }
             
         }
@@ -363,13 +364,46 @@ namespace FacebookImageUpload.FB_Images
 
         }
 
+        public void PrintLogMessages(RichTextBox tb)
+        {
+            if (this.Messages.Count > 0)
+            {
+                string content;
+                for (int i = 0; i < Messages.Count; i++)
+                {
+                    content = "";
+                    if (Messages[i].IsSent)
+                    {
+                        content = String.Format("{0} :{1}{2}{3}{4}{5}", "Me", Environment.NewLine, 
+                            Messages[i].Content,Environment.NewLine, 
+                            MyHelper.UnixTimeStampToDateTime(Messages[i].CreatedDate).ToString(), Environment.NewLine);
+                        tb.SelectionAlignment = HorizontalAlignment.Right;
+                        tb.AppendText(content + Environment.NewLine);
+                        //tb.AppendText(Environment.NewLine);
+                    }
+                    else
+                    {
+                        if (Messages[i].IsFull)
+                        {
+                            content = String.Format("{0} :{1}{2}{3}{4}{5}",this.UserName, Environment.NewLine,
+                                Messages[i].Content, Environment.NewLine, 
+                                MyHelper.UnixTimeStampToDateTime(Messages[i].CreatedDate).ToString(), Environment.NewLine);
+                            tb.SelectionAlignment = HorizontalAlignment.Left;
+                            tb.AppendText(content + Environment.NewLine);
+                            //tb.AppendText(Environment.NewLine);
+                        }
+                        
+                    }
+                }
+            }
+        }
         public static FB_Message GetMessageByID(List<FB_Message> listMessage, string id)
         {
             if (listMessage != null && listMessage.Count > 0)
             {
                 for (int i = 0; i < listMessage.Count; i++)
                 {
-                    if (listMessage[i].ID.Equals(id))
+                    if (!string.IsNullOrEmpty(listMessage[i].ID)&& listMessage[i].ID.Equals(id))
                     {
                         return listMessage[i];
                     }
